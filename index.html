@@ -195,18 +195,19 @@
           <div class="form-card">
             <h3 class="form-title">Express Your Interest</h3>
             <p class="form-sub">Fill out the form and we'll be in touch soon.</p>
-            <form class="join-form" onsubmit="handleSubmit(event)">
+            <form class="join-form" action="https://formspree.io/f/mjgjzyje" method="POST">
+              <input type="hidden" name="_subject" value="New volunteer interest — The First Chapter">
               <div class="field">
                 <label class="field-label">Full Name</label>
-                <input type="text" class="field-input" placeholder="Jane Smith" required>
+                <input type="text" name="name" class="field-input" placeholder="Jane Smith" required>
               </div>
               <div class="field">
                 <label class="field-label">Email Address</label>
-                <input type="email" class="field-input" placeholder="jane@example.com" required>
+                <input type="email" name="_replyto" class="field-input" placeholder="jane@example.com" required>
               </div>
               <div class="field">
                 <label class="field-label">Role of Interest</label>
-                <select class="field-input">
+                <select name="role" class="field-input">
                   <option value="">Select a role...</option>
                   <option>Volunteer Coordinator</option>
                   <option>Education Program Lead</option>
@@ -218,7 +219,7 @@
               </div>
               <div class="field">
                 <label class="field-label">Why do you want to join?</label>
-                <textarea class="field-input field-textarea" placeholder="Tell us about yourself and why you want to get involved..." required></textarea>
+                <textarea name="message" class="field-input field-textarea" placeholder="Tell us about yourself and why you want to get involved..." required></textarea>
               </div>
               <button type="submit" class="submit-btn">Send My Interest →</button>
             </form>
@@ -245,7 +246,7 @@
         </div>
         <div class="footer-col">
           <div class="footer-label">Contact</div>
-          <a href="mailto:thefirstchapter@gmail.com" class="footer-link">thefirstchapter@gmail.com</a>
+          <a href="mailto:thefirstchapternpo@gmail.com" class="footer-link">thefirstchapternpo@gmail.com</a>
           <div class="footer-link">Greater Toronto Area, Ontario</div>
         </div>
       </div>
