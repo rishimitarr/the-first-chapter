@@ -583,7 +583,7 @@ a { text-decoration: none; color: inherit; }
 
 .impact-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2px;
   background: rgba(255,255,255,0.1);
   border-radius: 20px;
