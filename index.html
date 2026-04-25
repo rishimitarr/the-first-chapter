@@ -1,13 +1,265 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>the-first-chapter</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/jpeg" href="/TheFirstChapterNPO.JPG" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The First Chapter | GTA Non-Profit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="logo-wrap">
+          <img src="/TheFirstChapterNPO.JPG" alt="The First Chapter Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="logo-fallback">FC</div>
+        </div>
+        <span class="wordmark">the first chapter</span>
+      </div>
+      <div class="nav-right">
+        <a href="#mission" class="nav-link">Our Mission</a>
+        <a href="#about" class="nav-link">About Us</a>
+        <a href="#impact" class="nav-link">Impact</a>
+        <a href="#join" class="nav-link">Join Us</a>
+        <a href="#join" class="nav-cta">Get Involved</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-pill">
+        <span class="green-dot"></span>
+        GTA Non-Profit Organization
+      </div>
+      <h1 class="hero-h1">
+        Every child deserves a<br>
+        <em>first chapter.</em>
+      </h1>
+      <p class="hero-sub">We are a student-founded non-profit rooted in the Greater Toronto Area, dedicated to improving children's education, health, and futures — one community at a time.</p>
+      <div class="hero-btns">
+        <a href="#join" class="btn-primary">Support Our Mission</a>
+        <a href="#mission" class="btn-ghost">Learn More</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">GTA</span>
+          <span class="stat-label">Greater Toronto Area</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">2</span>
+          <span class="stat-label">Passionate Founders</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Community Driven</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-grid">
+        <div class="hero-cell hero-cell-tall">
+          <img src="/hero1.jpg" alt="Children learning">
+        </div>
+        <div class="hero-cell">
+          <img src="/hero2.jpg" alt="Community">
+        </div>
+        <div class="hero-cell">
+          <img src="/hero3.jpg" alt="Education">
+        </div>
+      </div>
+      <div class="scroll-pill">
+        <span class="green-dot"></span>
+        Scroll to explore what we're building ↓
+      </div>
+    </div>
+  </section>
+
+  <!-- SCROLL HINT -->
+  <div class="scroll-hint">
+    <span class="scroll-hint-text">scroll to explore</span>
+    <div class="scroll-circle">↓</div>
+  </div>
+
+  <!-- OUR MISSION -->
+  <section id="mission" class="section mission-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-header-left">
+          <span class="section-tag">Our Mission</span>
+          <h2 class="section-h2">We believe every child, regardless of background, deserves to <em>thrive.</em></h2>
+        </div>
+        <div class="section-header-right">
+          <p class="section-sub">Every initiative, every event, and every dollar we raise goes directly toward creating opportunities for children in the Greater Toronto Area who need it most.</p>
+        </div>
+      </div>
+      <div class="mission-cards">
+        <div class="mission-card reveal">
+          <div class="card-accent"></div>
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">Education & Health</h3>
+          <p class="card-body">We champion access to quality learning resources, tutoring, and educational programs — while also raising funds for mental wellness and physical health so every child grows up safe, supported, and ready to learn.</p>
+        </div>
+        <div class="mission-card reveal">
+          <div class="card-accent"></div>
+          <div class="card-icon">🤝</div>
+          <h3 class="card-title">Community Impact</h3>
+          <p class="card-body">Rooted right here in the GTA, we work alongside local organizations, families, and volunteers to create lasting, meaningful change in the neighbourhoods where children live and grow.</p>
+        </div>
+        <div class="mission-card reveal">
+          <div class="card-accent"></div>
+          <div class="card-icon">📣</div>
+          <h3 class="card-title">Raising Awareness</h3>
+          <p class="card-body">We advocate loudly for children's rights and needs, organizing events and campaigns that bring communities together around what matters most — giving every child a fair and equal chance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-left">
+          <span class="section-tag reveal">About Us</span>
+          <h2 class="section-h2 reveal">Passionate students. Real change.</h2>
+          <blockquote class="pull-quote reveal">"We refused to wait until later to start making a difference."</blockquote>
+          <p class="body-text reveal">The First Chapter was founded by two students from the Greater Toronto Area who saw inequity in their communities and decided to act. What started as a conversation became a registered non-profit dedicated to children's futures.</p>
+          <p class="body-text reveal">We believe that young people have the power to create change right now — not someday. Every initiative we run is student-led, community-focused, and driven by genuine care for the children of the GTA.</p>
+        </div>
+        <div class="about-right">
+          <div class="founder-card reveal">
+            <div class="founder-avatar" style="background: var(--sage);">VM</div>
+            <div class="founder-info">
+              <div class="founder-name">Vishy Mitra</div>
+              <div class="founder-role">Co-Founder</div>
+              <div class="founder-bio">Student leader passionate about educational equity and community development across the Greater Toronto Area.</div>
+            </div>
+          </div>
+          <div class="founder-card reveal">
+            <div class="founder-avatar" style="background: var(--sage-dark);">VM</div>
+            <div class="founder-info">
+              <div class="founder-name">Veer Malik</div>
+              <div class="founder-role">Co-Founder</div>
+              <div class="founder-bio">Dedicated to building sustainable programs that create lasting impact for children's health and education in the GTA.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section id="impact" class="section impact-section">
+    <div class="container">
+      <div class="impact-header reveal">
+        <span class="section-tag impact-tag">Our Impact</span>
+        <h2 class="impact-h2">Small steps. Lasting change.</h2>
+        <p class="impact-sub">Every action we take is a step toward a more equitable future for children in the GTA.</p>
+      </div>
+      <div class="impact-cards">
+        <div class="impact-card reveal">
+          <div class="impact-num">GTA</div>
+          <div class="impact-label">Based in the Greater Toronto Area, Ontario</div>
+        </div>
+        <div class="impact-card reveal">
+          <div class="impact-num">2</div>
+          <div class="impact-label">Passionate founders driving the mission forward</div>
+        </div>
+        <div class="impact-card reveal">
+          <div class="impact-num">Every<br>Child</div>
+          <div class="impact-label">Every child in our community deserves their First Chapter</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN OUR TEAM -->
+  <section id="join" class="section join-section">
+    <div class="container">
+      <div class="join-grid">
+        <div class="join-left">
+          <span class="section-tag reveal">Join Our Team</span>
+          <h2 class="section-h2 reveal">Be part of something that matters.</h2>
+          <p class="body-text reveal">We're always looking for passionate, driven individuals who want to make a real difference in children's lives across the GTA. No experience required — just heart.</p>
+          <ul class="role-list">
+            <li class="role-item reveal"><span class="green-dot"></span>Volunteer Coordinator</li>
+            <li class="role-item reveal"><span class="green-dot"></span>Education Program Lead</li>
+            <li class="role-item reveal"><span class="green-dot"></span>Community Outreach</li>
+            <li class="role-item reveal"><span class="green-dot"></span>Marketing & Social Media</li>
+            <li class="role-item reveal"><span class="green-dot"></span>Event Organizer</li>
+          </ul>
+        </div>
+        <div class="join-right reveal">
+          <div class="form-card">
+            <h3 class="form-title">Express Your Interest</h3>
+            <p class="form-sub">Fill out the form and we'll be in touch soon.</p>
+            <form class="join-form" onsubmit="handleSubmit(event)">
+              <div class="field">
+                <label class="field-label">Full Name</label>
+                <input type="text" class="field-input" placeholder="Jane Smith" required>
+              </div>
+              <div class="field">
+                <label class="field-label">Email Address</label>
+                <input type="email" class="field-input" placeholder="jane@example.com" required>
+              </div>
+              <div class="field">
+                <label class="field-label">Role of Interest</label>
+                <select class="field-input">
+                  <option value="">Select a role...</option>
+                  <option>Volunteer Coordinator</option>
+                  <option>Education Program Lead</option>
+                  <option>Community Outreach</option>
+                  <option>Marketing &amp; Social Media</option>
+                  <option>Event Organizer</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Why do you want to join?</label>
+                <textarea class="field-input field-textarea" placeholder="Tell us about yourself and why you want to get involved..." required></textarea>
+              </div>
+              <button type="submit" class="submit-btn">Send My Interest →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-col">
+          <div class="footer-brand">the <span class="footer-green">first chapter</span></div>
+          <div class="footer-tagline">Education. Health. Community. One child at a time.</div>
+        </div>
+        <div class="footer-col">
+          <div class="footer-label">Navigate</div>
+          <a href="#mission" class="footer-link">Our Mission</a>
+          <a href="#about" class="footer-link">About Us</a>
+          <a href="#impact" class="footer-link">Our Impact</a>
+          <a href="#join" class="footer-link">Join Our Team</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-label">Contact</div>
+          <a href="mailto:thefirstchapter@gmail.com" class="footer-link">thefirstchapter@gmail.com</a>
+          <div class="footer-link">Greater Toronto Area, Ontario</div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 The First Chapter. All rights reserved.</span>
+        <span>Registered Non-Profit · Ontario, Canada</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/src/main.js" type="module"></script>
+</body>
 </html>
