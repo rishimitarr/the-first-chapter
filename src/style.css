@@ -940,11 +940,11 @@ a { text-decoration: none; color: inherit; }
   }
   .hero-cell-tall { border-radius: 16px 16px 16px 80px; }
   .scroll-pill {
-    bottom: -52px;
+    bottom: 16px;
     font-size: 11px;
     padding: 8px 14px;
   }
-  .hero-right { padding-bottom: 100px; }
+  .hero-right { padding-bottom: 72px; }
 
   .section-h2,
   .impact-h2 { font-size: 32px; }
