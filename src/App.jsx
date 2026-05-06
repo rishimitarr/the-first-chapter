@@ -1,1 +1,25 @@
-{"error":{"code":"api_version_disabled","message":"v6 of this endpoint has been disabled. Please use v8 instead.","fid":"41efb38212e5562b20d3716b5736d84645aec0b2"}}
+import Nav from './components/Nav'
+import Hero from './components/Hero'
+import Mission from './components/Mission'
+import About from './components/About'
+// import Impact from './components/Impact'
+import Join from './components/Join'
+import Footer from './components/Footer'
+
+function App() {
+  return (
+    <>
+      <Nav />
+      <main>
+        <Hero />
+        <Mission />
+        <About />
+        {/* <Impact /> */}
+        <Join />
+      </main>
+      <Footer />
+    </>
+  )
+}
+
+export default App
