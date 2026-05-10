@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useLocation } from 'react-router-dom'
 
 const navVariants = {
   hidden: { y: -140, opacity: 0 },
@@ -26,14 +27,36 @@ const linkVariants = {
   },
 }
 
-const links = [
-  { label: 'Our Mission', href: '#mission' },
-  { label: 'About Us', href: '#about' },
-  { label: 'Join Us', href: '#join' },
+const defaultLinks = [
+  { label: 'Our Mission', href: '/#mission' },
+  { label: 'About Us', href: '/#about' },
+  { label: 'Care Kits', href: '/care-kits', route: true },
+  { label: 'Join Us', href: '/#join' },
+]
+
+// On the /care-kits route the nav swaps to in-page anchors that mirror
+// the page's own sections.
+const careKitsLinks = [
+  { label: 'The Kit', href: '#the-kit' },
+  { label: "Who It's For", href: '#recipients' },
+  { label: "How It's Made", href: '#craft' },
 ]
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+
+  const onCareKits = location.pathname.startsWith('/care-kits')
+  const links = onCareKits ? careKitsLinks : defaultLinks
+
+  const resolveHref = (l) => {
+    if (l.route) return l.href
+    if (l.href.startsWith('/#') && location.pathname === '/') return l.href.slice(1)
+    return l.href
+  }
+
+  const ctaHref = onCareKits ? '#sponsor' : (location.pathname === '/' ? '#join' : '/#join')
+  const ctaLabel = onCareKits ? 'Sponsor a Kit' : 'Get Involved'
 
   return (
     <motion.nav
@@ -47,14 +70,14 @@ export default function Nav() {
 
       <div style={styles.inner} className="nav-inner-height">
         {/* Logo */}
-        <a href="#" style={styles.logoWrap} aria-label="The First Chapter home">
+        <Link to="/" style={styles.logoWrap} aria-label="The First Chapter home">
           <img
             src="/New First Chapter Logo.png"
             alt="The First Chapter"
             style={styles.logoImg}
             className="nav-logo-img"
           />
-        </a>
+        </Link>
 
         {/* Desktop links */}
         <motion.div
@@ -64,27 +87,50 @@ export default function Nav() {
           initial="hidden"
           animate="visible"
         >
-          {links.map((l) => (
-            <motion.a
-              key={l.href}
-              href={l.href}
-              className="nav-link-item"
-              style={styles.navLink}
-              variants={linkVariants}
-              whileHover={{ y: -2 }}
-            >
-              {l.label}
-            </motion.a>
-          ))}
+          {links.map((l) => {
+            const href = resolveHref(l)
+            if (l.route) {
+              return (
+                <motion.div key={l.href} variants={linkVariants} whileHover={{ y: -2 }}>
+                  <Link to={href} className="nav-link-item" style={styles.navLink}>
+                    {l.label}
+                  </Link>
+                </motion.div>
+              )
+            }
+            return (
+              <motion.a
+                key={l.href}
+                href={href}
+                className="nav-link-item"
+                style={styles.navLink}
+                variants={linkVariants}
+                whileHover={{ y: -2 }}
+              >
+                {l.label}
+              </motion.a>
+            )
+          })}
           <motion.a
-            href="#join"
+            href={ctaHref}
             style={styles.ctaBtn}
             variants={linkVariants}
             whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(107,45,139,0.45)' }}
             whileTap={{ scale: 0.97 }}
           >
-            Get Involved
+            {ctaLabel}
           </motion.a>
+          {onCareKits && (
+            <motion.a
+              href="/"
+              style={styles.homeBtn}
+              variants={linkVariants}
+              whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(247,148,29,0.45)' }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Home
+            </motion.a>
+          )}
         </motion.div>
 
         {/* Hamburger */}
@@ -126,23 +172,47 @@ export default function Nav() {
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 120, damping: 22 }}
           >
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                style={styles.mobileLink}
-                onClick={() => setMenuOpen(false)}
-              >
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) => {
+              const href = resolveHref(l)
+              if (l.route) {
+                return (
+                  <Link
+                    key={l.href}
+                    to={href}
+                    style={styles.mobileLink}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {l.label}
+                  </Link>
+                )
+              }
+              return (
+                <a
+                  key={l.href}
+                  href={href}
+                  style={styles.mobileLink}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {l.label}
+                </a>
+              )
+            })}
             <a
-              href="#join"
+              href={ctaHref}
               style={styles.mobileCta}
               onClick={() => setMenuOpen(false)}
             >
-              Get Involved
+              {ctaLabel}
             </a>
+            {onCareKits && (
+              <a
+                href="/"
+                style={styles.mobileHome}
+                onClick={() => setMenuOpen(false)}
+              >
+                Home
+              </a>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -252,6 +322,33 @@ const styles = {
     fontSize: '0.95rem',
     color: '#fff',
     background: '#6B2D8B',
+    padding: '12px 24px',
+    borderRadius: 100,
+    textAlign: 'center',
+  },
+  homeBtn: {
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.9rem',
+    color: '#fff',
+    background: '#F7941D',
+    padding: '10px 22px',
+    borderRadius: 100,
+    marginLeft: 8,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    textDecoration: 'none',
+  },
+  mobileHome: {
+    display: 'inline-block',
+    marginTop: 10,
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.95rem',
+    color: '#fff',
+    background: '#F7941D',
     padding: '12px 24px',
     borderRadius: 100,
     textAlign: 'center',
