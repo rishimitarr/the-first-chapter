@@ -1,3 +1,6 @@
 {
-  "alias": ["thefirstchapternpo.org", "www.thefirstchapternpo.org"]
+  "alias": ["thefirstchapternpo.org", "www.thefirstchapternpo.org"],
+  "rewrites": [
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
+  ]
 }
