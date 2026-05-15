@@ -10,19 +10,31 @@ const mosaicImages = [
 ]
 
 function MosaicCell({ img, index, tall }) {
+  const [hovered, setHovered] = useState(false)
   return (
     <motion.div
       style={{
         ...styles.mosaicCell,
         gridRow: tall ? 'span 2' : 'span 1',
+        transition: 'box-shadow 0.4s ease',
+        boxShadow: hovered ? '0 16px 40px rgba(0,0,0,0.18)' : '0 0px 0px rgba(0,0,0,0)',
       }}
       initial={{ opacity: 0, scale: 0.92 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.5, delay: 0.1 + index * 0.08 }}
-      whileHover={{ scale: 1.04, zIndex: 2, transition: { type: 'spring', stiffness: 300 } }}
+      whileHover={{ scale: 1.03, zIndex: 2, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } }}
+      whileTap={{ scale: 0.99 }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
     >
-      <img src={img.src} alt={img.alt} style={styles.mosaicImg} />
+      <motion.img
+        src={img.src}
+        alt={img.alt}
+        style={styles.mosaicImg}
+        animate={{ scale: hovered ? 1.08 : 1 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      />
     </motion.div>
   )
 }
