@@ -90,13 +90,13 @@ function CraftCard({ card, index }) {
 
 // ─── PricingCard (education kit only) ────────────────────────────────────────
 
-function PricingCard({ label, price, description, items, cta, background, BGComponent, comingSoon = false, href = '#sponsor' }) {
+function PricingCard({ label, price, description, items, cta, background, BGComponent, comingSoon = false, href = '#sponsor', isMobile }) {
   return (
     <motion.div
       whileHover="hover"
       variants={{ hover: { scale: 1.04 } }}
       transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
-      style={{ ...styles.priceCard, background }}
+      style={{ ...styles.priceCard, background, width: isMobile ? '100%' : 320 }}
     >
       {BGComponent && <BGComponent />}
       <div style={styles.priceContent}>
@@ -302,7 +302,7 @@ export default function EducationKit() {
       <section style={styles.hero}>
         <img src="/education-kit-hero.jpg" alt="" aria-hidden="true" style={styles.heroBg} />
         <div style={styles.heroOverlay} />
-        <div style={styles.heroInner}>
+        <div style={{ ...styles.heroInner, padding: isMobile ? '0 24px' : '0 60px' }}>
           {/* back link */}
           <motion.div
             initial={{ opacity: 0, x: -16 }}
@@ -322,7 +322,6 @@ export default function EducationKit() {
             style={styles.heroH1}
           >
             <span style={styles.heroLine}>The Education Kit.</span>
-            <span style={{ ...styles.heroLine, color: '#FBB040' }}>One child. One start.</span>
           </motion.h1>
 
           <motion.p
@@ -353,7 +352,7 @@ export default function EducationKit() {
       </section>
 
       {/* SCROLL ANIMATION */}
-      <section ref={sectionRef} id="the-kit" style={styles.scrollSection}>
+      <section ref={sectionRef} id="the-kit" style={{ ...styles.scrollSection, height: isMobile ? '70vh' : `${SECTION_HEIGHT_VH}vh` }}>
         <div style={styles.sticky}>
           <div style={styles.kitLabelWrap}>
             <span style={styles.kitEyebrow}>Presenting</span>
@@ -390,7 +389,7 @@ export default function EducationKit() {
             We source each item carefully so the kit feels complete, not makeshift.
           </motion.p>
 
-          <div style={styles.insideGrid}>
+          <div style={{ ...styles.insideGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
             {[
               { icon: Heart,      color: '#EE3093', name: 'Mini Plushie',        desc: 'A small comfort plushie tucked into every kit because kids need more than supplies.' },
               { icon: Pencil,     color: '#6B2D8B', name: 'Pencils',             desc: 'HB graphite pencils, pre-sharpened and ready for the first day back.' },
@@ -472,7 +471,7 @@ export default function EducationKit() {
             Sourced thoughtfully. <span style={styles.h2Em}>Packed by hand.</span>
           </motion.h2>
 
-          <div style={styles.cardGrid}>
+          <div style={{ ...styles.cardGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
             {[
               { color: '#6B2D8B', title: 'Sourced with intent', body: 'Every supply is chosen for durability and child safety, with local Canadian suppliers prioritized whenever possible.' },
               { color: '#0099D6', title: 'Hand assembled', body: 'Volunteers pack each kit one at a time. No factory line. Just real hands, building one kit for one kid.' },
@@ -502,7 +501,7 @@ export default function EducationKit() {
             child opens their kit.
           </motion.p>
 
-          <div style={styles.stepsGrid}>
+          <div style={{ ...styles.stepsGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(6, 1fr)' }}>
             {[
               { icon: HandHeart,   color: '#EE3093', step: '01', title: 'You sponsor a kit',        desc: 'A single donation funds one full Education Kit for one child in the Greater Toronto Area.', span: 2 },
               { icon: ShoppingBag, color: '#0099D6', step: '02', title: 'We source the supplies',   desc: 'Pencils, plushie, calculator, ruler, and the rest. Bought from Canadian suppliers wherever possible.', span: 2 },
@@ -519,7 +518,7 @@ export default function EducationKit() {
                   viewport={{ once: true, margin: '-60px' }}
                   transition={{ duration: 0.55, delay: i * 0.08 }}
                   whileHover={{ y: -6, boxShadow: '0 18px 38px rgba(26,58,107,0.12)', transition: { type: 'spring', stiffness: 280, damping: 18 } }}
-                  style={{ ...styles.stepCard, gridColumn: `span ${s.span}` }}
+                  style={{ ...styles.stepCard, gridColumn: isMobile ? 'span 1' : `span ${s.span}` }}
                 >
                   <div style={styles.stepHeaderRow}>
                     <span style={{ ...styles.stepIconWrap, background: `${s.color}18` }}>
@@ -552,7 +551,7 @@ export default function EducationKit() {
             funds the supplies and the carry pouch. This is a donation, not a product purchase.
           </motion.p>
 
-          <div style={styles.priceGrid}>
+          <div style={{ ...styles.priceGrid, flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'flex-start' }}>
             <PricingCard
               label="Education Kit"
               comingSoon
@@ -560,6 +559,7 @@ export default function EducationKit() {
               items={['Pencils and coloured pencils', 'Calculator', 'Ruler and sharpener', 'Erasers', 'Mini plushie', 'Handwritten note']}
               background="linear-gradient(155deg, #6B2D8B 0%, #4A1E61 100%)"
               BGComponent={BGCircles}
+              isMobile={isMobile}
             />
           </div>
 
@@ -648,7 +648,7 @@ const styles = {
   stepHeaderRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
   stepIconWrap: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: 12 },
   stepNumber: { fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: '0.78rem', letterSpacing: '0.2em', opacity: 0.85 },
-  stepTitle: { fontFamily: "'Poppins', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#1A3A6B', letterSpacing: '-0.015em', lineHeight: 1.25, whiteSpace: 'nowrap' },
+  stepTitle: { fontFamily: "'Poppins', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#1A3A6B', letterSpacing: '-0.015em', lineHeight: 1.25 },
   stepDesc: { fontFamily: "'DM Sans', sans-serif", fontSize: '0.92rem', lineHeight: 1.55, color: 'rgba(26,26,26,0.68)' },
 
   priceGrid: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 22, marginBottom: 36 },

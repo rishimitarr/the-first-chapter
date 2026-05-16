@@ -132,7 +132,7 @@ export default function Mission() {
               <span className="section-tag">Our Mission</span>
               <h2 className="section-h2" style={{ marginTop: 8, maxWidth: 500 }}>
                 We believe every child, regardless of background, deserves to{' '}
-                <span style={{ fontStyle: 'normal', fontWeight: 700 }}>thrive.</span>
+                <em>thrive.</em>
               </h2>
             </motion.div>
           </div>

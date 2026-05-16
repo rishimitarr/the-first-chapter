@@ -1,7 +1,10 @@
+import { Link } from 'react-router-dom'
+
 const navLinks = [
-  { label: 'Our Mission', href: '#mission' },
-  { label: 'About Us', href: '#about' },
-  { label: 'Join Our Team', href: '#join' },
+  { label: 'Our Mission', href: '#mission', route: false },
+  { label: 'About Us', href: '#about', route: false },
+  { label: 'Care Kits', href: '/care-kits', route: true },
+  { label: 'Join Our Team', href: '#join', route: false },
 ]
 
 export default function Footer() {
@@ -22,11 +25,17 @@ export default function Footer() {
           {/* Navigate */}
           <div style={styles.col} className="footer-col">
             <div style={styles.colLabel}>Navigate</div>
-            {navLinks.map((l) => (
-              <a key={l.href} href={l.href} style={styles.footerLink}>
-                {l.label}
-              </a>
-            ))}
+            {navLinks.map((l) =>
+              l.route ? (
+                <Link key={l.href} to={l.href} style={styles.footerLink}>
+                  {l.label}
+                </Link>
+              ) : (
+                <a key={l.href} href={l.href} style={styles.footerLink}>
+                  {l.label}
+                </a>
+              )
+            )}
           </div>
 
           {/* Contact */}
@@ -83,6 +92,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
+    alignSelf: 'flex-start',
   },
   logo: {
     height: 60,

@@ -75,6 +75,7 @@ ul { list-style: none; }
 
 .section-h2 em {
   font-style: normal;
+  font-weight: 800;
   color: var(--yellow);
 }
 
