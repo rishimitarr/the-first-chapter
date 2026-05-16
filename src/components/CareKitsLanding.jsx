@@ -239,7 +239,7 @@ export default function CareKitsLanding() {
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h2 style={{ ...styles.sectionH2, maxWidth: 'none', whiteSpace: 'nowrap' }}>
+              <h2 style={{ ...styles.sectionH2, maxWidth: 'none' }}>
                 For every child who deserves <span style={styles.h2Em}>a fresh start.</span>
               </h2>
               <p style={styles.sectionLeadWide}>
