@@ -38,8 +38,9 @@ const defaultLinks = [
 // the page's own sections.
 const careKitsLinks = [
   { label: 'The Kit', href: '#the-kit' },
+  { label: "What's Inside", href: '#whats-inside' },
   { label: "Who It's For", href: '#recipients' },
-  { label: "How It's Made", href: '#craft' },
+  { label: 'How It Works', href: '#create-a-kit' },
 ]
 
 export default function Nav() {
