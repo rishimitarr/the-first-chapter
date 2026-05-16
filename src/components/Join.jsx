@@ -37,7 +37,7 @@ export default function Join() {
             >
               <span className="section-tag">Join Our Team</span>
               <h2 className="section-h2" style={{ marginTop: 10, maxWidth: 400 }}>
-                Be part of something that <span style={{ fontStyle: 'normal', fontWeight: 700 }}>matters.</span>
+                Be part of something that <em>matters.</em>
               </h2>
               <p style={styles.bodyText}>
                 We&apos;re always looking for passionate, driven individuals who want to make

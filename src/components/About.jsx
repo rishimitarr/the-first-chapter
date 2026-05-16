@@ -107,7 +107,7 @@ export default function About() {
             <span className="section-tag" style={{ width: 'fit-content' }}>About Us</span>
             <h2 className="section-h2" style={{ marginTop: 8 }}>
               Passionate students.{' '}
-              <span style={{ fontStyle: 'normal', fontWeight: 700 }}>Real change.</span>
+              <em>Real change.</em>
             </h2>
 <p style={styles.bodyText}>
               The First Chapter was founded by two students from the Greater Toronto Area

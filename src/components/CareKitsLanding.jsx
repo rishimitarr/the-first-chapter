@@ -22,22 +22,20 @@ const PAGE_BG = '#F4F6FB'
 
 // ─── Kit card — horizontal layout, white card, colored accent column ─────────
 
-function KitCard({ kit }) {
+function KitCard({ kit, isMobile }) {
   return (
     <motion.div
       whileHover={kit.comingSoon ? {} : { y: -6, boxShadow: `0 22px 48px ${kit.shadow}` }}
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       style={{ ...styles.kitCard, opacity: kit.comingSoon ? 0.72 : 1 }}
     >
-      {/* Left accent column */}
-      <div style={{ ...styles.kitAccent, background: kit.accentBg }}>
+      <div style={{ ...styles.kitAccent, background: kit.accentBg, width: isMobile ? 80 : 130, padding: isMobile ? '20px 10px' : '28px 16px' }}>
         <div style={styles.kitIconCircle}>
-          <kit.Icon size={30} color="#fff" strokeWidth={2} />
+          <kit.Icon size={isMobile ? 22 : 30} color="#fff" strokeWidth={2} />
         </div>
       </div>
 
-      {/* Right content */}
-      <div style={styles.kitBody}>
+      <div style={{ ...styles.kitBody, padding: isMobile ? '16px 16px' : '24px 28px' }}>
         <div style={styles.kitBodyTop}>
           <h3 style={{ ...styles.kitCardTitle, color: kit.titleColor }}>{kit.name}</h3>
           <p style={styles.kitCardDesc}>{kit.desc}</p>
@@ -67,7 +65,7 @@ function KitCard({ kit }) {
 
 // ─── Step card ───────────────────────────────────────────────────────────────
 
-function StepCard({ step, index, span }) {
+function StepCard({ step, index, span, isMobile }) {
   const Icon = step.icon
   return (
     <motion.div
@@ -76,7 +74,7 @@ function StepCard({ step, index, span }) {
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.55, delay: index * 0.08 }}
       whileHover={{ y: -6, boxShadow: '0 18px 38px rgba(26,58,107,0.12)', transition: { type: 'spring', stiffness: 280, damping: 18 } }}
-      style={{ ...styles.stepCard, gridColumn: `span ${span}` }}
+      style={{ ...styles.stepCard, gridColumn: isMobile ? 'span 1' : `span ${span}` }}
     >
       <div style={styles.stepHeaderRow}>
         <span style={{ ...styles.stepIconWrap, background: `${step.color}18` }}>
@@ -149,10 +147,19 @@ const ROTATE_WORDS = ['One Story.', 'One Chapter.', 'One Beginning.', 'One Promi
 
 export default function CareKitsLanding() {
   const [titleNumber, setTitleNumber] = useState(0)
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  )
 
   useEffect(() => {
     const id = setInterval(() => setTitleNumber((n) => (n + 1) % ROTATE_WORDS.length), 2200)
     return () => clearInterval(id)
+  }, [])
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
   return (
@@ -163,7 +170,7 @@ export default function CareKitsLanding() {
       <section style={styles.hero}>
         <img src="/care-kits-hero.jpg" alt="" aria-hidden="true" style={styles.heroBg} />
         <div style={styles.heroOverlay} />
-        <div style={styles.heroInner}>
+        <div style={{ ...styles.heroInner, padding: isMobile ? '0 24px' : '0 60px' }}>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -230,7 +237,7 @@ export default function CareKitsLanding() {
           >
             What Are Care Kits?
           </motion.span>
-          <div style={styles.aboutRow}>
+          <div style={{ ...styles.aboutRow, flexDirection: isMobile ? 'column' : 'row' }}>
             {/* Text column */}
             <motion.div
               style={styles.aboutText}
@@ -242,22 +249,22 @@ export default function CareKitsLanding() {
               <h2 style={{ ...styles.sectionH2, maxWidth: 'none' }}>
                 For every child who deserves <span style={styles.h2Em}>a fresh start.</span>
               </h2>
-              <p style={styles.sectionLeadWide}>
-                When a child's life shifts, a hospital stay, a shelter placement, a home in
-                transition, school and normalcy are the first things to pause. Care Kits are
+              <p style={{ ...styles.sectionLeadWide, marginTop: 32 }}>
+                When a child's life shifts — a hospital stay, a shelter placement, a home in
+                transition — school and normalcy are the first things to pause. Care Kits are
                 our small, real answer: purpose-built packages that meet kids exactly where
                 they are, with supplies chosen specifically for their situation.
               </p>
               <p style={{ ...styles.sectionLeadWide, marginBottom: 0 }}>
-                Every kit is hand packed by a volunteer, funded by a single donor, and
-                delivered free of charge to a child through our hospital and shelter
-                partners across the Greater Toronto Area.
+                Every kit is hand-packed by a volunteer, funded by a single donor, and
+                delivered free of charge through our hospital and shelter partners across
+                the Greater Toronto Area.
               </p>
             </motion.div>
 
-            {/* Image column — hover matches Mission mosaic pattern */}
+            {/* Image column */}
             <motion.div
-              style={styles.aboutImgWrap}
+              style={{ ...styles.aboutImgWrap, flex: isMobile ? '1 1 auto' : '0 0 300px', width: isMobile ? '100%' : undefined }}
               initial={{ opacity: 0, x: 24 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-80px' }}
@@ -268,13 +275,56 @@ export default function CareKitsLanding() {
                 <motion.img
                   src="/care-kits-about.jpg"
                   alt="Child focused on schoolwork"
-                  style={styles.aboutImg}
+                  style={{ ...styles.aboutImg, aspectRatio: isMobile ? '4/3' : '3/4' }}
                   whileHover={{ scale: 1.08 }}
                   transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                 />
               </div>
               <span style={styles.aboutImgCaption}>Photo by Annie Spratt / Unsplash</span>
             </motion.div>
+          </div>
+
+          {/* Pillar cards */}
+          <div style={{ ...styles.pillarRow, gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)' }}>
+            {[
+              {
+                Icon: HandHeart,
+                color: '#6B2D8B',
+                bg: 'rgba(107,45,139,0.07)',
+                title: 'Hand-Packed with Care',
+                body: 'Every kit is assembled by one of our volunteers — no assembly lines, no shortcuts. Each item is placed with intention so a child feels seen the moment they open it.',
+              },
+              {
+                Icon: Heart,
+                color: '#C0392B',
+                bg: 'rgba(192,57,43,0.07)',
+                title: 'Funded by One Donor',
+                body: 'A single sponsorship covers one complete kit for one child. Donors know exactly where their contribution goes — and children receive every cent of it.',
+              },
+              {
+                Icon: Truck,
+                color: '#1A3A6B',
+                bg: 'rgba(26,58,107,0.07)',
+                title: 'Delivered by Us',
+                body: 'Our team personally delivers every kit to hospitals and shelters across the GTA — no middlemen, no delays. We show up ourselves because these kids deserve that.',
+              },
+            ].map((p, i) => (
+              <motion.div
+                key={p.title}
+                style={styles.pillarCard}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -6, boxShadow: '0 18px 42px rgba(26,58,107,0.12)', transition: { duration: 0.35 } }}
+              >
+                <div style={{ ...styles.pillarIconWrap, background: p.bg }}>
+                  <p.Icon size={26} color={p.color} strokeWidth={1.8} />
+                </div>
+                <h4 style={styles.pillarTitle}>{p.title}</h4>
+                <p style={styles.pillarBody}>{p.body}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -320,7 +370,7 @@ export default function CareKitsLanding() {
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
               >
-                <KitCard kit={kit} />
+                <KitCard kit={kit} isMobile={isMobile} />
               </motion.div>
             ))}
           </div>
@@ -344,14 +394,14 @@ export default function CareKitsLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{ ...styles.sectionH2, maxWidth: 'none', whiteSpace: 'nowrap' }}
+            style={{ ...styles.sectionH2, maxWidth: 'none' }}
           >
             From your gift to a <span style={styles.h2Em}>child's hands.</span>
           </motion.h2>
 
-          <div style={styles.stepsGrid}>
+          <div style={{ ...styles.stepsGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(6, 1fr)' }}>
             {STEPS.map((s, i) => (
-              <StepCard key={s.step} step={s} index={i} span={s.span} />
+              <StepCard key={s.step} step={s} index={i} span={s.span} isMobile={isMobile} />
             ))}
           </div>
         </div>
@@ -401,9 +451,8 @@ export default function CareKitsLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            style={styles.sponsorCards}
+            style={{ ...styles.sponsorCards, flexDirection: isMobile ? 'column' : 'row' }}
           >
-            {/* Education Kit — available, links to kit page */}
             <SponsorCard
               label="Education Kit"
               color="#6B2D8B"
@@ -413,22 +462,23 @@ export default function CareKitsLanding() {
               cta="Explore & Sponsor"
               href="/care-kits/education"
               isLink
+              isMobile={isMobile}
             />
-            {/* Comfort Kit — coming soon */}
             <SponsorCard
               label="Comfort Kit"
               color="#EE3093"
               bg="linear-gradient(155deg, #EE3093 0%, #B91F70 100%)"
               comingSoon
               desc="A care package for kids in hospital wards or family shelters. In development."
+              isMobile={isMobile}
             />
-            {/* Health Kit — coming soon */}
             <SponsorCard
               label="Health Kit"
               color="#14B8A6"
               bg="linear-gradient(155deg, #14B8A6 0%, #0D7A6F 100%)"
               comingSoon
               desc="Hygiene and wellness essentials for kids in shelters and transitional homes."
+              isMobile={isMobile}
             />
           </motion.div>
 
@@ -445,13 +495,13 @@ export default function CareKitsLanding() {
 
 // ─── Simple sponsor mini-card ─────────────────────────────────────────────────
 
-function SponsorCard({ label, color, bg, price, desc, cta, href, comingSoon, isLink }) {
+function SponsorCard({ label, color, bg, price, desc, cta, href, comingSoon, isLink, isMobile }) {
   return (
     <motion.div
       whileHover="hover"
       variants={{ hover: { scale: 1.04 } }}
       transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
-      style={{ ...styles.sponsorCard, background: bg }}
+      style={{ ...styles.sponsorCard, background: bg, width: isMobile ? '100%' : 300 }}
     >
       <span style={styles.sponsorBadge}>
         {comingSoon && <Lock size={11} strokeWidth={2.5} style={{ marginRight: 5 }} />}
@@ -643,7 +693,7 @@ const styles = {
     gap: 0,
   },
   aboutImgWrap: {
-    flex: '0 0 240px',
+    flex: '0 0 300px',
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
@@ -656,9 +706,9 @@ const styles = {
   },
   aboutImg: {
     width: '100%',
-    aspectRatio: '1 / 1',
+    aspectRatio: '3 / 4',
     objectFit: 'cover',
-    objectPosition: 'center 30%',
+    objectPosition: 'center center',
     display: 'block',
   },
   aboutImgCaption: {
@@ -668,6 +718,49 @@ const styles = {
     fontStyle: 'italic',
     letterSpacing: '0.02em',
     textAlign: 'right',
+  },
+
+  // pillar cards
+  pillarRow: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: 24,
+    marginTop: 56,
+  },
+  pillarCard: {
+    background: '#fff',
+    borderRadius: 20,
+    border: '1.5px solid rgba(26,58,107,0.09)',
+    boxShadow: '0 4px 18px rgba(26,58,107,0.07)',
+    padding: '32px 28px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+    cursor: 'default',
+  },
+  pillarIconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  pillarTitle: {
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 700,
+    fontSize: '1.05rem',
+    color: '#1A3A6B',
+    margin: 0,
+    lineHeight: 1.3,
+  },
+  pillarBody: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '0.92rem',
+    color: 'rgba(26,26,26,0.65)',
+    lineHeight: 1.7,
+    margin: 0,
   },
 
   // kit cards — vertical stack, horizontal layout per card
