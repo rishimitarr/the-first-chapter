@@ -13,6 +13,8 @@ import {
   PackageOpen,
   Truck,
   Mail,
+  Check,
+  Lock,
 } from 'lucide-react'
 import Nav from './Nav'
 import Footer from './Footer'
@@ -165,6 +167,172 @@ function KitButton({ href, isMobile }) {
     </motion.a>
   )
 }
+
+// Squishy pricing card — uses framer-motion variant propagation so the
+// outer "hover" state animates the background SVG shapes and the price
+// type simultaneously. Coming-soon variants are inert on hover.
+function PricingCard({
+  label,
+  price,
+  description,
+  items,
+  cta,
+  background,
+  BGComponent,
+  comingSoon = false,
+  href = '#sponsor',
+}) {
+  return (
+    <motion.div
+      whileHover="hover"
+      variants={{ hover: { scale: 1.04 } }}
+      transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
+      style={{
+        ...styles.priceCard,
+        background,
+      }}
+    >
+      {BGComponent && <BGComponent />}
+
+      <div style={styles.priceContent}>
+        <span style={styles.priceLabel}>
+          {comingSoon && <Lock size={12} strokeWidth={2.5} style={{ marginRight: 6 }} />}
+          {comingSoon ? 'Coming Soon' : label}
+        </span>
+
+        {!comingSoon ? (
+          <motion.span
+            initial={{ scale: 0.88 }}
+            variants={{ hover: { scale: 1 } }}
+            transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
+            style={styles.priceAmount}
+          >
+            $30
+            <span style={styles.priceCurrency}> CAD</span>
+            <span style={styles.pricePer}> / kit</span>
+          </motion.span>
+        ) : (
+          <span style={styles.priceAmountMuted}>{label}</span>
+        )}
+
+        <p style={styles.priceDesc}>{description}</p>
+
+        <ul style={styles.priceList}>
+          {items.map((it) => (
+            <li key={it} style={styles.priceItem}>
+              <Check size={15} strokeWidth={3} style={{ flexShrink: 0, marginTop: 3 }} />
+              <span>{it}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {comingSoon ? (
+        <span style={styles.priceBtnDisabled}>Not yet available</span>
+      ) : (
+        <a href={href} style={styles.priceBtn}>
+          {cta}
+        </a>
+      )}
+    </motion.div>
+  )
+}
+
+// Background shapes — three different SVGs that squish on the parent
+// card's "hover" variant. Soft, abstract, on-brand.
+const BGCircles = () => (
+  <motion.svg
+    viewBox="0 0 320 384"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    variants={{ hover: { scale: 1.4 } }}
+    transition={{ duration: 1, ease: [0.55, 0, 0.1, 1] }}
+    style={styles.priceBg}
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <motion.circle
+      variants={{ hover: { scaleY: 0.55, y: -22 } }}
+      transition={{ duration: 1, ease: [0.55, 0, 0.1, 1], delay: 0.15 }}
+      cx="160.5"
+      cy="120"
+      r="105"
+      fill="rgba(255,255,255,0.16)"
+    />
+    <motion.ellipse
+      variants={{ hover: { scaleY: 2.3, y: -28 } }}
+      transition={{ duration: 1, ease: [0.55, 0, 0.1, 1], delay: 0.15 }}
+      cx="160.5"
+      cy="280"
+      rx="110"
+      ry="48"
+      fill="rgba(255,255,255,0.14)"
+    />
+  </motion.svg>
+)
+
+const BGRects = () => (
+  <motion.svg
+    viewBox="0 0 320 384"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    variants={{ hover: { scale: 1.05 } }}
+    transition={{ duration: 1, ease: [0.55, 0, 0.1, 1] }}
+    style={styles.priceBg}
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <motion.rect
+      x="14"
+      width="153"
+      height="153"
+      rx="18"
+      fill="rgba(255,255,255,0.15)"
+      variants={{ hover: { y: 219, rotate: '90deg', scaleX: 2 } }}
+      style={{ y: 12 }}
+      transition={{ delay: 0.2, duration: 1, ease: [0.55, 0, 0.1, 1] }}
+    />
+    <motion.rect
+      x="155"
+      width="153"
+      height="153"
+      rx="18"
+      fill="rgba(255,255,255,0.13)"
+      variants={{ hover: { y: 12, rotate: '90deg', scaleX: 2 } }}
+      style={{ y: 219 }}
+      transition={{ delay: 0.2, duration: 1, ease: [0.55, 0, 0.1, 1] }}
+    />
+  </motion.svg>
+)
+
+const BGDiamonds = () => (
+  <motion.svg
+    viewBox="0 0 320 384"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    variants={{ hover: { scale: 1.2 } }}
+    transition={{ duration: 1, ease: [0.55, 0, 0.1, 1] }}
+    style={styles.priceBg}
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <motion.path
+      variants={{ hover: { y: -50 } }}
+      transition={{ delay: 0.3, duration: 1, ease: [0.55, 0, 0.1, 1] }}
+      d="M148.893 157.531C154.751 151.673 164.249 151.673 170.107 157.531L267.393 254.818C273.251 260.676 273.251 270.173 267.393 276.031L218.75 324.674C186.027 357.397 132.973 357.397 100.25 324.674L51.6068 276.031C45.7489 270.173 45.7489 260.676 51.6068 254.818L148.893 157.531Z"
+      fill="rgba(255,255,255,0.13)"
+    />
+    <motion.path
+      variants={{ hover: { y: -50 } }}
+      transition={{ delay: 0.2, duration: 1, ease: [0.55, 0, 0.1, 1] }}
+      d="M148.893 99.069C154.751 93.2111 164.249 93.2111 170.107 99.069L267.393 196.356C273.251 202.213 273.251 211.711 267.393 217.569L218.75 266.212C186.027 298.935 132.973 298.935 100.25 266.212L51.6068 217.569C45.7489 211.711 45.7489 202.213 51.6068 196.356L148.893 99.069Z"
+      fill="rgba(255,255,255,0.15)"
+    />
+    <motion.path
+      variants={{ hover: { y: -50 } }}
+      transition={{ delay: 0.1, duration: 1, ease: [0.55, 0, 0.1, 1] }}
+      d="M148.893 40.6066C154.751 34.7487 164.249 34.7487 170.107 40.6066L267.393 137.893C273.251 143.751 273.251 153.249 267.393 159.106L218.75 207.75C186.027 240.473 132.973 240.473 100.25 207.75L51.6068 159.106C45.7489 153.249 45.7489 143.751 51.6068 137.893L148.893 40.6066Z"
+      fill="rgba(255,255,255,0.17)"
+    />
+  </motion.svg>
+)
 
 export default function CareKits() {
   const sectionRef = useRef(null)
@@ -497,7 +665,7 @@ export default function CareKits() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             style={styles.sectionH2}
           >
-            Built for kids navigating <span style={styles.h2Em}>big moments</span>.
+            Built for kids navigating <span style={styles.h2Em}>big moments.</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -676,8 +844,8 @@ export default function CareKits() {
                 icon: Mail,
                 color: '#F7941D',
                 step: '05',
-                title: 'A thank you finds you',
-                desc: 'You receive a card sent in the child’s name so you know exactly when your kit arrived.',
+                title: 'A card in your name',
+                desc: 'Tucked inside the kit, a small card carries your name and a note that shares your generosity with the child who receives it.',
               },
             ].map((s, i) => {
               const Icon = s.icon
@@ -693,7 +861,7 @@ export default function CareKits() {
                     boxShadow: '0 18px 38px rgba(26,58,107,0.12)',
                     transition: { type: 'spring', stiffness: 280, damping: 18 },
                   }}
-                  style={styles.stepCard}
+                  style={{ ...styles.stepCard, gridColumn: i < 3 ? 'span 2' : 'span 3' }}
                 >
                   <div style={styles.stepHeaderRow}>
                     <span style={{ ...styles.stepIconWrap, background: `${s.color}18` }}>
@@ -710,9 +878,9 @@ export default function CareKits() {
         </div>
       </section>
 
-      {/* SPONSOR / OUTRO CTA */}
-      <section id="sponsor" style={styles.outro}>
-        <div style={styles.outroInner}>
+      {/* DONATE / SPONSOR (merged pricing + outro) */}
+      <section id="sponsor" style={styles.sponsorSection}>
+        <div style={styles.sectionInner}>
           <motion.span
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -727,7 +895,7 @@ export default function CareKits() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={styles.outroH2}
+            style={styles.sponsorH2}
           >
             One kit can change a{' '}
             <SparklesText
@@ -736,28 +904,74 @@ export default function CareKits() {
               count={12}
               textStyle={{ color: '#FBB040' }}
             />
-            .
+            <span style={{ color: '#FBB040' }}>.</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            style={styles.outroP}
+            style={styles.sponsorLead}
           >
             Every sponsored kit goes directly to a child who needs one. Your contribution
-            funds the supplies, the carry pouch, and the hands that pack it.
+            funds the supplies and the carry pouch. This is a
+            donation, not a product purchase.
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            style={styles.outroCtaRow}
+
+          <div style={styles.priceGrid}>
+            <PricingCard
+              label="Education Kit"
+              comingSoon
+              description="Stationery essentials and a small comfort item, hand packed for one child in the Greater Toronto Area."
+              items={[
+                'Pencils and coloured pencils',
+                'Calculator',
+                'Ruler and sharpener',
+                'Erasers',
+                'Mini plushie',
+                'Handwritten note',
+              ]}
+              background="linear-gradient(155deg, #6B2D8B 0%, #4A1E61 100%)"
+              BGComponent={BGCircles}
+            />
+            <PricingCard
+              label="Comfort Kit"
+              comingSoon
+              description="A care package for kids spending time in hospital wards or family shelters. Currently in development."
+              items={[
+                'Soft fleece blanket',
+                'Cuddle plushie',
+                'Activity booklet',
+                'Volunteer note',
+              ]}
+              background="linear-gradient(155deg, #EE3093 0%, #B91F70 100%)"
+              BGComponent={BGRects}
+            />
+            <PricingCard
+              label="Health Kit"
+              comingSoon
+              description="Hygiene and wellness essentials for kids in shelters, hospitals, and transitional homes. Launching later this year."
+              items={[
+                'Toothbrush and toothpaste',
+                'Bandages and first aid basics',
+                'Reusable water bottle',
+                'Daily multivitamins',
+                'Wellness activity booklet',
+              ]}
+              background="linear-gradient(155deg, #14B8A6 0%, #0D7A6F 100%)"
+              BGComponent={BGDiamonds}
+            />
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={styles.priceFootnote}
           >
-            <a href="#sponsor" style={styles.heroPrimary}>Sponsor a Kit</a>
-            <a href="/#mission" style={styles.outroGhost}>Our Mission →</a>
-          </motion.div>
+            100% of your gift funds the supplies and the carry pouch.
+          </motion.p>
         </div>
       </section>
 
@@ -1147,7 +1361,8 @@ const styles = {
   // --- Creating a Kit Today (step process) ---
   stepsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+    gridTemplateColumns: 'repeat(6, 1fr)',
+    gridTemplateRows: 'auto auto',
     gap: 16,
   },
   stepCard: {
@@ -1155,12 +1370,13 @@ const styles = {
     background: '#FFFFFF',
     border: '1px solid rgba(26,58,107,0.10)',
     borderRadius: 18,
-    padding: '22px 22px 24px',
+    padding: '22px 18px 24px',
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
     boxShadow: '0 4px 20px rgba(26,58,107,0.06)',
     cursor: 'default',
+    overflow: 'hidden',
   },
   stepHeaderRow: {
     display: 'flex',
@@ -1186,16 +1402,204 @@ const styles = {
   stepTitle: {
     fontFamily: "'Poppins', sans-serif",
     fontWeight: 700,
-    fontSize: '1.02rem',
+    fontSize: '0.95rem',
     color: '#1A3A6B',
-    letterSpacing: '-0.01em',
+    letterSpacing: '-0.015em',
     lineHeight: 1.25,
+    whiteSpace: 'nowrap',
   },
   stepDesc: {
     fontFamily: "'DM Sans', sans-serif",
     fontSize: '0.92rem',
     lineHeight: 1.55,
     color: 'rgba(26,26,26,0.68)',
+  },
+
+  // --- Donation / Pricing cards (squishy hover) ---
+  priceGrid: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 22,
+    marginBottom: 36,
+  },
+  priceCard: {
+    position: 'relative',
+    width: 320,
+    minHeight: 540,
+    flexShrink: 0,
+    overflow: 'hidden',
+    borderRadius: 22,
+    padding: 30,
+    paddingBottom: 84,
+    boxShadow: '0 14px 38px rgba(26,58,107,0.18)',
+    color: '#FFFFFF',
+    cursor: 'default',
+  },
+  priceBg: {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 0,
+    pointerEvents: 'none',
+  },
+  priceContent: {
+    position: 'relative',
+    zIndex: 2,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+  },
+  priceLabel: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    width: 'fit-content',
+    background: 'rgba(255,255,255,0.22)',
+    backdropFilter: 'blur(8px)',
+    border: '1px solid rgba(255,255,255,0.28)',
+    color: '#FFFFFF',
+    padding: '5px 14px',
+    borderRadius: 100,
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.8rem',
+    letterSpacing: '0.04em',
+  },
+  priceAmount: {
+    display: 'block',
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
+    fontWeight: 900,
+    fontSize: '3.4rem',
+    lineHeight: 1.05,
+    transformOrigin: 'top left',
+    letterSpacing: '-0.02em',
+    marginTop: 4,
+  },
+  priceCurrency: {
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    letterSpacing: 0,
+    opacity: 0.88,
+  },
+  pricePer: {
+    display: 'block',
+    fontSize: '0.95rem',
+    fontWeight: 600,
+    opacity: 0.78,
+    marginTop: -4,
+  },
+  priceAmountMuted: {
+    display: 'block',
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 800,
+    fontSize: '2.4rem',
+    lineHeight: 1.1,
+    letterSpacing: '-0.02em',
+    marginTop: 4,
+    color: 'rgba(255,255,255,0.95)',
+  },
+  priceDesc: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '0.97rem',
+    lineHeight: 1.55,
+    color: 'rgba(255,255,255,0.92)',
+    margin: '4px 0 6px',
+  },
+  priceList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  priceItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 10,
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '0.94rem',
+    lineHeight: 1.4,
+    color: 'rgba(255,255,255,0.95)',
+  },
+  priceBtn: {
+    position: 'absolute',
+    bottom: 18,
+    left: 18,
+    right: 18,
+    zIndex: 3,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '13px 18px',
+    borderRadius: 12,
+    background: '#FFFFFF',
+    color: '#1A1A1A',
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
+    fontWeight: 800,
+    fontSize: '0.92rem',
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase',
+    textDecoration: 'none',
+    border: '2px solid #FFFFFF',
+    transition: 'background 0.2s ease, color 0.2s ease',
+  },
+  priceBtnDisabled: {
+    position: 'absolute',
+    bottom: 18,
+    left: 18,
+    right: 18,
+    zIndex: 3,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '13px 18px',
+    borderRadius: 12,
+    background: 'rgba(255,255,255,0.18)',
+    color: 'rgba(255,255,255,0.85)',
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
+    fontWeight: 700,
+    fontSize: '0.82rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    border: '1.5px dashed rgba(255,255,255,0.4)',
+    cursor: 'not-allowed',
+  },
+  priceFootnote: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '0.86rem',
+    lineHeight: 1.6,
+    color: 'rgba(26,58,107,0.6)',
+    textAlign: 'center',
+    maxWidth: 620,
+    margin: '0 auto',
+    fontStyle: 'italic',
+  },
+
+  // --- Merged Sponsor / Donate section (centered) ---
+  sponsorSection: {
+    position: 'relative',
+    padding: '0 24px clamp(100px, 14vh, 160px)',
+    textAlign: 'center',
+  },
+  sponsorH2: {
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 800,
+    fontSize: 'clamp(2.1rem, 4.6vw, 3.4rem)',
+    lineHeight: 1.1,
+    letterSpacing: '-0.025em',
+    color: '#1A3A6B',
+    margin: '0 auto 22px',
+    maxWidth: 820,
+  },
+  sponsorLead: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 'clamp(1rem, 1.25vw, 1.18rem)',
+    lineHeight: 1.7,
+    color: 'rgba(26,26,26,0.72)',
+    maxWidth: 720,
+    margin: '0 auto 48px',
   },
   cardGrid: {
     display: 'grid',
@@ -1245,52 +1649,4 @@ const styles = {
     margin: 0,
   },
 
-  // --- Outro / Sponsor CTA ---
-  outro: {
-    position: 'relative',
-    padding: '140px 24px 160px',
-    textAlign: 'center',
-    overflow: 'hidden',
-  },
-  outroInner: {
-    position: 'relative',
-    maxWidth: 820,
-    margin: '0 auto',
-  },
-  outroH2: {
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: 800,
-    fontSize: 'clamp(2rem, 4.6vw, 3.4rem)',
-    lineHeight: 1.1,
-    letterSpacing: '-0.02em',
-    color: '#1A3A6B',
-    marginBottom: 18,
-  },
-  outroP: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 'clamp(1rem, 1.2vw, 1.15rem)',
-    lineHeight: 1.7,
-    color: 'rgba(26,26,26,0.7)',
-    marginBottom: 32,
-  },
-  outroCtaRow: {
-    display: 'flex',
-    gap: 16,
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
-  outroGhost: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    padding: '14px 26px',
-    borderRadius: 100,
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.95rem',
-    color: '#1A3A6B',
-    border: '1.5px solid rgba(26,58,107,0.25)',
-    background: 'rgba(255,255,255,0.6)',
-    backdropFilter: 'blur(10px)',
-    textDecoration: 'none',
-  },
 }

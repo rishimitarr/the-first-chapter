@@ -208,7 +208,7 @@ const styles = {
   strip: {
     position: 'relative',
     overflow: 'hidden',
-    height: 52,
+    height: 8,
   },
   shine: {
     position: 'absolute',
