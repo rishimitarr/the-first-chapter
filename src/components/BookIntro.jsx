@@ -151,7 +151,7 @@ function makeStyles(W, H, D, logoSize, coverLogoSize, chapterFontSize, coverTitl
       width: logoSize, height: 'auto', objectFit: 'contain', mixBlendMode: 'multiply',
     },
     chapterLabel: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
       fontWeight: 600,
       fontSize: `${chapterFontSize}px`,
       color: '#1A3A6B',
@@ -178,7 +178,7 @@ function makeStyles(W, H, D, logoSize, coverLogoSize, chapterFontSize, coverTitl
       filter: 'brightness(0) invert(1)', opacity: 0.9,
     },
     coverTitle: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
       fontWeight: 700,
       fontSize: `${coverTitleFontSize}px`,
       color: 'rgba(255,255,255,0.85)',
@@ -195,7 +195,7 @@ function makeStyles(W, H, D, logoSize, coverLogoSize, chapterFontSize, coverTitl
       transform: 'rotateY(180deg)',
     },
     hint: {
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontSize: `${Math.round(W * 0.036)}px`,
       color: 'rgba(26,58,107,0.4)',
       letterSpacing: '0.06em',

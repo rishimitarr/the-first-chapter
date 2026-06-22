@@ -1,12 +1,12 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 
 const mosaicImages = [
-  { src: '/mission-children.jpg',                    alt: 'Children learning', tall: true },
-  { src: '/cheng-lin-XHVDuroLbrs-unsplash.jpg',      alt: 'Community' },
-  { src: '/jason-hu-oumTYrBrkoA-unsplash.jpg',       alt: 'Education' },
-  { src: '/vitaly-gariev-axUZuU0nBNI-unsplash.jpg',  alt: 'Children' },
-  { src: '/vitaly-gariev-lGGuf8LSxa4-unsplash.jpg',  alt: 'Impact' },
+  { src: '/mission-children.jpg',                    alt: 'Children learning', tall: true, credit: 'Marisa Howenstine' },
+  { src: '/cheng-lin-XHVDuroLbrs-unsplash.jpg',      alt: 'Community',         credit: 'Cheng Lin' },
+  { src: '/jason-hu-oumTYrBrkoA-unsplash.jpg',       alt: 'Education',         credit: 'Jason Hu' },
+  { src: '/vitaly-gariev-axUZuU0nBNI-unsplash.jpg',  alt: 'Children',          credit: 'Vitaly Gariev' },
+  { src: '/vitaly-gariev-lGGuf8LSxa4-unsplash.jpg',  alt: 'Impact',            credit: 'Vitaly Gariev' },
 ]
 
 function MosaicCell({ img, index, tall }) {
@@ -35,23 +35,24 @@ function MosaicCell({ img, index, tall }) {
         animate={{ scale: hovered ? 1.08 : 1 }}
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       />
+      <span style={styles.mosaicCredit}>{img.credit}</span>
     </motion.div>
   )
 }
 
 const cards = [
   {
-    color: '#6B2D8B',
+    accent: '#1A3A6B',
     title: 'Education & Health',
     body: 'We champion access to quality learning resources by building and distributing educational kits, funding aligned charitable organizations, and supplying the tools children need to thrive, while raising funds for mental wellness and physical health so every child grows up safe, supported, and ready to learn.',
   },
   {
-    color: '#0099D6',
+    accent: '#0099D6',
     title: 'Community Impact',
     body: 'Rooted right here in the GTA, we work alongside local organizations, families, and volunteers to create lasting, meaningful change in the neighbourhoods where children live and grow.',
   },
   {
-    color: '#F7941D',
+    accent: '#F7941D',
     title: 'Raising Awareness',
     body: "We advocate loudly for children's rights and needs, organizing events and campaigns that bring communities together around what matters most: giving every child a fair and equal chance.",
   },
@@ -59,20 +60,14 @@ const cards = [
 
 function Card({ card, index }) {
   const controls = useAnimation()
-  const hoverCountRef = useRef(0)
   const [hovered, setHovered] = useState(false)
 
   const handleHoverStart = () => {
-    hoverCountRef.current += 1
-    // odd hover = tilt left, even hover = tilt right
-    const rotate = hoverCountRef.current % 2 === 1 ? -1.8 : 1.8
     setHovered(true)
     controls.start({
-      y: -12,
-      rotate,
-      scale: 1.03,
-      boxShadow: `0 20px 44px ${card.color}44`,
-      transition: { type: 'spring', stiffness: 280, damping: 18 },
+      y: -6,
+      boxShadow: '0 16px 40px rgba(0,0,0,0.13)',
+      transition: { duration: 0.22, ease: 'easeOut' },
     })
   }
 
@@ -80,26 +75,24 @@ function Card({ card, index }) {
     setHovered(false)
     controls.start({
       y: 0,
-      rotate: 0,
-      scale: 1,
-      boxShadow: '0 4px 20px rgba(0,0,0,0.07)',
-      transition: { type: 'spring', stiffness: 280, damping: 18 },
+      boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+      transition: { duration: 0.22, ease: 'easeOut' },
     })
   }
 
   return (
     <motion.div
       style={styles.block}
-      initial={{ opacity: 0, y: 70, rotate: -3 }}
-      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+      initial={{ opacity: 0, y: 48 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ type: 'spring', stiffness: 110, damping: 14, delay: index * 0.18 }}
+      transition={{ duration: 0.65, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       animate={controls}
       onHoverStart={handleHoverStart}
       onHoverEnd={handleHoverEnd}
     >
-      {/* Colored header strip — no letter, just the color + shine */}
-      <div style={{ ...styles.strip, background: card.color }}>
+      {/* Colored header strip , no letter, just the color + shine */}
+      <div style={{ ...styles.strip, background: card.accent }}>
         <motion.div
           style={styles.shine}
           animate={hovered ? { x: '130%', opacity: 0.22 } : { x: '-40%', opacity: 0 }}
@@ -109,7 +102,7 @@ function Card({ card, index }) {
 
       {/* Body */}
       <div style={styles.body}>
-        <h3 style={{ ...styles.cardTitle, color: card.color }}>{card.title}</h3>
+        <h3 style={styles.cardTitle}>{card.title}</h3>
         <p style={styles.cardBody}>{card.body}</p>
       </div>
     </motion.div>
@@ -124,10 +117,10 @@ export default function Mission() {
         <div style={styles.header} className="mission-header">
           <div style={styles.headerLeft}>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.5 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
               <span className="section-tag">Our Mission</span>
               <h2 className="section-h2" style={{ marginTop: 8, maxWidth: 500 }}>
@@ -138,10 +131,10 @@ export default function Mission() {
           </div>
           <motion.div
             style={styles.headerRight}
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.65, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
             <div style={styles.mosaic} className="mission-mosaic">
               {mosaicImages.map((img, i) => (
@@ -163,7 +156,7 @@ export default function Mission() {
 }
 
 const styles = {
-  section: { padding: '96px 0', background: '#fff' },
+  section: { padding: '72px 0', background: '#fff' },
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -177,15 +170,26 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1.1fr 1fr 1fr',
     gridTemplateRows: '1fr 1fr',
-    gap: 10,
+    gap: 8,
     height: 360,
-    borderRadius: 20,
+    borderRadius: 6,
     overflow: 'hidden',
   },
   mosaicCell: {
     overflow: 'hidden',
-    borderRadius: 12,
+    borderRadius: 4,
     position: 'relative',
+  },
+  mosaicCredit: {
+    position: 'absolute',
+    bottom: 6,
+    right: 7,
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.55rem',
+    color: 'rgba(255,255,255,0.38)',
+    letterSpacing: '0.02em',
+    pointerEvents: 'none',
+    lineHeight: 1,
   },
   mosaicImg: {
     width: '100%',
@@ -200,10 +204,11 @@ const styles = {
   },
   block: {
     background: '#fff',
-    borderRadius: 20,
+    borderRadius: 6,
     overflow: 'hidden',
     cursor: 'default',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.07)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+    border: '1px solid rgba(0,0,0,0.06)',
   },
   strip: {
     position: 'relative',
@@ -220,18 +225,18 @@ const styles = {
     pointerEvents: 'none',
   },
   body: {
-    padding: '24px 28px 28px',
+    padding: '28px 32px 32px',
   },
   cardTitle: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
-    fontSize: '1.1rem',
-    marginBottom: 12,
-    lineHeight: 1.3,
+    fontSize: '1.5rem',
+    marginBottom: 14,
+    lineHeight: 1.2,
   },
   cardBody: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: '0.91rem',
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1.05rem',
     lineHeight: 1.75,
     color: '#555',
     margin: 0,

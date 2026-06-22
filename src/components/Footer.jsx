@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
 const navLinks = [
-  { label: 'Our Mission', href: '#mission', route: false },
-  { label: 'About Us', href: '#about', route: false },
+  { label: 'Our Mission', href: '/mission', route: true },
+  { label: 'About Us', href: '/about', route: true },
   { label: 'Care Kits', href: '/care-kits', route: true },
-  { label: 'Join Our Team', href: '#join', route: false },
+  { label: 'Join Our Team', href: '/#join', route: false },
 ]
 
 export default function Footer() {
@@ -103,29 +103,28 @@ const styles = {
     alignSelf: 'flex-start',
   },
   tagline: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: '0.9rem',
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
     color: 'rgba(255,255,255,0.65)',
-    lineHeight: 1.5,
-    whiteSpace: 'nowrap',
+    lineHeight: 1.6,
     textAlign: 'left',
   },
   colLabel: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
-    fontSize: '0.78rem',
+    fontSize: '0.88rem',
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
     color: '#FFFFFF',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   footerLink: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: '0.88rem',
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
     color: 'rgba(255,255,255,0.70)',
     transition: 'color 0.2s',
     cursor: 'pointer',
-    lineHeight: 1.6,
+    lineHeight: 1.7,
   },
   igBtn: {
     display: 'inline-flex',
@@ -133,8 +132,8 @@ const styles = {
     justifyContent: 'center',
     width: 40,
     height: 40,
-    borderRadius: '50%',
-    border: '1.5px solid rgba(255,255,255,0.30)',
+    borderRadius: 4,
+    border: '1.5px solid rgba(255,255,255,0.28)',
     color: '#fff',
     transition: 'border-color 0.2s, background 0.2s',
     cursor: 'pointer',
@@ -144,7 +143,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 28,
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.78rem',
     color: 'rgba(255,255,255,0.40)',
     flexWrap: 'wrap',

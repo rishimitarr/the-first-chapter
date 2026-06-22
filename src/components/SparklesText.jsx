@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-// SparklesText — drop-in inline span that renders the given text with
+// SparklesText , drop-in inline span that renders the given text with
 // brand-colored sparkles drifting around it. Inherits parent typography
 // by default; pass `textStyle` to color/style the inner text.
 export default function SparklesText({
   text,
-  colors = { first: '#6B2D8B', second: '#FBB040' },
+  colors = { first: '#1A3A6B', second: '#FBB040' },
   count = 10,
   style,
   textStyle,

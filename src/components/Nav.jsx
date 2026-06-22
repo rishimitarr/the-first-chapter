@@ -28,8 +28,7 @@ const linkVariants = {
 }
 
 const defaultLinks = [
-  { label: 'Our Mission', href: '/#mission' },
-  { label: 'About Us', href: '/#about' },
+  { label: 'About Us', href: '/about', route: true },
   { label: 'Care Kits', href: '/care-kits', route: true },
   { label: 'Join Us', href: '/#join' },
 ]
@@ -56,8 +55,11 @@ export default function Nav() {
     return l.href
   }
 
-  const ctaHref = onCareKits ? '#sponsor' : (location.pathname === '/' ? '#join' : '/#join')
-  const ctaLabel = onCareKits ? 'Sponsor a Kit' : 'Get Involved'
+  const onCareKitsLanding = location.pathname === '/care-kits'
+  const ctaHref = onCareKits
+    ? (onCareKitsLanding ? '#our-kits' : '#sponsor')
+    : (location.pathname === '/' ? '#join' : '/#join')
+  const ctaLabel = onCareKits ? (onCareKitsLanding ? 'See Our Kits' : 'Sponsor a Kit') : 'Get Involved'
 
   return (
     <motion.nav
@@ -116,7 +118,7 @@ export default function Nav() {
             href={ctaHref}
             style={styles.ctaBtn}
             variants={linkVariants}
-            whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(107,45,139,0.45)' }}
+            whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(26,58,107,0.45)' }}
             whileTap={{ scale: 0.97 }}
           >
             {ctaLabel}
@@ -232,7 +234,7 @@ const styles = {
   rainbow: {
     height: 6,
     background:
-      'linear-gradient(to right, #6B2D8B 0% 16.6%, #0099D6 16.6% 33.2%, #39B54A 33.2% 49.8%, #F7941D 49.8% 66.4%, #EE3093 66.4% 83%, #FBB040 83% 100%)',
+      'linear-gradient(to right, #F07000 0% 14.285%, #003078 14.285% 28.57%, #0090B8 28.57% 42.855%, #58A018 42.855% 57.14%, #E81858 57.14% 71.425%, #682090 71.425% 85.71%, #FFB000 85.71% 100%)',
   },
   inner: {
     display: 'flex',
@@ -241,7 +243,7 @@ const styles = {
     maxWidth: 1160,
     margin: '0 auto',
     padding: '0 24px',
-    height: 114,
+    height: 150,
   },
   logoWrap: {
     display: 'flex',
@@ -249,7 +251,7 @@ const styles = {
     flexShrink: 0,
   },
   logoImg: {
-    height: 100,
+    height: 160,
     width: 'auto',
     objectFit: 'contain',
     mixBlendMode: 'multiply',
@@ -257,29 +259,30 @@ const styles = {
   linksWrap: {
     display: 'flex',
     alignItems: 'center',
-    gap: 4,
+    gap: 8,
   },
   navLink: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontWeight: 500,
-    fontSize: '0.9rem',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    fontSize: '1.25rem',
     color: '#1A1A1A',
-    padding: '8px 14px',
+    padding: '10px 18px',
     borderRadius: 8,
     cursor: 'pointer',
     transition: 'color 0.2s',
   },
   ctaBtn: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.9rem',
     color: '#fff',
-    background: '#6B2D8B',
+    background: '#1A3A6B',
     padding: '10px 22px',
-    borderRadius: 100,
+    borderRadius: 4,
     marginLeft: 8,
     cursor: 'pointer',
     display: 'inline-block',
+    letterSpacing: '0.01em',
   },
   hamburger: {
     display: 'flex',
@@ -307,7 +310,7 @@ const styles = {
     overflow: 'hidden',
   },
   mobileLink: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontWeight: 500,
     fontSize: '1rem',
     color: '#1A1A1A',
@@ -318,23 +321,23 @@ const styles = {
   mobileCta: {
     display: 'inline-block',
     marginTop: 16,
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
     color: '#fff',
-    background: '#6B2D8B',
+    background: '#1A3A6B',
     padding: '12px 24px',
-    borderRadius: 100,
+    borderRadius: 4,
     textAlign: 'center',
   },
   homeBtn: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.9rem',
     color: '#fff',
     background: '#F7941D',
     padding: '10px 22px',
-    borderRadius: 100,
+    borderRadius: 4,
     marginLeft: 8,
     cursor: 'pointer',
     display: 'inline-flex',
@@ -345,13 +348,13 @@ const styles = {
   mobileHome: {
     display: 'inline-block',
     marginTop: 10,
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
     color: '#fff',
     background: '#F7941D',
     padding: '12px 24px',
-    borderRadius: 100,
+    borderRadius: 4,
     textAlign: 'center',
   },
 }

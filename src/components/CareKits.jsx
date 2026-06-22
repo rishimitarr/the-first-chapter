@@ -1,5 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useScroll, useAnimation } from 'framer-motion'
+
+const fromLeft = {
+  hidden: { opacity: 0, x: -150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
+  visible: { opacity: 1, x: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+}
+const fromRight = {
+  hidden: { opacity: 0, x: 150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
+  visible: { opacity: 1, x: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+}
+const fromBottom = {
+  hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+}
 import {
   Backpack,
   Heart,
@@ -21,12 +34,12 @@ import Footer from './Footer'
 import SparklesText from './SparklesText'
 
 // =====================================================================
-//  KIT SCROLL ANIMATION — TIMING KNOBS
+//  KIT SCROLL ANIMATION , TIMING KNOBS
 //  --------------------------------------------------------------------
 //  Four numbers control how the kit animates as the user scrolls.
 //  Tweak only these; nothing else needs to change.
 //
-//  1. SCROLL_START          — when the animation begins.
+//  1. SCROLL_START          , when the animation begins.
 //                             Higher % = starts EARLIER in the scroll.
 //                             Lower  % = starts LATER (closed kit visible
 //                             longer before it opens).
@@ -34,17 +47,17 @@ import SparklesText from './SparklesText'
 //                                    '100%' (very early, kit off-screen).
 //                             Try: '40%', '50%', '60%'.
 //
-//  2. ANIM_END              — fraction of the scroll range used to play
+//  2. ANIM_END              , fraction of the scroll range used to play
 //                             back the frames. Lower = animation finishes
 //                             faster; higher = stretches longer.
 //                             Range: 0.30 to 0.90.
 //
-//  3. SECTION_HEIGHT_VH     — total height of the scroll section in vh.
+//  3. SECTION_HEIGHT_VH     , total height of the scroll section in vh.
 //                             Bigger = more scroll room around the
 //                             animation; smaller = whole thing is tighter.
 //                             Range: 120 to 220.
 //
-//  4. FRAME_LERP            — frame-catchup smoothing per render tick.
+//  4. FRAME_LERP            , frame-catchup smoothing per render tick.
 //                             Lower = smoother, more video-like, slight
 //                             lag. Higher = snappier, more 1:1 with
 //                             scroll. Range: 0.15 to 0.45.
@@ -63,9 +76,9 @@ const framePath = (i) =>
 // Single page-wide background. Every section under the hero uses this,
 // so the scroll-animation section doesn't have a visible border against
 // the outro section above or below it.
-const PAGE_BG = '#F4F6FB'
+const PAGE_BG = '#fff'
 
-// Card with hover-tilt + colored shine — same animation pattern as the
+// Card with hover-tilt + colored shine , same animation pattern as the
 // Mission cards on the main page so the Care Kits page reads as part of
 // the same site.
 function CraftCard({ card, index }) {
@@ -92,7 +105,7 @@ function CraftCard({ card, index }) {
       y: 0,
       rotate: 0,
       scale: 1,
-      boxShadow: '0 4px 20px rgba(26,58,107,0.07)',
+      boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
       transition: { type: 'spring', stiffness: 280, damping: 18 },
     })
   }
@@ -100,10 +113,6 @@ function CraftCard({ card, index }) {
   return (
     <motion.div
       style={styles.craftCard}
-      initial={{ opacity: 0, y: 70, rotate: -3 }}
-      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ type: 'spring', stiffness: 110, damping: 14, delay: index * 0.1 }}
       animate={controls}
       onHoverStart={handleHoverStart}
       onHoverEnd={handleHoverEnd}
@@ -168,7 +177,7 @@ function KitButton({ href, isMobile }) {
   )
 }
 
-// Squishy pricing card — uses framer-motion variant propagation so the
+// Squishy pricing card , uses framer-motion variant propagation so the
 // outer "hover" state animates the background SVG shapes and the price
 // type simultaneously. Coming-soon variants are inert on hover.
 function PricingCard({
@@ -238,7 +247,7 @@ function PricingCard({
   )
 }
 
-// Background shapes — three different SVGs that squish on the parent
+// Background shapes , three different SVGs that squish on the parent
 // card's "hover" variant. Soft, abstract, on-brand.
 const BGCircles = () => (
   <motion.svg
@@ -488,7 +497,7 @@ export default function CareKits() {
     <div style={{ background: PAGE_BG, color: '#1A1A1A' }}>
       <Nav />
 
-      {/* HERO — mirrors main page Hero: photo bg, dark overlay, white type,
+      {/* HERO , mirrors main page Hero: photo bg, dark overlay, white type,
           #FBB040 accent on the emphasis word. */}
       <section style={styles.hero}>
         <img src="/care-kits-hero.jpg" alt="" aria-hidden="true" style={styles.heroBg} />
@@ -540,7 +549,7 @@ export default function CareKits() {
           >
             <KitButton href="#the-kit" isMobile={isMobile} />
             <a href="#sponsor" className="btn-glass" style={styles.heroGhost}>
-              Sponsor a Kit →
+              Sponsor a Kit
             </a>
           </motion.div>
         </div>
@@ -549,7 +558,7 @@ export default function CareKits() {
       {/* SCROLL ANIMATION */}
       <section ref={sectionRef} id="the-kit" style={styles.scrollSection}>
         <div style={styles.sticky}>
-          {/* Section label — bigger now, sits in the upper band so the
+          {/* Section label , bigger now, sits in the upper band so the
               exploded kit at the end of the animation never collides. */}
           <div style={styles.kitLabelWrap}>
             <span style={styles.kitEyebrow}>Presenting</span>
@@ -578,44 +587,30 @@ export default function CareKits() {
       {/* WHAT'S INSIDE */}
       <section id="whats-inside" style={styles.section}>
         <div style={styles.sectionInner}>
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            style={styles.sectionEyebrow}
+          <motion.div
+            variants={fromLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            What's Inside
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={styles.sectionH2}
-          >
+          <span style={styles.sectionEyebrow}>What's Inside</span>
+          <h2 style={styles.sectionH2}>
             Six supplies. One{' '}
             <span style={styles.h2Em}>complete kit.</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            style={styles.sectionLead}
-          >
+          </h2>
+          <p style={styles.sectionLead}>
             At its core, the Educational Kit is a stationery kit: the everyday supplies
             that make school feel possible. Pencils, erasers, rulers. The things most kids
             take for granted, and that children in crisis are the most likely to be without.
             We source each item carefully so the kit feels complete, not makeshift.
-          </motion.p>
+          </p>
 
           <div style={styles.insideGrid}>
             {[
               { icon: Heart,      color: '#EE3093', name: 'Mini Plushie',      desc: 'A small comfort plushie tucked into every kit because kids need more than supplies.' },
-              { icon: Pencil,     color: '#6B2D8B', name: 'Pencils',           desc: 'HB graphite pencils, pre-sharpened and ready for the first day back.' },
-              { icon: Palette,    color: '#0099D6', name: 'Coloured Pencils',  desc: 'A set of vibrant pencil crayons for creative work, art, and self-expression.' },
-              { icon: Calculator, color: '#39B54A', name: 'Calculator',        desc: 'A basic calculator to support math work across grade levels.' },
+              { icon: Pencil,     color: '#1A3A6B', name: 'Pencils',           desc: 'HB graphite pencils, ready to use and ready for the first day back.' },
+              { icon: Palette,    color: '#0099D6', name: 'Coloured Pencils',  desc: 'A set of vibrant pencil crayons for creative work, art, and self expression.' },
+              { icon: Calculator, color: '#1A3A6B', name: 'Calculator',        desc: 'A basic calculator to support math work across grade levels.' },
               { icon: Eraser,     color: '#F7941D', name: 'Erasers',           desc: 'Soft erasers that keep the page clean and mistakes easy to fix.' },
               { icon: Ruler,      color: '#14B8A6', name: 'Ruler and Sharpener', desc: 'A 30 cm ruler and a handheld sharpener so nothing stops the work.' },
             ].map((item, i) => {
@@ -623,10 +618,6 @@ export default function CareKits() {
               return (
                 <motion.div
                   key={item.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.55, delay: i * 0.07 }}
                   whileHover={{
                     y: -6,
                     boxShadow: '0 16px 36px rgba(26,58,107,0.10)',
@@ -643,335 +634,216 @@ export default function CareKits() {
               )
             })}
           </div>
+          </motion.div>
         </div>
       </section>
 
       {/* WHO IT'S FOR */}
       <section id="recipients" style={styles.section}>
         <div style={styles.sectionInner}>
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            style={styles.sectionEyebrow}
+          <motion.div
+            variants={fromBottom}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            Who It's For
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={styles.sectionH2}
-          >
-            Built for kids navigating <span style={styles.h2Em}>big moments.</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            style={styles.sectionLead}
-          >
-            Our Educational Kits go directly to children across the Greater Toronto Area
-            who are spending time in hospital wards, family shelters, foster placements,
-            and homes in transition. Education is one of the first things that pauses when
-            a child's life shifts. The kit is our small, real answer: a familiar set of
-            supplies that says you are still a student, still a kid, still on your way.
-          </motion.p>
+            <span style={styles.sectionEyebrow}>Who It's For</span>
+            <h2 style={styles.sectionH2}>
+              Built for kids navigating <span style={styles.h2Em}>big moments.</span>
+            </h2>
+            <p style={styles.sectionLead}>
+              Our Educational Kits go directly to children across the Greater Toronto Area
+              who are spending time in hospital wards, family shelters, foster placements,
+              and homes in transition. Education is one of the first things that pauses when
+              a child's life shifts. The kit is our small, real answer: a familiar set of
+              supplies that says you are still a student, still a kid, still on your way.
+            </p>
 
-          <div style={styles.statRow}>
-            {[
-              { k: 'GTA-wide', v: 'Hospitals, shelters, family programs' },
-              { k: 'Personalized', v: 'Each kit packed with a single child in mind' },
-              { k: 'No cost', v: 'Delivered to families and partners for free' },
-            ].map((s, i) => (
-              <motion.div
-                key={s.k}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.6, delay: 0.1 + i * 0.08 }}
-                whileHover={{
-                  y: -8,
-                  scale: 1.02,
-                  boxShadow: '0 16px 36px rgba(26,58,107,0.10)',
-                  transition: { type: 'spring', stiffness: 280, damping: 18 },
-                }}
-                style={styles.statCard}
-              >
-                <span style={styles.statKey}>{s.k}</span>
-                <span style={styles.statVal}>{s.v}</span>
-              </motion.div>
-            ))}
-          </div>
+            <div style={styles.statRow}>
+              {[
+                { k: 'Across the GTA', v: 'Hospitals, shelters, family programs' },
+                { k: 'Personalized', v: 'Each kit packed with a single child in mind' },
+                { k: 'No cost', v: 'Delivered to families and partners for free' },
+              ].map((s, i) => (
+                <motion.div
+                  key={s.k}
+                  whileHover={{
+                    y: -8,
+                    scale: 1.02,
+                    boxShadow: '0 16px 36px rgba(26,58,107,0.10)',
+                    transition: { type: 'spring', stiffness: 280, damping: 18 },
+                  }}
+                  style={styles.statCard}
+                >
+                  <span style={styles.statKey}>{s.k}</span>
+                  <span style={styles.statVal}>{s.v}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* HOW IT'S MADE */}
       <section id="craft" style={styles.section}>
         <div style={styles.sectionInner}>
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            style={styles.sectionEyebrow}
+          <motion.div
+            variants={fromRight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            How It's Made
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={styles.sectionH2}
-          >
-            Sourced thoughtfully. <span style={styles.h2Em}>Packed by hand.</span>
-          </motion.h2>
+            <span style={styles.sectionEyebrow}>How It's Made</span>
+            <h2 style={styles.sectionH2}>
+              Sourced thoughtfully. <span style={styles.h2Em}>Packed by hand.</span>
+            </h2>
 
-          <div style={styles.cardGrid}>
-            {[
-              {
-                color: '#6B2D8B',
-                title: 'Sourced with intent',
-                body:
-                  'Every supply is chosen for durability and child safety, with local Canadian suppliers prioritized whenever possible.',
-              },
-              {
-                color: '#0099D6',
-                title: 'Hand assembled',
-                body:
-                  'Volunteers pack each kit one at a time. No factory line. Just real hands, building one kit for one kid.',
-              },
-              {
-                color: '#39B54A',
-                title: 'Built to last',
-                body:
-                  'Reusable carry pouch, recyclable inserts, and zero single use plastic in the kit itself wherever we can avoid it.',
-              },
-              {
-                color: '#F7941D',
-                title: 'Shaped by educators',
-                body:
-                  'Contents are reviewed with teachers, child life specialists, and family workers so the kit actually fits the way kids learn and play.',
-              },
-              {
-                color: '#EE3093',
-                title: 'Personally addressed',
-                body:
-                  'Every kit is matched to a specific child where possible, with a small handwritten note from a volunteer included inside.',
-              },
-              {
-                color: '#14B8A6',
-                title: 'Delivered with care',
-                body:
-                  'We hand off kits directly to hospital staff, shelter workers, and family programs across the GTA so they reach kids fast.',
-              },
-            ].map((c, i) => (
-              <CraftCard key={c.title} card={c} index={i} />
-            ))}
-          </div>
+            <div style={styles.cardGrid}>
+              {[
+                { color: '#1A3A6B', title: 'Sourced with intent', body: 'Every supply is chosen for durability and child safety, with local Canadian suppliers prioritized whenever possible.' },
+                { color: '#0099D6', title: 'Hand assembled', body: 'Volunteers pack each kit one at a time. No factory line. Just real hands, building one kit for one kid.' },
+                { color: '#1A3A6B', title: 'Built to last', body: 'Reusable carry pouch, recyclable inserts, and zero single use plastic in the kit itself wherever we can avoid it.' },
+                { color: '#F7941D', title: 'Shaped by educators', body: 'Contents are reviewed with teachers, child life specialists, and family workers so the kit actually fits the way kids learn and play.' },
+                { color: '#EE3093', title: 'Personally addressed', body: 'Every kit is matched to a specific child where possible, with a small handwritten note from a volunteer included inside.' },
+                { color: '#14B8A6', title: 'Delivered with care', body: 'We hand off kits directly to hospital staff, shelter workers, and family programs across the GTA so they reach kids fast.' },
+              ].map((c, i) => (
+                <CraftCard key={c.title} card={c} index={i} />
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CREATING A KIT TODAY */}
       <section id="create-a-kit" style={styles.section}>
         <div style={styles.sectionInner}>
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            style={styles.sectionEyebrow}
+          <motion.div
+            variants={fromLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            Creating a Kit Today
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={styles.sectionH2}
-          >
-            From your gift to a{' '}
-            <span style={styles.h2Em}>child's hands.</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            style={styles.sectionLead}
-          >
-            Every kit starts with someone choosing to sponsor one. Here is exactly what
-            happens after you do, from the moment your donation comes in to the moment a
-            child opens their kit.
-          </motion.p>
+            <span style={styles.sectionEyebrow}>Creating a Kit Today</span>
+            <h2 style={styles.sectionH2}>
+              From your gift to a{' '}
+              <span style={styles.h2Em}>child's hands.</span>
+            </h2>
+            <p style={styles.sectionLead}>
+              Every kit starts with someone choosing to sponsor one. Here is exactly what
+              happens after you do, from the moment your donation comes in to the moment a
+              child opens their kit.
+            </p>
 
-          <div style={styles.stepsGrid}>
-            {[
-              {
-                icon: HandHeart,
-                color: '#EE3093',
-                step: '01',
-                title: 'You sponsor a kit',
-                desc: 'A single donation funds one full Educational Kit for one child in the Greater Toronto Area.',
-              },
-              {
-                icon: ShoppingBag,
-                color: '#0099D6',
-                step: '02',
-                title: 'We source the supplies',
-                desc: 'Pencils, plushie, calculator, ruler, and the rest. Bought from Canadian suppliers wherever possible.',
-              },
-              {
-                icon: PackageOpen,
-                color: '#6B2D8B',
-                step: '03',
-                title: 'Volunteers hand pack it',
-                desc: 'A volunteer assembles your kit one piece at a time, with a short handwritten note tucked inside.',
-              },
-              {
-                icon: Truck,
-                color: '#39B54A',
-                step: '04',
-                title: 'A child receives it',
-                desc: 'We deliver directly to hospital wards, family shelters, and partner programs across the GTA.',
-              },
-              {
-                icon: Mail,
-                color: '#F7941D',
-                step: '05',
-                title: 'A card in your name',
-                desc: 'Tucked inside the kit, a small card carries your name and a note that shares your generosity with the child who receives it.',
-              },
-            ].map((s, i) => {
-              const Icon = s.icon
-              return (
-                <motion.div
-                  key={s.step}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.55, delay: i * 0.08 }}
-                  whileHover={{
-                    y: -6,
-                    boxShadow: '0 18px 38px rgba(26,58,107,0.12)',
-                    transition: { type: 'spring', stiffness: 280, damping: 18 },
-                  }}
-                  style={{ ...styles.stepCard, gridColumn: i < 3 ? 'span 2' : 'span 3' }}
-                >
-                  <div style={styles.stepHeaderRow}>
-                    <span style={{ ...styles.stepIconWrap, background: `${s.color}18` }}>
-                      <Icon size={22} color={s.color} strokeWidth={2} />
-                    </span>
-                    <span style={{ ...styles.stepNumber, color: `${s.color}` }}>{s.step}</span>
-                  </div>
-                  <span style={styles.stepTitle}>{s.title}</span>
-                  <span style={styles.stepDesc}>{s.desc}</span>
-                </motion.div>
-              )
-            })}
-          </div>
+            <div style={styles.stepsGrid}>
+              {[
+                { icon: HandHeart, color: '#EE3093', step: '01', title: 'You sponsor a kit', desc: 'A single donation funds one full Educational Kit for one child in the Greater Toronto Area.' },
+                { icon: ShoppingBag, color: '#0099D6', step: '02', title: 'We source the supplies', desc: 'Pencils, plushie, calculator, ruler, and the rest. Bought from Canadian suppliers wherever possible.' },
+                { icon: PackageOpen, color: '#1A3A6B', step: '03', title: 'Volunteers hand pack it', desc: 'A volunteer assembles your kit one piece at a time, with a short handwritten note tucked inside.' },
+                { icon: Truck, color: '#1A3A6B', step: '04', title: 'A child receives it', desc: 'We deliver directly to hospital wards, family shelters, and partner programs across the GTA.' },
+                { icon: Mail, color: '#F7941D', step: '05', title: 'A card in your name', desc: 'Tucked inside the kit, a small card carries your name and a note that shares your generosity with the child who receives it.' },
+              ].map((s, i) => {
+                const Icon = s.icon
+                return (
+                  <motion.div
+                    key={s.step}
+                    whileHover={{
+                      y: -6,
+                      boxShadow: '0 18px 38px rgba(26,58,107,0.12)',
+                      transition: { type: 'spring', stiffness: 280, damping: 18 },
+                    }}
+                    style={{ ...styles.stepCard, gridColumn: i < 3 ? 'span 2' : 'span 3' }}
+                  >
+                    <div style={styles.stepHeaderRow}>
+                      <span style={{ ...styles.stepIconWrap, background: `${s.color}18` }}>
+                        <Icon size={22} color={s.color} strokeWidth={2} />
+                      </span>
+                      <span style={{ ...styles.stepNumber, color: `${s.color}` }}>{s.step}</span>
+                    </div>
+                    <span style={styles.stepTitle}>{s.title}</span>
+                    <span style={styles.stepDesc}>{s.desc}</span>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* DONATE / SPONSOR (merged pricing + outro) */}
       <section id="sponsor" style={styles.sponsorSection}>
         <div style={styles.sectionInner}>
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            style={styles.sectionEyebrow}
+          <motion.div
+            variants={fromBottom}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            Sponsor a Kit
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={styles.sponsorH2}
-          >
-            One kit can change a{' '}
-            <SparklesText
-              text="chapter"
-              colors={{ first: '#6B2D8B', second: '#FBB040' }}
-              count={12}
-              textStyle={{ color: '#FBB040' }}
-            />
-            <span style={{ color: '#FBB040' }}>.</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            style={styles.sponsorLead}
-          >
-            Every sponsored kit goes directly to a child who needs one. Your contribution
-            funds the supplies and the carry pouch. This is a
-            donation, not a product purchase.
-          </motion.p>
+            <span style={styles.sectionEyebrow}>Sponsor a Kit</span>
+            <h2 style={styles.sponsorH2}>
+              One kit can change a{' '}
+              <SparklesText
+                text="chapter"
+                colors={{ first: '#1A3A6B', second: '#FBB040' }}
+                count={12}
+                textStyle={{ color: '#FBB040' }}
+              />
+              <span style={{ color: '#FBB040' }}>.</span>
+            </h2>
+            <p style={styles.sponsorLead}>
+              Every sponsored kit goes directly to a child who needs one. Your contribution
+              funds the supplies and the carry pouch. This is a
+              donation, not a product purchase.
+            </p>
 
-          <div style={styles.priceGrid}>
-            <PricingCard
-              label="Education Kit"
-              comingSoon
-              description="Stationery essentials and a small comfort item, hand packed for one child in the Greater Toronto Area."
-              items={[
-                'Pencils and coloured pencils',
-                'Calculator',
-                'Ruler and sharpener',
-                'Erasers',
-                'Mini plushie',
-                'Handwritten note',
-              ]}
-              background="linear-gradient(155deg, #6B2D8B 0%, #4A1E61 100%)"
-              BGComponent={BGCircles}
-            />
-            <PricingCard
-              label="Comfort Kit"
-              comingSoon
-              description="A care package for kids spending time in hospital wards or family shelters. Currently in development."
-              items={[
-                'Soft fleece blanket',
-                'Cuddle plushie',
-                'Activity booklet',
-                'Volunteer note',
-              ]}
-              background="linear-gradient(155deg, #EE3093 0%, #B91F70 100%)"
-              BGComponent={BGRects}
-            />
-            <PricingCard
-              label="Health Kit"
-              comingSoon
-              description="Hygiene and wellness essentials for kids in shelters, hospitals, and transitional homes. Launching later this year."
-              items={[
-                'Toothbrush and toothpaste',
-                'Bandages and first aid basics',
-                'Reusable water bottle',
-                'Daily multivitamins',
-                'Wellness activity booklet',
-              ]}
-              background="linear-gradient(155deg, #14B8A6 0%, #0D7A6F 100%)"
-              BGComponent={BGDiamonds}
-            />
-          </div>
+            <div style={styles.priceGrid}>
+              <PricingCard
+                label="Educational Kit"
+                comingSoon
+                description="Stationery essentials and a small comfort item, hand packed for one child in the Greater Toronto Area."
+                items={[
+                  'Pencils and coloured pencils',
+                  'Calculator',
+                  'Ruler and sharpener',
+                  'Erasers',
+                  'Mini plushie',
+                  'Handwritten note',
+                ]}
+                background="linear-gradient(155deg, #1A3A6B 0%, #0f2347 100%)"
+                BGComponent={BGCircles}
+              />
+              <PricingCard
+                label="Comfort Kit"
+                comingSoon
+                description="A care package for kids spending time in hospital wards or family shelters. Currently in development."
+                items={[
+                  'Soft fleece blanket',
+                  'Cuddle plushie',
+                  'Activity booklet',
+                  'Volunteer note',
+                ]}
+                background="linear-gradient(155deg, #EE3093 0%, #B91F70 100%)"
+                BGComponent={BGRects}
+              />
+              <PricingCard
+                label="Health Kit"
+                comingSoon
+                description="Hygiene and wellness essentials for kids in shelters, hospitals, and transitional homes. Launching later this year."
+                items={[
+                  'Toothbrush and toothpaste',
+                  'Bandages and first aid basics',
+                  'Reusable water bottle',
+                  'Daily multivitamins',
+                  'Wellness activity booklet',
+                ]}
+                background="linear-gradient(155deg, #14B8A6 0%, #0D7A6F 100%)"
+                BGComponent={BGDiamonds}
+              />
+            </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            style={styles.priceFootnote}
-          >
-            100% of your gift funds the supplies and the carry pouch.
-          </motion.p>
+            <p style={styles.priceFootnote}>
+              100% of your gift funds the supplies and the carry pouch.
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -1017,7 +889,7 @@ const styles = {
     maxWidth: 820,
   },
   heroH1: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: 'clamp(2.4rem, 5.5vw, 5rem)',
     lineHeight: 1.08,
@@ -1045,14 +917,14 @@ const styles = {
   rotateWord: {
     position: 'absolute',
     left: 0,
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     color: '#FBB040',
     whiteSpace: 'nowrap',
     fontStyle: 'normal',
   },
   heroLead: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: 'clamp(1rem, 1.3vw, 1.2rem)',
     lineHeight: 1.65,
     color: 'rgba(255,255,255,0.92)',
@@ -1070,21 +942,21 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     padding: '14px 30px',
-    borderRadius: 100,
-    fontFamily: "'Poppins', sans-serif",
+    borderRadius: 4,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
     color: '#fff',
-    background: '#6B2D8B',
-    boxShadow: '0 6px 24px rgba(107,45,139,0.45)',
+    background: '#1A3A6B',
+    boxShadow: '0 6px 24px rgba(26,58,107,0.45)',
     textDecoration: 'none',
   },
   heroGhost: {
     display: 'inline-flex',
     alignItems: 'center',
     padding: '14px 26px',
-    borderRadius: 100,
-    fontFamily: "'Poppins', sans-serif",
+    borderRadius: 4,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
     color: '#ffffff',
@@ -1102,12 +974,12 @@ const styles = {
     justifyContent: 'center',
     height: 60,
     width: 60,
-    borderRadius: 100,
+    borderRadius: 4,
     overflow: 'hidden',
-    background: '#6B2D8B',
+    background: '#1A3A6B',
     cursor: 'pointer',
     textDecoration: 'none',
-    boxShadow: '0 6px 24px rgba(107,45,139,0.45)',
+    boxShadow: '0 6px 24px rgba(26,58,107,0.45)',
     flexShrink: 0,
   },
   kitBtnIcon: {
@@ -1119,7 +991,7 @@ const styles = {
   kitBtnText: {
     position: 'absolute',
     color: '#ffffff',
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
     whiteSpace: 'nowrap',
@@ -1140,15 +1012,15 @@ const styles = {
     pointerEvents: 'none',
   },
   kitEyebrow: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: '0.92rem',
     letterSpacing: '0.34em',
     textTransform: 'uppercase',
-    color: '#6B2D8B',
+    color: '#1A3A6B',
   },
   kitTitle: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: 'clamp(1.9rem, 3.4vw, 2.8rem)',
     lineHeight: 1.1,
@@ -1179,7 +1051,7 @@ const styles = {
     width: '70vw',
     height: '60vh',
     transform: 'translateX(-50%)',
-    background: 'radial-gradient(ellipse at center, rgba(107,45,139,0.05), transparent 70%)',
+    background: 'radial-gradient(ellipse at center, rgba(26,58,107,0.05), transparent 70%)',
     filter: 'blur(60px)',
     pointerEvents: 'none',
     zIndex: 0,
@@ -1199,7 +1071,7 @@ const styles = {
     left: 0,
     right: 0,
     textAlign: 'center',
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.74rem',
     fontStyle: 'italic',
     letterSpacing: '0.04em',
@@ -1234,11 +1106,11 @@ const styles = {
   },
   loaderFill: {
     height: '100%',
-    background: '#6B2D8B',
+    background: '#1A3A6B',
     transition: 'width 0.2s ease',
   },
   loaderText: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.78rem',
     letterSpacing: '0.18em',
     textTransform: 'uppercase',
@@ -1257,25 +1129,25 @@ const styles = {
     margin: '0 auto',
   },
   sectionEyebrow: {
-    display: 'inline-block',
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: 800,
-    fontSize: '0.74rem',
-    letterSpacing: '0.24em',
+    display: 'block',
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 600,
+    fontSize: '0.72rem',
+    letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    color: '#6B2D8B',
-    background: 'rgba(107,45,139,0.10)',
-    padding: '6px 14px',
-    borderRadius: 100,
-    marginBottom: 22,
+    color: '#aaa',
+    marginBottom: 14,
+    background: 'none',
+    padding: 0,
+    borderRadius: 0,
   },
   sectionH2: {
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: 800,
-    fontSize: 'clamp(2.1rem, 4.4vw, 3.4rem)',
-    lineHeight: 1.08,
-    letterSpacing: '-0.025em',
-    color: '#1A3A6B',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: 'clamp(1.9rem, 3vw, 2.55rem)',
+    lineHeight: 1.12,
+    letterSpacing: '-0.015em',
+    color: '#1A1A1A',
     margin: '0 0 24px',
     maxWidth: 820,
   },
@@ -1284,10 +1156,10 @@ const styles = {
     fontStyle: 'normal',
   },
   sectionLead: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: 'clamp(1rem, 1.25vw, 1.18rem)',
     lineHeight: 1.7,
-    color: 'rgba(26,26,26,0.72)',
+    color: '#555',
     maxWidth: 760,
     margin: '0 0 48px',
   },
@@ -1298,27 +1170,27 @@ const styles = {
   },
   statCard: {
     background: '#FFFFFF',
-    border: '1px solid rgba(26,58,107,0.10)',
-    borderRadius: 18,
+    border: '1px solid rgba(0,0,0,0.06)',
+    borderRadius: 6,
     padding: '22px 24px',
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    boxShadow: '0 4px 24px rgba(26,58,107,0.05)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
   },
   statKey: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: '0.78rem',
     letterSpacing: '0.18em',
     textTransform: 'uppercase',
-    color: '#6B2D8B',
+    color: '#1A1A1A',
   },
   statVal: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '1rem',
     lineHeight: 1.5,
-    color: '#1A3A6B',
+    color: '#555',
   },
   insideGrid: {
     display: 'grid',
@@ -1327,13 +1199,13 @@ const styles = {
   },
   insideCard: {
     background: '#FFFFFF',
-    border: '1px solid rgba(26,58,107,0.10)',
-    borderRadius: 18,
+    border: '1px solid rgba(0,0,0,0.06)',
+    borderRadius: 6,
     padding: '26px 24px',
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
-    boxShadow: '0 4px 20px rgba(26,58,107,0.06)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
     cursor: 'default',
   },
   insideIconWrap: {
@@ -1342,20 +1214,20 @@ const styles = {
     justifyContent: 'center',
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   insideName: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '1.05rem',
-    color: '#1A3A6B',
+    color: '#1A1A1A',
     letterSpacing: '-0.01em',
   },
   insideDesc: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.95rem',
     lineHeight: 1.6,
-    color: 'rgba(26,26,26,0.68)',
+    color: '#555',
   },
 
   // --- Creating a Kit Today (step process) ---
@@ -1368,13 +1240,13 @@ const styles = {
   stepCard: {
     position: 'relative',
     background: '#FFFFFF',
-    border: '1px solid rgba(26,58,107,0.10)',
-    borderRadius: 18,
+    border: '1px solid rgba(0,0,0,0.06)',
+    borderRadius: 6,
     padding: '22px 18px 24px',
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
-    boxShadow: '0 4px 20px rgba(26,58,107,0.06)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
     cursor: 'default',
     overflow: 'hidden',
   },
@@ -1390,29 +1262,29 @@ const styles = {
     justifyContent: 'center',
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   stepNumber: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: '0.78rem',
     letterSpacing: '0.2em',
     opacity: 0.85,
   },
   stepTitle: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
-    color: '#1A3A6B',
+    color: '#1A1A1A',
     letterSpacing: '-0.015em',
     lineHeight: 1.25,
     whiteSpace: 'nowrap',
   },
   stepDesc: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.92rem',
     lineHeight: 1.55,
-    color: 'rgba(26,26,26,0.68)',
+    color: '#555',
   },
 
   // --- Donation / Pricing cards (squishy hover) ---
@@ -1461,7 +1333,7 @@ const styles = {
     color: '#FFFFFF',
     padding: '5px 14px',
     borderRadius: 100,
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.8rem',
     letterSpacing: '0.04em',
@@ -1491,7 +1363,7 @@ const styles = {
   },
   priceAmountMuted: {
     display: 'block',
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: '2.4rem',
     lineHeight: 1.1,
@@ -1500,7 +1372,7 @@ const styles = {
     color: 'rgba(255,255,255,0.95)',
   },
   priceDesc: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.97rem',
     lineHeight: 1.55,
     color: 'rgba(255,255,255,0.92)',
@@ -1518,7 +1390,7 @@ const styles = {
     display: 'flex',
     alignItems: 'flex-start',
     gap: 10,
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.94rem',
     lineHeight: 1.4,
     color: 'rgba(255,255,255,0.95)',
@@ -1533,7 +1405,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '13px 18px',
-    borderRadius: 12,
+    borderRadius: 4,
     background: '#FFFFFF',
     color: '#1A1A1A',
     fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
@@ -1555,7 +1427,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '13px 18px',
-    borderRadius: 12,
+    borderRadius: 4,
     background: 'rgba(255,255,255,0.18)',
     color: 'rgba(255,255,255,0.85)',
     fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
@@ -1567,7 +1439,7 @@ const styles = {
     cursor: 'not-allowed',
   },
   priceFootnote: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.86rem',
     lineHeight: 1.6,
     color: 'rgba(26,58,107,0.6)',
@@ -1584,20 +1456,20 @@ const styles = {
     textAlign: 'center',
   },
   sponsorH2: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
-    fontSize: 'clamp(2.1rem, 4.6vw, 3.4rem)',
+    fontSize: 'clamp(2.8rem, 5.5vw, 4.2rem)',
     lineHeight: 1.1,
-    letterSpacing: '-0.025em',
-    color: '#1A3A6B',
+    letterSpacing: '-0.02em',
+    color: '#1A1A1A',
     margin: '0 auto 22px',
     maxWidth: 820,
   },
   sponsorLead: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: 'clamp(1rem, 1.25vw, 1.18rem)',
     lineHeight: 1.7,
-    color: 'rgba(26,26,26,0.72)',
+    color: '#555',
     maxWidth: 720,
     margin: '0 auto 48px',
   },
@@ -1606,14 +1478,15 @@ const styles = {
     gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
     gap: 22,
   },
-  // Craft card — color strip on top, hover lifts and tilts, animated
+  // Craft card , color strip on top, hover lifts and tilts, animated
   // shine sweep across the strip. Mirrors Mission cards on main page.
   craftCard: {
     position: 'relative',
     background: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 6,
     overflow: 'hidden',
-    boxShadow: '0 4px 20px rgba(26,58,107,0.07)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+    border: '1px solid rgba(0,0,0,0.06)',
     cursor: 'default',
   },
   craftStrip: {
@@ -1635,17 +1508,17 @@ const styles = {
     padding: '26px 28px 28px',
   },
   craftCardTitle: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
     fontSize: '1.18rem',
     letterSpacing: '-0.01em',
     margin: '0 0 10px',
   },
   craftCardBody: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.98rem',
     lineHeight: 1.6,
-    color: 'rgba(26,26,26,0.72)',
+    color: '#555',
     margin: 0,
   },
 

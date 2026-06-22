@@ -91,7 +91,7 @@ const styles = {
     alignItems: 'center',
   },
   subtext: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: '1rem',
     color: '#666',
     maxWidth: 540,
@@ -120,7 +120,7 @@ const styles = {
     cursor: 'default',
   },
   cardNum: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: 'clamp(2.8rem, 5vw, 3.8rem)',
     color: '#fff',
@@ -128,7 +128,7 @@ const styles = {
     textAlign: 'center',
   },
   cardLabel: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontWeight: 600,
     fontSize: '1rem',
     color: 'rgba(255,255,255,0.92)',
@@ -137,7 +137,7 @@ const styles = {
     maxWidth: 280,
   },
   cardDesc: {
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontWeight: 600,
     fontSize: '1rem',
     color: 'rgba(255,255,255,0.92)',

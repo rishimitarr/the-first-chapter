@@ -1,157 +1,212 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useEffect, useMemo, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  BookOpen,
+  HeartPulse,
+  HandHeart,
+  Compass,
+  UsersRound,
+  Newspaper,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+} from 'lucide-react'
+
+const NAVY = '#1A3A6B'
+const BLUE = '#0099D6'
+const ORANGE = '#F7941D'
+const YELLOW = '#FBB040'
+const CHARCOAL = '#1A1A1A'
+
+const aboutImages = {
+  hero: {
+    src: '/about-hero-children-reading.png',
+    alt: 'Children reading and learning together',
+    credit: 'Ismail Salad Osman Hajji Dirir',
+  },
+  vision: {
+    src: 'https://images.unsplash.com/photo-1560785496-3c9d27877182?auto=format&fit=crop&w=1200&q=82',
+    alt: 'Child writing in a notebook',
+    credit: 'Annie Spratt',
+  },
+  mission: {
+    src: 'https://images.unsplash.com/photo-1636202339022-7d67f7447e3a?auto=format&fit=crop&w=1200&q=82',
+    alt: 'Children sitting at desks in a classroom',
+    credit: 'Mario Heller',
+  },
+}
 
 const RISHI_BIO =
-  "Inequality wasn't an abstraction for me growing up. I've witnessed people weighing whether a notebook was worth the money, and I know that what stands between children and their dreams isn't a shortage of love. It's access. That awareness has never faded. My role at The First Chapter involves laying the groundwork for all operations ranging from finance, treasury, fundraising, technical, outreach, and ensuring that our organization operates with integrity. Trust isn't a label we hang on ourselves; it's earned through transparency with each passing day. A childhood without prejudice is possible for all children. It's my responsibility to ensure that the organization making this happen lasts for generations."
+  "Inequality wasn't an abstraction for me growing up. I've witnessed people weighing whether a notebook was worth the money, and I know that what stands between children and their dreams isn't a shortage of love. It's access. My role at The First Chapter involves laying the groundwork for operations, finance, fundraising, outreach, and making sure the organization operates with integrity. Trust is earned through transparency with each passing day."
 
 const VEER_BIO =
-  "Every child should have an equal opportunity in life. This principle is the reason I started The First Chapter. Way too many children within our own community do not have access to what most people take for granted: a healthy childhood, an adequate education, and the basic human feeling of being cared for. My goal is simple: to create an organization that connects selflessness with the children who most desperately need it the most. I believe that to bring change in our society it does not always have to begin through the government. Sometimes it starts right here in the community, where a single act of kindness can improve the life of a child."
+  "Every child should have an equal opportunity in life. This principle is the reason I started The First Chapter. Too many children within our own community do not have access to what most people take for granted: a healthy childhood, an adequate education, and the basic feeling of being cared for. My goal is simple: to connect selflessness with the children who need it most."
 
-function TypewriterText({ text, isActive, onDone }) {
-  const [visibleCount, setVisibleCount] = useState(0)
-  const words = text.split(' ')
-  const timerRef = useRef(null)
+const focusCards = [
+  {
+    icon: BookOpen,
+    title: 'Education access',
+    body: 'We aim to provide practical learning supplies, educational kits, and school-readiness support to children who may be starting from behind.',
+    color: NAVY,
+  },
+  {
+    icon: HeartPulse,
+    title: 'Health and wellbeing',
+    body: 'We aim to support children facing hospital stays, family instability, or difficult transitions with resources that feel useful and caring.',
+    color: BLUE,
+  },
+  {
+    icon: HandHeart,
+    title: 'Community care',
+    body: 'We aim to work with local partners, volunteers, families, and students so help reaches children through trusted community channels.',
+    color: ORANGE,
+  },
+]
+
+const quickLinks = [
+  { icon: Compass, label: 'Vision', href: '#vision' },
+  { icon: BookOpen, label: 'Mission', href: '#mission' },
+  { icon: HeartPulse, label: 'Purpose', href: '#purpose' },
+  { icon: UsersRound, label: 'Founders', href: '#founders' },
+  { icon: Newspaper, label: 'Reading', href: '#reading' },
+]
+
+const todayKey = () => new Date().toISOString().slice(0, 10)
+const feedCacheKey = () => `tfc-about-reading-real-news-v2-${todayKey()}`
+const isGenericNewsImage = (image = '') =>
+  image.includes('lh3.googleusercontent.com/J6_coFbog') || image.includes('news.google.com')
+
+const hasCleanArticleImages = (items = []) =>
+  items.length > 0 && items.every((story) => story.image && !isGenericNewsImage(story.image))
+
+function NewsCarousel() {
+  const [stories, setStories] = useState([])
+  const [active, setActive] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!isActive) return
-    setVisibleCount(0)
-    let i = 0
+    let cancelled = false
+    const cacheKey = feedCacheKey()
+    const cached = localStorage.getItem(cacheKey)
 
-    const tick = () => {
-      i += 1
-      setVisibleCount(i)
-      if (i < words.length) {
-        timerRef.current = setTimeout(tick, 72)
-      } else {
-        onDone && onDone()
+    if (cached) {
+      const parsed = JSON.parse(cached)
+      if (hasCleanArticleImages(parsed)) {
+        const frame = requestAnimationFrame(() => {
+          if (cancelled) return
+          setStories(parsed)
+          setLoading(false)
+        })
+        return () => {
+          cancelled = true
+          cancelAnimationFrame(frame)
+        }
       }
+      localStorage.removeItem(cacheKey)
     }
 
-    timerRef.current = setTimeout(tick, 200)
+    fetch('/api/reading-list')
+      .then((res) => {
+        if (!res.ok) throw new Error('Reading list failed')
+        return res.json()
+      })
+      .then((data) => {
+        if (cancelled) return
+        const items = Array.isArray(data.stories) ? data.stories : []
+        const cleanItems = items.filter((story) => story.image && !isGenericNewsImage(story.image))
+        setStories(cleanItems)
+        setLoading(false)
+        if (cleanItems.length > 0) localStorage.setItem(cacheKey, JSON.stringify(cleanItems))
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      })
 
-    return () => clearTimeout(timerRef.current)
-  }, [isActive]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  return (
-    <span>
-      {words.slice(0, visibleCount).join(' ')}
-      {visibleCount > 0 && visibleCount < words.length && (
-        <span style={styles.cursor}>|</span>
-      )}
-    </span>
-  )
-}
-
-function FounderBubble({ initials, name, role, accentColor, isActive, onDone, delay = 0, bio }) {
-  const [started, setStarted] = useState(false)
-
-  useEffect(() => {
-    if (!isActive) return
-    const t = setTimeout(() => setStarted(true), delay)
-    return () => clearTimeout(t)
-  }, [isActive, delay])
-
-  return (
-    <motion.div
-      style={styles.bubble}
-      initial={{ opacity: 0, x: 40, scale: 0.96 }}
-      animate={isActive ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 40, scale: 0.96 }}
-      transition={{ type: 'spring', stiffness: 100, damping: 20, delay: delay / 1000 }}
-    >
-      {/* Avatar row */}
-      <div style={styles.avatarRow}>
-        <div style={{ ...styles.avatar, background: accentColor }}>
-          {initials}
-        </div>
-        <div>
-          <div style={styles.founderName}>{name}</div>
-          <div style={styles.founderRole}>{role}</div>
-        </div>
-        <div style={{ ...styles.statusDot, background: started ? '#FBB040' : '#ccc' }} />
-      </div>
-
-      {/* Message bubble */}
-      <div style={styles.messageBubble}>
-        <TypewriterText text={bio} isActive={started} onDone={onDone} />
-      </div>
-    </motion.div>
-  )
-}
-
-export default function About() {
-  const triggerRef = useRef(null)
-  const inView = useInView(triggerRef, { once: true, margin: '-80px' })
-
-  const [bubble1Done, setBubble1Done] = useState(false)
-  const [bubble2Active, setBubble2Active] = useState(false)
-
-  useEffect(() => {
-    if (bubble1Done) {
-      const t = setTimeout(() => setBubble2Active(true), 500)
-      return () => clearTimeout(t)
+    return () => {
+      cancelled = true
     }
-  }, [bubble1Done])
+  }, [])
+
+  useEffect(() => {
+    if (stories.length === 0) return undefined
+    const id = setInterval(() => {
+      setActive((current) => (current + 1) % stories.length)
+    }, 6500)
+    return () => clearInterval(id)
+  }, [stories.length])
+
+  const story = stories[active]
+  const go = (direction) => {
+    if (stories.length === 0) return
+    setActive((current) => (current + direction + stories.length) % stories.length)
+  }
 
   return (
-    <section id="about" style={styles.section}>
+    <section id="reading" style={styles.readingSection}>
       <div className="container">
-        <div style={styles.grid} className="about-grid">
-          {/* Left static */}
-          <motion.div
-            style={styles.left}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="section-tag" style={{ width: 'fit-content' }}>About Us</span>
-            <h2 className="section-h2" style={{ marginTop: 8 }}>
-              Passionate students.{' '}
-              <em>Real change.</em>
-            </h2>
-<p style={styles.bodyText}>
-              The First Chapter was founded by two students from the Greater Toronto Area
-              who saw inequity in their communities and decided to act. What started as a
-              conversation became a registered non-profit dedicated to children&apos;s futures.
+        <div style={styles.readingHeader} className="about-reading-header">
+          <div>
+            <h2 style={styles.sectionTitle}>Reading List</h2>
+            <p style={styles.readingIntro}>
+              A rotating set of articles about children, education, health, and belonging.
+              The goal is to keep the page connected to the real issues children are facing now.
             </p>
-            <p style={styles.bodyText}>
-              We believe that young people have the power to create change right now. Every
-              initiative we run is student-led, community-focused, and driven by genuine
-              care for the children around the GTA.
-            </p>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Right — chat bubbles */}
-          <div style={styles.right} className="about-chat-window" ref={triggerRef}>
-            <div style={styles.chatHeader}>
-              <span style={{ ...styles.chatDot, background: '#FF5F57' }} />
-              <span style={{ ...styles.chatDot, background: '#FEBC2E' }} />
-              <span style={{ ...styles.chatDot, background: '#28C840' }} />
-              <span style={styles.chatTitle}>The First Chapter — Founders</span>
-            </div>
+        <div style={styles.carouselShell} className="about-carousel-shell">
+          <button style={styles.carouselButton} onClick={() => go(-1)} aria-label="Previous article">
+            <ChevronLeft size={22} />
+          </button>
 
-            <div style={styles.chatBody}>
-              <FounderBubble
-                initials="RM"
-                name="Rishi Mitra"
-                role="Co-Founder"
-                accentColor="#F7941D"
-                isActive={inView}
-                delay={300}
-                onDone={() => setBubble1Done(true)}
-                bio={RISHI_BIO}
+          <div style={styles.storyViewport}>
+            {loading || !story ? (
+              <div style={styles.storyEmpty}>
+                {loading ? 'Loading articles...' : 'Articles are unavailable right now.'}
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.article
+                  key={`${story.title}-${active}`}
+                  style={styles.storyCard}
+                  className="about-story-card"
+                  initial={{ opacity: 0, x: 28 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -28 }}
+                  transition={{ duration: 0.28, ease: 'easeOut' }}
+                >
+                  <div style={styles.storyImageWrap} className="about-image-card">
+                    <img src={story.image} alt="" aria-hidden="true" style={styles.storyImage} />
+                  </div>
+                  <div style={styles.storyContent}>
+                    <h3 style={styles.storyTitle}>{story.title}</h3>
+                    <a href={story.link} target="_blank" rel="noreferrer" style={styles.storyLink}>
+                      Read article <ExternalLink size={15} />
+                    </a>
+                  </div>
+                </motion.article>
+              </AnimatePresence>
+            )}
+          </div>
+
+          <button style={styles.carouselButton} onClick={() => go(1)} aria-label="Next article">
+            <ChevronRight size={22} />
+          </button>
+        </div>
+
+        <div style={styles.carouselFooter}>
+          <span />
+          <div style={styles.dots}>
+            {stories.map((item, index) => (
+              <button
+                key={`${item.title}-${index}`}
+                aria-label={`Show article ${index + 1}`}
+                onClick={() => setActive(index)}
+                style={{ ...styles.dot, background: index === active ? NAVY : 'rgba(26,58,107,0.18)' }}
               />
-
-              <FounderBubble
-                initials="VM"
-                name="Veer Malik"
-                role="Co-Founder"
-                accentColor="#0099D6"
-                isActive={bubble2Active}
-                delay={0}
-                bio={VEER_BIO}
-              />
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -159,125 +214,610 @@ export default function About() {
   )
 }
 
+function FounderCard({ initials, name, role, bio, color }) {
+  return (
+    <motion.article
+      style={styles.founderCard}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div style={{ ...styles.founderAvatar, background: color }}>{initials}</div>
+      <div>
+        <span style={styles.founderRole}>{role}</span>
+        <h3 style={styles.founderName}>{name}</h3>
+        <p style={styles.founderBio}>{bio}</p>
+      </div>
+    </motion.article>
+  )
+}
+
+export default function About() {
+  const heroStats = useMemo(
+    () => [
+      { label: 'Student-led', value: 'Built by young people who want to act now' },
+      { label: 'GTA-focused', value: 'Designed for children and families close to home' },
+      { label: 'Purpose-first', value: 'Education, health, and care before everything else' },
+    ],
+    []
+  )
+
+  return (
+    <div style={styles.page}>
+      <section style={styles.hero}>
+        <div className="container">
+          <div style={styles.heroGrid} className="about-page-hero-grid">
+            <motion.div
+              style={styles.heroCopy}
+              initial={{ opacity: 0, x: -36 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <h1 style={styles.heroTitle} className="about-hero-title">
+                About The First Chapter
+              </h1>
+              <p style={styles.heroText}>
+                The First Chapter is a student-led non-profit in the Greater Toronto Area
+                focused on helping children access education, health, and the feeling that
+                someone is in their corner.
+              </p>
+            </motion.div>
+
+            <motion.div
+              style={styles.heroImageWrap}
+              className="about-image-card"
+              initial={{ opacity: 0, x: 36 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+                <img src={aboutImages.hero.src} alt={aboutImages.hero.alt} style={styles.heroImage} />
+              <span style={styles.imageCredit}>Photo: {aboutImages.hero.credit}</span>
+              <div style={styles.heroImageNote}>
+                Built around supplies, care, and community support.
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <section style={styles.quickBand} aria-label="About page sections">
+        <div className="container">
+          <div style={styles.quickGrid} className="about-quick-grid">
+            {quickLinks.map((item) => {
+              const Icon = item.icon
+              return (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  style={styles.quickItem}
+                  initial="rest"
+                  whileHover="hover"
+                  whileTap={{ scale: 0.98 }}
+                  variants={{
+                    rest: { y: 0, scale: 1, color: CHARCOAL },
+                    hover: { y: -8, scale: 1.03, color: NAVY },
+                  }}
+                  transition={{ type: 'spring', stiffness: 280, damping: 18 }}
+                >
+                  <motion.span
+                    style={styles.quickIcon}
+                    variants={{ rest: { rotate: 0 }, hover: { rotate: -6 } }}
+                  >
+                    <Icon size={35} strokeWidth={1.75} />
+                  </motion.span>
+                  <span>{item.label}</span>
+                </motion.a>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="vision" style={styles.visionSection}>
+        <div className="container">
+          <h2 style={styles.sectionTitle}>Our Vision</h2>
+          <div style={styles.visionPanel} className="about-vision-grid">
+            <div style={styles.visionImageWrap} className="about-image-card">
+              <img src={aboutImages.vision.src} alt={aboutImages.vision.alt} style={styles.visionImage} />
+              <span style={styles.imageCredit}>Photo: {aboutImages.vision.credit} / Unsplash</span>
+            </div>
+            <div style={styles.visionBody}>
+              <p>
+                We believe every child deserves access to the tools, encouragement, and
+                care that make learning and growing feel possible. A child should not have
+                to wonder whether they belong in a classroom, whether they have the basic
+                supplies to participate, or whether anyone notices what they are carrying.
+              </p>
+              <p>
+                Our vision is to build a community where generosity becomes practical:
+                school supplies, care kits, awareness, volunteer time, and local partnerships
+                that help children feel supported before they fall through the cracks.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="mission" style={styles.missionSection}>
+        <div className="container">
+          <div style={styles.splitFeature} className="about-split-feature">
+            <div style={styles.splitImageWrap} className="about-image-card">
+              <img src={aboutImages.mission.src} alt={aboutImages.mission.alt} style={styles.splitImage} />
+              <span style={styles.imageCredit}>Photo: {aboutImages.mission.credit} / Unsplash</span>
+            </div>
+            <div style={styles.splitCopy}>
+              <h2 style={styles.sectionTitle}>Our Mission</h2>
+              <p style={styles.bodyText}>
+                Our mission is to support children through education-focused care kits,
+                health and wellness fundraising, and community awareness. We are building
+                the foundation carefully so every future project is useful, transparent,
+                and rooted in real needs.
+              </p>
+              <a href="/care-kits" style={styles.primaryButton}>Explore Care Kits</a>
+            </div>
+          </div>
+
+          <div style={styles.focusGrid} className="about-focus-grid">
+            {focusCards.map((card) => {
+              const Icon = card.icon
+              return (
+                <motion.article
+                  key={card.title}
+                  style={styles.focusCard}
+                  whileHover={{ y: -6, boxShadow: '0 16px 36px rgba(26,58,107,0.14)' }}
+                >
+                  <span style={{ ...styles.focusIcon, color: card.color, background: `${card.color}16` }}>
+                    <Icon size={24} />
+                  </span>
+                  <h3 style={styles.focusTitle}>{card.title}</h3>
+                  <p style={styles.focusBody}>{card.body}</p>
+                </motion.article>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="purpose" style={styles.purposeBand}>
+        <div className="container">
+          <HeartPulse size={58} strokeWidth={1.8} style={styles.purposeIcon} />
+          <h2 style={styles.purposeTitle}>Our Purpose</h2>
+          <p style={styles.purposeText}>
+            We are not here to tell stories of impact before the work has earned them.
+            We are here to build the structure for future impact: responsible fundraising,
+            useful programs, trusted partnerships, and a clear focus on children who need
+            education and health support.
+          </p>
+        </div>
+      </section>
+
+      <section style={styles.statsSection}>
+        <div className="container">
+          <div style={styles.statGrid} className="about-stat-grid">
+            {heroStats.map((stat) => (
+              <div key={stat.label} style={styles.statCard}>
+                <span style={styles.statLabel}>{stat.label}</span>
+                <p style={styles.statValue}>{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="founders" style={styles.foundersSection}>
+        <div className="container">
+          <div style={styles.foundersHeader}>
+            <h2 style={styles.sectionTitle}>Founders</h2>
+          </div>
+          <div style={styles.founderGrid} className="about-founder-grid">
+            <FounderCard initials="RM" name="Rishi Mitra" role="Co-Founder" bio={RISHI_BIO} color={NAVY} />
+            <FounderCard initials="VM" name="Veer Malik" role="Co-Founder" bio={VEER_BIO} color={CHARCOAL} />
+          </div>
+        </div>
+      </section>
+
+      <NewsCarousel />
+    </div>
+  )
+}
+
 const styles = {
-  section: {
-    padding: '96px 0',
-    background: '#FDFAF6',
-  },
-  grid: {
+  page: { background: '#fff', color: CHARCOAL },
+  hero: { padding: '96px 0 72px', background: '#fff' },
+  heroGrid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 72,
-    alignItems: 'start',
+    gridTemplateColumns: '1fr 0.75fr',
+    gap: 42,
+    alignItems: 'center',
   },
-  left: {
+  heroCopy: { position: 'relative', zIndex: 2 },
+  heroTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: 'clamp(2.2rem, 3.2vw, 3rem)',
+    lineHeight: 1.08,
+    letterSpacing: '-0.02em',
+    margin: '0 0 18px',
+    maxWidth: 'none',
+    whiteSpace: 'nowrap',
+  },
+  heroText: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1.08rem',
+    lineHeight: 1.75,
+    color: '#555',
+    maxWidth: 520,
+    margin: 0,
+  },
+  heroImageWrap: {
+    position: 'relative',
+    minHeight: 430,
+    overflow: 'hidden',
+    borderRadius: 6,
+    boxShadow: '0 22px 60px rgba(0,0,0,0.13)',
+  },
+  heroImage: { width: '100%', height: 430, objectFit: 'cover' },
+  imageCredit: {
+    position: 'absolute',
+    right: 10,
+    bottom: 9,
+    zIndex: 2,
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.58rem',
+    color: 'rgba(255,255,255,0.64)',
+    letterSpacing: '0.02em',
+    textShadow: '0 1px 5px rgba(0,0,0,0.45)',
+    pointerEvents: 'none',
+  },
+  heroImageNote: {
+    position: 'absolute',
+    left: 22,
+    bottom: 22,
+    maxWidth: 310,
+    background: '#fff',
+    color: CHARCOAL,
+    padding: '14px 16px',
+    borderRadius: 4,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '0.9rem',
+    boxShadow: '0 10px 26px rgba(0,0,0,0.14)',
+  },
+  quickBand: { background: '#F5F3EF', padding: '34px 0' },
+  quickGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(5, 1fr)',
+    gap: 14,
+  },
+  quickItem: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    minHeight: 112,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.82rem',
+    color: CHARCOAL,
+  },
+  quickIcon: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  visionSection: { padding: '74px 0 54px' },
+  visionPanel: {
+    display: 'grid',
+    gridTemplateColumns: '0.9fr 1.1fr',
+    gap: 56,
+    alignItems: 'stretch',
+    marginTop: 28,
+  },
+  sectionTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: 'clamp(1.9rem, 3vw, 2.55rem)',
+    lineHeight: 1.12,
+    letterSpacing: '-0.015em',
+    margin: 0,
+  },
+  visionBody: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: 20,
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
+    lineHeight: 1.8,
+    color: '#555',
+    maxWidth: 700,
+  },
+  visionImageWrap: {
+    position: 'relative',
+    width: '100%',
+    minHeight: 320,
+    overflow: 'hidden',
+    borderRadius: 6,
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+  },
+  visionImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  missionSection: { padding: '54px 0 82px' },
+  splitFeature: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 0.9fr',
+    gap: 46,
+    alignItems: 'center',
+    marginBottom: 46,
+  },
+  splitImageWrap: {
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: 6,
+  },
+  splitImage: {
+    width: '100%',
+    height: 350,
+    objectFit: 'cover',
+  },
+  splitCopy: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20 },
+  bodyText: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
+    lineHeight: 1.8,
+    color: '#555',
+    margin: 0,
+  },
+  primaryButton: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '13px 26px',
+    borderRadius: 4,
+    background: NAVY,
+    color: '#fff',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '0.88rem',
+  },
+  focusGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: 20,
   },
-  bodyText: {
-    fontFamily: "'DM Sans', sans-serif",
+  focusCard: {
+    background: '#fff',
+    border: '1px solid rgba(0,0,0,0.07)',
+    borderRadius: 6,
+    padding: '28px 26px',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+  },
+  focusIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 18,
+  },
+  focusTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: '1.25rem',
+    margin: '0 0 10px',
+  },
+  focusBody: {
+    fontFamily: "'Inter', sans-serif",
     fontSize: '0.95rem',
     lineHeight: 1.7,
     color: '#555',
+    margin: 0,
   },
-  right: {
+  purposeBand: {
+    background: NAVY,
+    color: '#fff',
+    textAlign: 'center',
+    padding: '82px 24px',
+  },
+  purposeIcon: { color: YELLOW, margin: '0 auto 20px' },
+  purposeTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: 'clamp(1.9rem, 3vw, 2.55rem)',
+    lineHeight: 1.12,
+    letterSpacing: '-0.015em',
+    maxWidth: 880,
+    margin: '0 auto 18px',
+  },
+  purposeText: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
+    lineHeight: 1.8,
+    color: 'rgba(255,255,255,0.82)',
+    maxWidth: 820,
+    margin: '0 auto',
+  },
+  statsSection: { padding: '56px 0', background: '#fff' },
+  statGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: 18,
+  },
+  statCard: {
+    borderTop: `5px solid ${NAVY}`,
     background: '#fff',
-    borderRadius: 20,
-    overflow: 'hidden',
-    boxShadow: '0 8px 40px rgba(0,0,0,0.10)',
-    minHeight: 480,
-    display: 'flex',
-    flexDirection: 'column',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+    borderRadius: 6,
+    padding: '24px 24px 26px',
   },
-  chatHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    padding: '14px 20px',
-    background: '#f5f5f7',
-    borderBottom: '1px solid rgba(0,0,0,0.07)',
+  statLabel: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: '0.78rem',
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    color: NAVY,
   },
-  chatDot: {
-    width: 12,
-    height: 12,
-    borderRadius: '50%',
-    background: '#ddd',
-    display: 'inline-block',
+  statValue: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.98rem',
+    lineHeight: 1.65,
+    color: '#555',
+    margin: '10px 0 0',
   },
-  chatTitle: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: '0.8rem',
-    color: '#888',
-    marginLeft: 8,
-    letterSpacing: '0.04em',
+  foundersSection: { padding: '46px 0 84px', background: '#fff' },
+  foundersHeader: { maxWidth: 760, marginBottom: 28 },
+  founderGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 24,
   },
-  chatBody: {
-    flex: 1,
-    padding: '24px 20px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 28,
-    overflowY: 'auto',
-    maxHeight: 520,
+  founderCard: {
+    display: 'grid',
+    gridTemplateColumns: '64px 1fr',
+    gap: 18,
+    background: '#F7F8FA',
+    border: '1px solid rgba(0,0,0,0.06)',
+    borderRadius: 6,
+    padding: 28,
   },
-  bubble: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-  },
-  avatarRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-  },
-  avatar: {
-    width: 44,
-    height: 44,
+  founderAvatar: {
+    width: 64,
+    height: 64,
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.9rem',
     color: '#fff',
-    flexShrink: 0,
-  },
-  founderName: {
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.9rem',
-    color: '#1A3A6B',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
   },
   founderRole: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: '0.75rem',
-    color: '#888',
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.72rem',
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    color: NAVY,
   },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    marginLeft: 'auto',
-    transition: 'background 0.5s',
+  founderName: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: '1.45rem',
+    margin: '3px 0 12px',
   },
-  messageBubble: {
-    background: '#f0f7ff',
-    borderRadius: '4px 16px 16px 16px',
-    padding: '14px 18px',
-    fontFamily: "'DM Sans', sans-serif",
+  founderBio: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.94rem',
+    lineHeight: 1.75,
+    color: '#555',
+    margin: 0,
+  },
+  readingSection: { padding: '82px 0 92px', background: '#F5F3EF' },
+  readingHeader: {
+    display: 'block',
+    maxWidth: 760,
+    marginBottom: 30,
+  },
+  readingIntro: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
+    lineHeight: 1.75,
+    color: '#555',
+    margin: '14px 0 0',
+  },
+  carouselShell: {
+    display: 'grid',
+    gridTemplateColumns: '48px 1fr 48px',
+    gap: 18,
+    alignItems: 'stretch',
+  },
+  carouselButton: {
+    border: '1px solid rgba(26,58,107,0.18)',
+    borderRadius: 4,
+    background: '#fff',
+    color: NAVY,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+  },
+  storyViewport: { minHeight: 270, overflow: 'hidden' },
+  storyCard: {
+    minHeight: 270,
+    background: '#fff',
+    borderRadius: 6,
+    padding: 0,
+    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+    border: '1px solid rgba(0,0,0,0.06)',
+    overflow: 'hidden',
+    display: 'grid',
+    gridTemplateColumns: '0.42fr 0.58fr',
+  },
+  storyEmpty: {
+    minHeight: 270,
+    background: '#fff',
+    borderRadius: 6,
+    border: '1px solid rgba(0,0,0,0.06)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.95rem',
+    color: '#666',
+  },
+  storyImageWrap: {
+    position: 'relative',
+    minHeight: 270,
+    background: '#E9ECEF',
+  },
+  storyImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  storyContent: {
+    padding: '34px 36px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  storyTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: 'clamp(1.25rem, 2vw, 1.7rem)',
+    lineHeight: 1.2,
+    margin: '0 0 22px',
+  },
+  storyLink: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 8,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
     fontSize: '0.88rem',
-    lineHeight: 1.7,
-    color: '#333',
-    minHeight: 80,
-    boxShadow: '0 2px 8px rgba(0,153,214,0.08)',
+    color: NAVY,
   },
-  cursor: {
-    display: 'inline-block',
-    fontWeight: 100,
-    color: '#6B2D8B',
-    animation: 'blink 1s step-end infinite',
-    marginLeft: 1,
+  carouselFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 18,
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  dots: { display: 'flex', gap: 8 },
+  dot: {
+    width: 9,
+    height: 9,
+    borderRadius: '50%',
+    border: 0,
+    cursor: 'pointer',
   },
 }

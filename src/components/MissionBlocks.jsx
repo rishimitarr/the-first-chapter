@@ -8,7 +8,7 @@ const BLOCKS = [
     color: '#F7941D',
     letter: 'E',
     title: 'Education & Health',
-    body: 'Champion access to quality learning, tutoring, and programs — raising funds for mental wellness so every child grows safe, supported, and ready to learn.',
+    body: 'Champion access to quality learning, tutoring, and programs , raising funds for mental wellness so every child grows safe, supported, and ready to learn.',
   },
   {
     color: '#0099D6',
@@ -17,10 +17,10 @@ const BLOCKS = [
     body: 'Working alongside GTA organizations, families, and volunteers to create lasting, meaningful change in the neighbourhoods where children live and grow.',
   },
   {
-    color: '#39B54A',
+    color: '#1A3A6B',
     letter: 'R',
     title: 'Raising Awareness',
-    body: "Organizing events that advocate for children's rights, bringing communities together — giving every child a fair and equal chance.",
+    body: "Organizing events that advocate for children's rights, bringing communities together , giving every child a fair and equal chance.",
   },
 ]
 
