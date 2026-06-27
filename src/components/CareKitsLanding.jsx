@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   Truck,
   Mail,
+  Check,
 } from 'lucide-react'
 import Nav from './Nav'
 import Footer from './Footer'
@@ -29,13 +30,17 @@ const fromBottom = {
 }
 
 const PAGE_BG = '#fff'
-const CARE_GREEN = '#57A018'
+const LOGO_BLUE = '#0099D6'
+const LOGO_GREEN = '#57A018'
+const LOGO_ORANGE = '#F7941D'
+const LOGO_PINK = '#EE3093'
+const LOGO_TEAL = '#14B8A6'
 const ACCENTS = {
-  green: { color: CARE_GREEN, bg: 'rgba(87,160,24,0.08)', shadow: 'rgba(87,160,24,0.12)' },
+  green: { color: LOGO_GREEN, bg: 'rgba(87,160,24,0.08)', shadow: 'rgba(87,160,24,0.12)' },
   navy: { color: '#1A3A6B', bg: 'rgba(26,58,107,0.08)', shadow: 'rgba(26,58,107,0.12)' },
-  amber: { color: '#B97822', bg: 'rgba(185,120,34,0.09)', shadow: 'rgba(185,120,34,0.12)' },
-  red: { color: '#A04A3D', bg: 'rgba(160,74,61,0.08)', shadow: 'rgba(160,74,61,0.12)' },
-  teal: { color: '#2F7F7A', bg: 'rgba(47,127,122,0.08)', shadow: 'rgba(47,127,122,0.12)' },
+  amber: { color: LOGO_ORANGE, bg: 'rgba(247,148,29,0.09)', shadow: 'rgba(247,148,29,0.12)' },
+  pink: { color: LOGO_PINK, bg: 'rgba(238,48,147,0.08)', shadow: 'rgba(238,48,147,0.12)' },
+  teal: { color: LOGO_TEAL, bg: 'rgba(20,184,166,0.08)', shadow: 'rgba(20,184,166,0.12)' },
 }
 
 function KitCard({ kit, isMobile }) {
@@ -73,7 +78,7 @@ function KitCard({ kit, isMobile }) {
 
 // ─── Step card ───────────────────────────────────────────────────────────────
 
-function StepCard({ step, index, span, isMobile }) {
+function StepCard({ step, span, isMobile }) {
   const Icon = step.icon
   return (
     <motion.div
@@ -92,38 +97,113 @@ function StepCard({ step, index, span, isMobile }) {
   )
 }
 
+function DonationKitCard({ kit }) {
+  return (
+    <motion.div
+      whileHover="hover"
+      variants={{ hover: { scale: kit.comingSoon ? 1 : 1.04 } }}
+      transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
+      style={{ ...styles.donateCard, background: kit.background, boxShadow: kit.shadow }}
+    >
+      <DonationCardBg />
+      <div style={styles.donateCardContent}>
+        <span style={styles.donateKitLabel}>{kit.name}</span>
+        {kit.comingSoon ? (
+          <span style={styles.donateAmountMuted}>Coming Soon</span>
+        ) : (
+          <motion.span
+            initial={{ scale: 0.88 }}
+            variants={{ hover: { scale: 1 } }}
+            transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
+            style={styles.donatePrice}
+          >
+            $6<span style={styles.donateCurrency}> CAD</span>
+            <span style={styles.donatePer}> / kit</span>
+          </motion.span>
+        )}
+        <p style={styles.donateCopy}>{kit.copy}</p>
+        <ul style={styles.donateList}>
+          {kit.items.map((item) => (
+            <li key={item} style={styles.donateItem}>
+              <Check size={15} strokeWidth={3} style={{ flexShrink: 0, marginTop: 3 }} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {kit.comingSoon ? (
+        <span style={styles.donateDisabled}>Not yet available</span>
+      ) : (
+        <a href={kit.href} style={styles.donateCta}>
+          Donate Today
+        </a>
+      )}
+    </motion.div>
+  )
+}
+
+const DonationCardBg = () => (
+  <motion.svg
+    viewBox="0 0 320 384"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    variants={{ hover: { scale: 1.4 } }}
+    transition={{ duration: 1, ease: [0.55, 0, 0.1, 1] }}
+    style={styles.donateBg}
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <motion.circle
+      variants={{ hover: { scaleY: 0.55, y: -22 } }}
+      transition={{ duration: 1, ease: [0.55, 0, 0.1, 1], delay: 0.15 }}
+      cx="160.5"
+      cy="120"
+      r="105"
+      fill="rgba(255,255,255,0.16)"
+    />
+    <motion.ellipse
+      variants={{ hover: { scaleY: 2.3, y: -28 } }}
+      transition={{ duration: 1, ease: [0.55, 0, 0.1, 1], delay: 0.15 }}
+      cx="160.5"
+      cy="280"
+      rx="110"
+      ry="48"
+      fill="rgba(255,255,255,0.14)"
+    />
+  </motion.svg>
+)
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 const KITS = [
   {
     num: '01',
-    color: '#57A018',
+    color: LOGO_BLUE,
     name: 'Educational Kit',
     body: 'Stationery essentials and a small comfort item, packed by hand for one child navigating a hospital stay, shelter placement, or home in transition.',
-    img: '/pillar-education.jpg',
-    credit: 'Unsplash',
+    img: 'https://images.unsplash.com/photo-1661732017114-6d554292c1b2?auto=format&fit=crop&w=1200&q=82',
+    credit: 'Kelly Sikkema / Unsplash',
     href: '/care-kits/education',
     cta: 'Explore the Educational Kit',
     comingSoon: false,
   },
   {
     num: '02',
-    color: '#F7941D',
+    color: LOGO_ORANGE,
     name: 'Comfort Kit',
     body: 'A care package for kids in hospital wards or family shelters. A soft blanket, a plushie, and a handwritten note from a volunteer. Currently in development.',
-    img: '/vitaly-gariev-lGGuf8LSxa4-unsplash.jpg',
-    credit: 'Vitaly Gariev',
+    img: 'https://images.unsplash.com/photo-1530325553241-4f6e7690cf36?auto=format&fit=crop&w=1200&q=82',
+    credit: 'Barrett Ward / Unsplash',
     href: '#',
     cta: 'Coming Soon',
     comingSoon: true,
   },
   {
     num: '03',
-    color: '#C0392B',
+    color: LOGO_PINK,
     name: 'Health Kit',
     body: 'Hygiene and wellness essentials for kids in shelters, hospitals, and transitional homes. Launching later this year.',
-    img: '/pillar-health.jpg',
-    credit: 'Unsplash',
+    img: 'https://images.unsplash.com/photo-1759910548177-638d4e6ee0d5?auto=format&fit=crop&w=1200&q=82',
+    credit: 'mdreza jalali / Unsplash',
     href: '#',
     cta: 'Coming Soon',
     comingSoon: true,
@@ -135,7 +215,38 @@ const STEPS = [
   { icon: ShoppingBag, accent: ACCENTS.amber, step: '02', title: 'We source the supplies', desc: 'Every item is selected from Canadian suppliers whenever possible, with quality guiding each choice.', span: 2 },
   { icon: PackageOpen, accent: ACCENTS.navy, step: '03', title: 'Volunteers hand pack it', desc: 'A volunteer assembles your kit one piece at a time, with a short handwritten note tucked inside.', span: 2 },
   { icon: Truck, accent: ACCENTS.teal, step: '04', title: 'A child receives it', desc: 'We deliver directly to hospital wards, family shelters, and partner programs across the GTA.', span: 3 },
-  { icon: Mail, accent: ACCENTS.red, step: '05', title: 'A card in your name', desc: 'A small card inside the kit carries your name so your generosity reaches the child directly.', span: 3 },
+  { icon: Mail, accent: ACCENTS.pink, step: '05', title: 'A card in your name', desc: 'A small card inside the kit carries your name so your generosity reaches the child directly.', span: 3 },
+]
+
+const DONATION_KITS = [
+  {
+    name: 'Educational Kit',
+    color: LOGO_BLUE,
+    background: `linear-gradient(155deg, ${LOGO_BLUE} 0%, ${LOGO_BLUE} 100%)`,
+    shadow: '0 14px 38px rgba(0,153,214,0.22)',
+    copy: 'Stationery essentials and a small comfort item for one child.',
+    items: ['Pencils and coloured pencils', 'Calculator', 'Ruler and sharpener', 'Erasers', 'Mini plushie', 'Handwritten note'],
+    href: 'mailto:thefirstchapternpo@gmail.com?subject=Donate%20an%20Educational%20Kit',
+    comingSoon: false,
+  },
+  {
+    name: 'Comfort Kit',
+    color: LOGO_ORANGE,
+    background: `linear-gradient(155deg, ${LOGO_ORANGE} 0%, ${LOGO_ORANGE} 100%)`,
+    shadow: '0 14px 38px rgba(247,148,29,0.18)',
+    copy: 'A care package concept currently in development.',
+    items: ['Comfort supplies', 'Volunteer packed'],
+    comingSoon: true,
+  },
+  {
+    name: 'Health Kit',
+    color: LOGO_PINK,
+    background: `linear-gradient(155deg, ${LOGO_PINK} 0%, ${LOGO_PINK} 100%)`,
+    shadow: '0 14px 38px rgba(238,48,147,0.18)',
+    copy: 'A wellness kit concept currently in development.',
+    items: ['Wellness essentials', 'Partner delivered'],
+    comingSoon: true,
+  },
 ]
 
 const ROTATE_WORDS = ['One Story.', 'One Chapter.', 'One Beginning.', 'One Promise.', 'One Change.']
@@ -234,7 +345,7 @@ export default function CareKitsLanding() {
               {/* Text column */}
               <div style={styles.aboutText}>
                 <h2 style={{ ...styles.sectionH2, maxWidth: 'none' }}>
-                  For every child who deserves <span style={styles.h2Em}>a fresh start.</span>
+                  Care Kits
                 </h2>
                 <p style={{ ...styles.sectionLeadWide, marginTop: 32 }}>
                   When a child's life shifts, school and normal routines can pause overnight.
@@ -275,7 +386,7 @@ export default function CareKitsLanding() {
                 },
                 {
                   Icon: Heart,
-                  accent: ACCENTS.red,
+                  accent: ACCENTS.pink,
                   title: 'Funded by One Donor',
                   body: 'One sponsorship funds one complete kit for one child.',
                 },
@@ -285,7 +396,7 @@ export default function CareKitsLanding() {
                   title: 'Delivered by Us',
                   body: 'Our team brings kits directly to trusted local partners.',
                 },
-              ].map((p, i) => (
+              ].map((p) => (
                 <motion.div
                   key={p.title}
                   style={styles.pillarCard}
@@ -348,9 +459,9 @@ export default function CareKitsLanding() {
                 text="chapter"
                 colors={{ first: '#F7941D', second: '#FBB040' }}
                 count={12}
-                textStyle={{ color: '#FBB040' }}
+                textStyle={{ color: '#1A1A1A' }}
               />
-              <span style={{ color: '#FBB040' }}>.</span>
+              .
             </h2>
 
             <div style={{ ...styles.stepsGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(6, 1fr)' }}>
@@ -362,8 +473,31 @@ export default function CareKitsLanding() {
         </div>
       </section>
 
+      {/* ── DONATE ── */}
+      <section id="donate" style={styles.donateSection}>
+        <div style={styles.sectionInner}>
+          <motion.div
+            variants={fromBottom}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+          >
+            <span style={styles.eyebrow}>Donate</span>
+            <h2 style={styles.sectionH2}>Donate a Kit</h2>
+            <p style={{ ...styles.sectionLead, marginBottom: 42 }}>
+              Each Educational Kit is $6 and goes toward supplies for one child.
+            </p>
+            <div style={{ ...styles.donateGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, minmax(0, 1fr))' }}>
+              {DONATION_KITS.map((kit) => (
+                <DonationKitCard key={kit.name} kit={kit} />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       <Footer />
-      <DonateFloat label="View Educational Kit" to="/care-kits/education" />
+      <DonateFloat label="Donate Today" to="/care-kits#donate" />
     </div>
   )
 }
@@ -473,6 +607,7 @@ const styles = {
 
   section: { position: 'relative', padding: '60px 24px 60px' },
   kitsSection: { position: 'relative', padding: '0 24px clamp(80px, 12vh, 140px)' },
+  donateSection: { position: 'relative', padding: '0 24px clamp(90px, 13vh, 150px)' },
 
   sectionInner: { maxWidth: 1080, margin: '0 auto' },
   eyebrow: {
@@ -498,7 +633,7 @@ const styles = {
     margin: '0 0 16px',
     maxWidth: 820,
   },
-  h2Em: { color: '#FBB040', fontStyle: 'normal' },
+  h2Em: { color: '#1A1A1A', fontStyle: 'normal' },
   sectionLead: {
     fontFamily: "'Inter', sans-serif",
     fontSize: 'clamp(1rem, 1.25vw, 1.18rem)',
@@ -713,6 +848,151 @@ const styles = {
     color: 'rgba(26,26,26,0.40)',
     border: '1.5px solid rgba(26,26,26,0.20)',
     cursor: 'not-allowed',
+  },
+
+  donateGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gap: 24,
+  },
+  donateCard: {
+    position: 'relative',
+    minHeight: 540,
+    overflow: 'hidden',
+    borderRadius: 6,
+    padding: 30,
+    paddingBottom: 84,
+    color: '#FFFFFF',
+    cursor: 'default',
+  },
+  donateBg: {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 0,
+    pointerEvents: 'none',
+  },
+  donateCardContent: {
+    position: 'relative',
+    zIndex: 2,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+  },
+  donateKitLabel: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    width: 'fit-content',
+    background: 'rgba(255,255,255,0.22)',
+    backdropFilter: 'blur(8px)',
+    border: '1px solid rgba(255,255,255,0.28)',
+    color: '#FFFFFF',
+    padding: '5px 14px',
+    borderRadius: 100,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.8rem',
+    letterSpacing: '0.04em',
+  },
+  donatePrice: {
+    display: 'block',
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
+    fontWeight: 900,
+    fontSize: '3.4rem',
+    lineHeight: 1.05,
+    transformOrigin: 'top left',
+    letterSpacing: '-0.02em',
+    marginTop: 4,
+    color: '#FFFFFF',
+  },
+  donateCurrency: {
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    letterSpacing: 0,
+    opacity: 0.88,
+  },
+  donatePer: {
+    display: 'block',
+    fontSize: '0.95rem',
+    fontWeight: 600,
+    opacity: 0.78,
+    marginTop: -4,
+  },
+  donateAmountMuted: {
+    display: 'block',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '2.4rem',
+    lineHeight: 1.1,
+    letterSpacing: '-0.02em',
+    marginTop: 4,
+    color: 'rgba(255,255,255,0.95)',
+  },
+  donateCopy: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.97rem',
+    lineHeight: 1.55,
+    color: 'rgba(255,255,255,0.92)',
+    margin: '4px 0 6px',
+  },
+  donateList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  donateItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 10,
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.94rem',
+    lineHeight: 1.4,
+    color: 'rgba(255,255,255,0.95)',
+  },
+  donateCta: {
+    position: 'absolute',
+    bottom: 18,
+    left: 18,
+    right: 18,
+    zIndex: 3,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '13px 22px',
+    borderRadius: 4,
+    background: '#FFFFFF',
+    color: LOGO_BLUE,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '0.92rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.01em',
+    textDecoration: 'none',
+    border: '2px solid #FFFFFF',
+  },
+  donateDisabled: {
+    position: 'absolute',
+    bottom: 18,
+    left: 18,
+    right: 18,
+    zIndex: 3,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '13px 18px',
+    borderRadius: 4,
+    background: 'rgba(255,255,255,0.18)',
+    color: 'rgba(255,255,255,0.85)',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.82rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    border: '1.5px solid rgba(255,255,255,0.4)',
   },
 
   // steps

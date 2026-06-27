@@ -7,14 +7,12 @@ import {
   Calculator,
   Eraser,
   Ruler,
-  Check,
   ArrowLeft,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Nav from './Nav'
 import Footer from './Footer'
 import DonateFloat from './DonateFloat'
-import SparklesText from './SparklesText'
 
 // ── Timing knobs ──────────────────────────────────────────────────────────────
 const SCROLL_START = '38%'
@@ -31,7 +29,21 @@ const framePath = (i) =>
   `/kit-frames-webp/frame-${String(i).padStart(3, '0')}.webp?${FRAME_VER}`
 
 const PAGE_BG = '#fff'
+const EDUCATION_BLUE = '#0099D6'
 const LOGO_GREEN = '#57A018'
+const LOGO_ORANGE = '#F7941D'
+const LOGO_PINK = '#EE3093'
+const LOGO_TEAL = '#14B8A6'
+const LOGO_NAVY = '#1A3A6B'
+const NEUTRAL_ACCENT = '#1A1A1A'
+
+const colorShadow = (color, opacity = 0.18) => {
+  const hex = color.replace('#', '')
+  const r = parseInt(hex.slice(0, 2), 16)
+  const g = parseInt(hex.slice(2, 4), 16)
+  const b = parseInt(hex.slice(4, 6), 16)
+  return `rgba(${r},${g},${b},${opacity})`
+}
 
 const fromLeft = {
   hidden: { opacity: 0, x: -150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
@@ -56,7 +68,7 @@ function CraftCard({ card, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(87,160,24,0.16)' }}
+      whileHover={{ y: -6, boxShadow: `0 16px 40px ${colorShadow(card.color, 0.16)}` }}
     >
       <div style={styles.craftImgWrap}>
         <img src={card.img} alt={card.title} style={styles.craftImg} />
@@ -70,67 +82,6 @@ function CraftCard({ card, index }) {
     </motion.div>
   )
 }
-
-// ─── PricingCard (education kit only) ────────────────────────────────────────
-
-function PricingCard({ label, description, items, cta, background, BGComponent, comingSoon = false, href = '#sponsor', isMobile }) {
-  return (
-    <motion.div
-      whileHover="hover"
-      variants={{ hover: { scale: 1.04 } }}
-      transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
-      style={{ ...styles.priceCard, background, width: isMobile ? '100%' : 320 }}
-    >
-      {BGComponent && <BGComponent />}
-      <div style={styles.priceContent}>
-        <span style={styles.priceLabel}>
-          {comingSoon ? 'Coming Soon' : label}
-        </span>
-        {!comingSoon ? (
-          <motion.span
-            initial={{ scale: 0.88 }}
-            variants={{ hover: { scale: 1 } }}
-            transition={{ duration: 0.9, ease: [0.55, 0, 0.1, 1] }}
-            style={styles.priceAmount}
-          >
-            $30<span style={styles.priceCurrency}> CAD</span>
-            <span style={styles.pricePer}> / kit</span>
-          </motion.span>
-        ) : (
-          <span style={styles.priceAmountMuted}>{label}</span>
-        )}
-        <p style={styles.priceDesc}>{description}</p>
-        <ul style={styles.priceList}>
-          {items.map((it) => (
-            <li key={it} style={styles.priceItem}>
-              <Check size={15} strokeWidth={3} style={{ flexShrink: 0, marginTop: 3 }} />
-              <span>{it}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {comingSoon ? (
-        <span style={styles.priceBtnDisabled}>Not yet available</span>
-      ) : (
-        <a href={href} style={styles.priceBtn}>{cta}</a>
-      )}
-    </motion.div>
-  )
-}
-
-// ─── BG shapes ───────────────────────────────────────────────────────────────
-
-const BGCircles = () => (
-  <motion.svg
-    viewBox="0 0 320 384" fill="none" xmlns="http://www.w3.org/2000/svg"
-    variants={{ hover: { scale: 1.4 } }}
-    transition={{ duration: 1, ease: [0.55, 0, 0.1, 1] }}
-    style={styles.priceBg} preserveAspectRatio="xMidYMid slice"
-  >
-    <motion.circle variants={{ hover: { scaleY: 0.55, y: -22 } }} transition={{ duration: 1, ease: [0.55, 0, 0.1, 1], delay: 0.15 }} cx="160.5" cy="120" r="105" fill="rgba(255,255,255,0.16)" />
-    <motion.ellipse variants={{ hover: { scaleY: 2.3, y: -28 } }} transition={{ duration: 1, ease: [0.55, 0, 0.1, 1], delay: 0.15 }} cx="160.5" cy="280" rx="110" ry="48" fill="rgba(255,255,255,0.14)" />
-  </motion.svg>
-)
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 
@@ -373,9 +324,9 @@ export default function EducationKit() {
             <a href="#the-kit" style={styles.heroPrimary}>
               See What's Inside
             </a>
-            <a href="#sponsor" style={styles.heroGhost}>
-              Sponsor a Kit
-            </a>
+            <Link to="/care-kits#donate" style={styles.heroGhost}>
+              Donate Today
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -411,9 +362,9 @@ export default function EducationKit() {
             whileInView="visible"
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            <span style={styles.sectionEyebrow}>What's Inside</span>
+            <span style={styles.sectionEyebrow}>Kit Contents</span>
             <h2 style={{ ...styles.sectionH2, maxWidth: 'none', whiteSpace: isMobile ? 'normal' : 'nowrap' }}>
-              Six supplies. One <span style={styles.h2Em}>complete kit.</span>
+              What's Included
             </h2>
             <p style={styles.sectionLead}>
               At its core, the Educational Kit is a stationery kit: the everyday supplies
@@ -424,18 +375,18 @@ export default function EducationKit() {
 
             <div style={{ ...styles.insideGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
               {[
-                { icon: Heart,      color: LOGO_GREEN, name: 'Mini Plushie',        desc: 'A small comfort plushie tucked into every kit because kids need more than supplies.' },
-                { icon: Pencil,     color: LOGO_GREEN, name: 'Pencils',             desc: 'HB graphite pencils, ready to use for the first day back.' },
-                { icon: Palette,    color: LOGO_GREEN, name: 'Coloured Pencils',    desc: 'A set of vibrant pencil crayons for creative work, art, and expression.' },
-                { icon: Calculator, color: LOGO_GREEN, name: 'Calculator',          desc: 'A basic calculator to support math work across grade levels.' },
-                { icon: Eraser,     color: LOGO_GREEN, name: 'Erasers',             desc: 'Soft erasers that keep the page clean and mistakes easy to fix.' },
-                { icon: Ruler,      color: LOGO_GREEN, name: 'Ruler and Sharpener', desc: 'A 30 cm ruler and a handheld sharpener so nothing stops the work.' },
+                { icon: Heart,      color: LOGO_PINK,      name: 'Mini Plushie',        desc: 'A small comfort plushie tucked into every kit because kids need more than supplies.' },
+                { icon: Pencil,     color: EDUCATION_BLUE, name: 'Pencils',             desc: 'HB graphite pencils, ready to use for the first day back.' },
+                { icon: Palette,    color: LOGO_ORANGE,    name: 'Coloured Pencils',    desc: 'A set of vibrant pencil crayons for creative work, art, and expression.' },
+                { icon: Calculator, color: LOGO_NAVY,      name: 'Calculator',          desc: 'A basic calculator to support math work across grade levels.' },
+                { icon: Eraser,     color: LOGO_GREEN,     name: 'Erasers',             desc: 'Soft erasers that keep the page clean and mistakes easy to fix.' },
+                { icon: Ruler,      color: LOGO_TEAL,      name: 'Ruler and Sharpener', desc: 'A 30 cm ruler and a handheld sharpener so nothing stops the work.' },
               ].map((item) => {
                 const Icon = item.icon
                 return (
                   <motion.div
                     key={item.name}
-                    whileHover={{ y: -6, boxShadow: '0 16px 36px rgba(87,160,24,0.16)', transition: { type: 'spring', stiffness: 280, damping: 18 } }}
+                    whileHover={{ y: -6, boxShadow: `0 16px 36px ${colorShadow(item.color, 0.16)}`, transition: { type: 'spring', stiffness: 280, damping: 18 } }}
                     style={styles.insideCard}
                   >
                     <span style={{ ...styles.insideIconWrap, background: `${item.color}18` }}>
@@ -460,9 +411,9 @@ export default function EducationKit() {
             whileInView="visible"
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            <span style={styles.sectionEyebrow}>Who It's For</span>
+            <span style={styles.sectionEyebrow}>Recipients</span>
             <h2 style={styles.sectionH2}>
-              Built for kids navigating <span style={styles.h2Em}>big moments.</span>
+              Who Receives Kits
             </h2>
             <p style={styles.sectionLead}>
               Our Educational Kits go directly to children across the Greater Toronto Area
@@ -474,16 +425,16 @@ export default function EducationKit() {
 
             <div style={styles.statRow}>
               {[
-                { k: 'Across the GTA', v: 'Hospitals, shelters, family programs' },
-                { k: 'Personalized', v: 'Each kit packed with a single child in mind' },
-                { k: 'No cost', v: 'Delivered to families and partners for free' },
+                { k: 'Across the GTA', v: 'Hospitals, shelters, family programs', color: EDUCATION_BLUE },
+                { k: 'Personalized', v: 'Each kit packed with a single child in mind', color: LOGO_ORANGE },
+                { k: 'No cost', v: 'Delivered to families and partners for free', color: LOGO_GREEN },
               ].map((s) => (
                 <motion.div
                   key={s.k}
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: '0 16px 36px rgba(87,160,24,0.16)', transition: { type: 'spring', stiffness: 280, damping: 18 } }}
+                  whileHover={{ y: -8, scale: 1.02, boxShadow: `0 16px 36px ${colorShadow(s.color, 0.16)}`, transition: { type: 'spring', stiffness: 280, damping: 18 } }}
                   style={styles.statCard}
                 >
-                  <span style={styles.statKey}>{s.k}</span>
+                  <span style={{ ...styles.statKey, color: s.color }}>{s.k}</span>
                   <span style={styles.statVal}>{s.v}</span>
                 </motion.div>
               ))}
@@ -501,15 +452,15 @@ export default function EducationKit() {
             whileInView="visible"
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            <span style={styles.sectionEyebrow}>How It's Made</span>
+            <span style={styles.sectionEyebrow}>Process</span>
             <h2 style={styles.sectionH2}>
-              Sourced thoughtfully. <span style={styles.h2Em}>Packed by hand.</span>
+              Kit Assembly
             </h2>
 
             <div style={{ ...styles.cardGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
               {[
-                { num: '01', color: LOGO_GREEN, title: 'Sourced with intent', body: 'Every supply is chosen for durability, child safety, and usefulness in real classrooms.', img: '/pillar-edu-a.jpg', credit: 'Unsplash' },
-                { num: '02', color: LOGO_GREEN, title: 'Packed by hand', body: 'Volunteers assemble each kit one at a time, with care built into every pouch.', img: '/care-kits-about.jpg', credit: 'Annie Spratt' },
+                { num: '01', color: EDUCATION_BLUE, title: 'Sourced with intent', body: 'Every supply is chosen for durability, child safety, and usefulness in real classrooms.', img: '/pillar-edu-a.jpg', credit: 'Unsplash' },
+                { num: '02', color: LOGO_ORANGE, title: 'Packed by hand', body: 'Volunteers assemble each kit one at a time, with care built into every pouch.', img: '/care-kits-about.jpg', credit: 'Annie Spratt' },
                 { num: '03', color: LOGO_GREEN, title: 'Delivered with care', body: 'Kits are handed to trusted hospital, shelter, and family program partners across the GTA.', img: '/pillar-health-b.jpg', credit: 'Unsplash' },
               ].map((c, i) => (
                 <CraftCard key={c.title} card={c} index={i} />
@@ -519,55 +470,12 @@ export default function EducationKit() {
         </div>
       </section>
 
-      {/* SPONSOR */}
-      <section id="sponsor" style={styles.sponsorSection}>
-        <div style={styles.sectionInner}>
-          <motion.div
-            variants={fromBottom}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
-          >
-            <span style={styles.sectionEyebrow}>Sponsor a Kit</span>
-            <h2 style={styles.sponsorH2}>
-              Change a{' '}
-              <SparklesText
-                text="chapter"
-                colors={{ first: LOGO_GREEN, second: '#7FBC4A' }}
-                count={8}
-                textStyle={{ color: '#1A1A1A' }}
-              />{' '}
-              today.
-            </h2>
-            <p style={styles.sponsorLead}>
-              Every sponsored kit goes directly to a child who needs one. Your contribution
-              funds the supplies and the carry pouch. This is a donation, not a product purchase.
-            </p>
-
-            <div style={{ ...styles.priceGrid, flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'flex-start' }}>
-              <PricingCard
-                label="Educational Kit"
-                description="Stationery essentials and a small comfort item, hand packed for one child in the Greater Toronto Area."
-                items={['Pencils and coloured pencils', 'Calculator', 'Ruler and sharpener', 'Erasers', 'Mini plushie', 'Handwritten note']}
-                cta="Donate Today"
-                background={`linear-gradient(155deg, ${LOGO_GREEN} 0%, ${LOGO_GREEN} 100%)`}
-                BGComponent={BGCircles}
-                isMobile={isMobile}
-              />
-            </div>
-
-            <p style={styles.priceFootnote}>
-              100% of your gift funds the supplies and the carry pouch.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
       <Footer />
       <DonateFloat
-        label="Donate a Kit today"
-        background={LOGO_GREEN}
-        shadow="0 6px 24px rgba(87,160,24,0.30)"
+        label="Donate Today"
+        to="/care-kits#donate"
+        background={EDUCATION_BLUE}
+        shadow="0 6px 24px rgba(0,153,214,0.30)"
       />
     </div>
   )
@@ -589,8 +497,8 @@ const styles = {
     color: 'rgba(255,255,255,0.80)',
     textDecoration: 'none',
     letterSpacing: '0.02em',
-    border: '1px solid rgba(87,160,24,0.42)',
-    background: 'rgba(87,160,24,0.22)',
+    border: '1px solid rgba(0,153,214,0.42)',
+    background: 'rgba(0,153,214,0.22)',
     backdropFilter: 'blur(8px)',
     padding: '7px 16px',
     borderRadius: 4,
@@ -600,8 +508,8 @@ const styles = {
   heroLine: { display: 'block' },
   heroLead: { fontFamily: "'Inter', sans-serif", fontSize: 'clamp(1rem, 1.3vw, 1.2rem)', lineHeight: 1.65, color: 'rgba(255,255,255,0.92)', maxWidth: 620, margin: 0, textShadow: '0 1px 12px rgba(0,0,0,0.35)' },
   heroCtaRow: { display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' },
-  heroPrimary: { display: 'inline-flex', alignItems: 'center', padding: '14px 30px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#fff', background: LOGO_GREEN, boxShadow: '0 6px 24px rgba(87,160,24,0.34)', textDecoration: 'none' },
-  heroGhost: { display: 'inline-flex', alignItems: 'center', padding: '14px 26px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#ffffff', border: '1.5px solid rgba(255,255,255,0.55)', background: 'rgba(87,160,24,0.30)', backdropFilter: 'blur(10px)', textDecoration: 'none' },
+  heroPrimary: { display: 'inline-flex', alignItems: 'center', padding: '14px 30px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#fff', background: EDUCATION_BLUE, boxShadow: '0 6px 24px rgba(0,153,214,0.34)', textDecoration: 'none' },
+  heroGhost: { display: 'inline-flex', alignItems: 'center', padding: '14px 26px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#ffffff', border: '1.5px solid rgba(255,255,255,0.55)', background: 'rgba(0,153,214,0.30)', backdropFilter: 'blur(10px)', textDecoration: 'none' },
 
   scrollSection: { position: 'relative', height: `${SECTION_HEIGHT_VH}vh` },
   sticky: { position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' },
@@ -614,20 +522,20 @@ const styles = {
   canvas: { width: 'min(76vw, 1040px)', height: 'min(60vh, 660px)', display: 'block', background: 'transparent' },
   canvasMobile: { width: 'min(88vw, 520px)', height: '42vh', display: 'block', background: 'transparent' },
   loader: { position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)', zIndex: 6 },
-  loaderTrack: { width: 220, height: 3, background: 'rgba(87,160,24,0.18)', borderRadius: 100, overflow: 'hidden' },
-  loaderFill: { height: '100%', background: LOGO_GREEN, transition: 'width 0.2s ease' },
-  loaderText: { fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(87,160,24,0.72)' },
+  loaderTrack: { width: 220, height: 3, background: 'rgba(0,0,0,0.12)', borderRadius: 100, overflow: 'hidden' },
+  loaderFill: { height: '100%', background: EDUCATION_BLUE, transition: 'width 0.2s ease' },
+  loaderText: { fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(0,153,214,0.72)' },
 
   section: { position: 'relative', padding: '0 24px clamp(80px, 12vh, 140px)' },
   sectionInner: { maxWidth: 1080, margin: '0 auto' },
   sectionEyebrow: { display: 'block', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#aaa', marginBottom: 14, background: 'none', padding: 0, borderRadius: 0 },
   sectionH2: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 750, fontSize: 'clamp(1.9rem, 3vw, 2.55rem)', lineHeight: 1.12, letterSpacing: '-0.015em', color: '#1A1A1A', margin: '0 0 24px', maxWidth: 820 },
-  h2Em: { color: LOGO_GREEN, fontStyle: 'normal' },
+  h2Em: { color: NEUTRAL_ACCENT, fontStyle: 'normal' },
   sectionLead: { fontFamily: "'Inter', sans-serif", fontSize: 'clamp(1rem, 1.25vw, 1.18rem)', lineHeight: 1.7, color: '#555', maxWidth: 760, margin: '0 0 48px' },
 
   statRow: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 18 },
   statCard: { background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 6, padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' },
-  statKey: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: LOGO_GREEN },
+  statKey: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: EDUCATION_BLUE },
   statVal: { fontFamily: "'Inter', sans-serif", fontSize: '1rem', lineHeight: 1.5, color: '#555' },
 
   insideGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 },
@@ -654,23 +562,4 @@ const styles = {
   stepTitle: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '1.05rem', color: '#1A1A1A', letterSpacing: '-0.015em', lineHeight: 1.25 },
   stepDesc: { fontFamily: "'Inter', sans-serif", fontSize: '0.95rem', lineHeight: 1.7, color: '#555' },
 
-  priceGrid: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 22, marginBottom: 36 },
-  priceCard: { position: 'relative', width: 320, minHeight: 540, flexShrink: 0, overflow: 'hidden', borderRadius: 6, padding: 30, paddingBottom: 84, boxShadow: '0 14px 38px rgba(87,160,24,0.22)', color: '#FFFFFF', cursor: 'default' },
-  priceBg: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' },
-  priceContent: { position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 14 },
-  priceLabel: { display: 'inline-flex', alignItems: 'center', width: 'fit-content', background: 'rgba(255,255,255,0.22)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.28)', color: '#FFFFFF', padding: '5px 14px', borderRadius: 100, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.04em' },
-  priceAmount: { display: 'block', fontFamily: "'JetBrains Mono', 'SF Mono', monospace", fontWeight: 900, fontSize: '3.4rem', lineHeight: 1.05, transformOrigin: 'top left', letterSpacing: '-0.02em', marginTop: 4 },
-  priceCurrency: { fontSize: '1.2rem', fontWeight: 700, letterSpacing: 0, opacity: 0.88 },
-  pricePer: { display: 'block', fontSize: '0.95rem', fontWeight: 600, opacity: 0.78, marginTop: -4 },
-  priceAmountMuted: { display: 'block', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '2.4rem', lineHeight: 1.1, letterSpacing: '-0.02em', marginTop: 4, color: 'rgba(255,255,255,0.95)' },
-  priceDesc: { fontFamily: "'Inter', sans-serif", fontSize: '0.97rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.92)', margin: '4px 0 6px' },
-  priceList: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 },
-  priceItem: { display: 'flex', alignItems: 'flex-start', gap: 10, fontFamily: "'Inter', sans-serif", fontSize: '0.94rem', lineHeight: 1.4, color: 'rgba(255,255,255,0.95)' },
-  priceBtn: { position: 'absolute', bottom: 18, left: 18, right: 18, zIndex: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '13px 18px', borderRadius: 4, background: '#FFFFFF', color: LOGO_GREEN, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '0.92rem', letterSpacing: '0.04em', textTransform: 'uppercase', textDecoration: 'none', border: '2px solid #FFFFFF', transition: 'background 0.2s ease, color 0.2s ease' },
-  priceBtnDisabled: { position: 'absolute', bottom: 18, left: 18, right: 18, zIndex: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '13px 18px', borderRadius: 4, background: 'rgba(255,255,255,0.18)', color: 'rgba(255,255,255,0.85)', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', border: '1.5px solid rgba(255,255,255,0.4)', cursor: 'not-allowed' },
-  priceFootnote: { fontFamily: "'Inter', sans-serif", fontSize: '0.86rem', lineHeight: 1.6, color: 'rgba(0,0,0,0.6)', textAlign: 'center', maxWidth: 620, margin: '0 auto', fontStyle: 'italic' },
-
-  sponsorSection: { position: 'relative', padding: '0 24px clamp(100px, 14vh, 160px)', textAlign: 'center' },
-  sponsorH2: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(2.8rem, 5.5vw, 4.2rem)', lineHeight: 1.1, letterSpacing: '-0.02em', color: '#1A1A1A', margin: '0 auto 22px', maxWidth: 820 },
-  sponsorLead: { fontFamily: "'Inter', sans-serif", fontSize: 'clamp(1rem, 1.25vw, 1.18rem)', lineHeight: 1.7, color: '#555', maxWidth: 640, margin: '0 auto 48px' },
 }

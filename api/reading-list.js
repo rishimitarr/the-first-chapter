@@ -146,6 +146,18 @@ const uniqueStories = (stories) => {
   return unique
 }
 
+const dailyRotationOffset = (length) => {
+  if (length <= 1) return 0
+  const today = new Date().toISOString().slice(0, 10)
+  const seed = today.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0)
+  return seed % length
+}
+
+const rotateStoriesDaily = (stories) => {
+  const offset = dailyRotationOffset(stories.length)
+  return offset === 0 ? stories : [...stories.slice(offset), ...stories.slice(0, offset)]
+}
+
 async function fetchWithTimeout(url, ms = 4500) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), ms)
@@ -302,10 +314,11 @@ export default async function handler(req, res) {
     }
 
     if (stories.length > 0) {
+      const dailyStories = rotateStoriesDaily(stories.slice(0, 10))
       json(res, 200, {
         updatedAt: new Date().toISOString(),
         provider: process.env.NEWS_API_KEY ? 'newsapi' : 'gnews',
-        stories: stories.slice(0, 10),
+        stories: dailyStories,
       })
       return
     }
@@ -321,7 +334,7 @@ export default async function handler(req, res) {
 
     json(res, 200, {
       updatedAt: new Date().toISOString(),
-      stories: fallbackStories,
+      stories: rotateStoriesDaily(fallbackStories),
     })
   } catch {
     json(res, 500, { error: 'Unable to load reading list' })

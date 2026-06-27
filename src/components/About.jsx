@@ -1,15 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   BookOpen,
   HeartPulse,
   HandHeart,
   Compass,
   UsersRound,
-  Newspaper,
-  ChevronLeft,
-  ChevronRight,
-  ExternalLink,
 } from 'lucide-react'
 
 const NAVY = '#1A3A6B'
@@ -68,151 +63,7 @@ const quickLinks = [
   { icon: BookOpen, label: 'Mission', href: '#mission' },
   { icon: HeartPulse, label: 'Purpose', href: '#purpose' },
   { icon: UsersRound, label: 'Founders', href: '#founders' },
-  { icon: Newspaper, label: 'Reading', href: '#reading' },
 ]
-
-const todayKey = () => new Date().toISOString().slice(0, 10)
-const feedCacheKey = () => `tfc-about-reading-real-news-v2-${todayKey()}`
-const isGenericNewsImage = (image = '') =>
-  image.includes('lh3.googleusercontent.com/J6_coFbog') || image.includes('news.google.com')
-
-const hasCleanArticleImages = (items = []) =>
-  items.length > 0 && items.every((story) => story.image && !isGenericNewsImage(story.image))
-
-function NewsCarousel() {
-  const [stories, setStories] = useState([])
-  const [active, setActive] = useState(0)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    let cancelled = false
-    const cacheKey = feedCacheKey()
-    const cached = localStorage.getItem(cacheKey)
-
-    if (cached) {
-      const parsed = JSON.parse(cached)
-      if (hasCleanArticleImages(parsed)) {
-        const frame = requestAnimationFrame(() => {
-          if (cancelled) return
-          setStories(parsed)
-          setLoading(false)
-        })
-        return () => {
-          cancelled = true
-          cancelAnimationFrame(frame)
-        }
-      }
-      localStorage.removeItem(cacheKey)
-    }
-
-    fetch('/api/reading-list')
-      .then((res) => {
-        if (!res.ok) throw new Error('Reading list failed')
-        return res.json()
-      })
-      .then((data) => {
-        if (cancelled) return
-        const items = Array.isArray(data.stories) ? data.stories : []
-        const cleanItems = items.filter((story) => story.image && !isGenericNewsImage(story.image))
-        setStories(cleanItems)
-        setLoading(false)
-        if (cleanItems.length > 0) localStorage.setItem(cacheKey, JSON.stringify(cleanItems))
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  useEffect(() => {
-    if (stories.length === 0) return undefined
-    const id = setInterval(() => {
-      setActive((current) => (current + 1) % stories.length)
-    }, 6500)
-    return () => clearInterval(id)
-  }, [stories.length])
-
-  const story = stories[active]
-  const go = (direction) => {
-    if (stories.length === 0) return
-    setActive((current) => (current + direction + stories.length) % stories.length)
-  }
-
-  return (
-    <section id="reading" style={styles.readingSection}>
-      <div className="container">
-        <div style={styles.readingHeader} className="about-reading-header">
-          <div>
-            <h2 style={styles.sectionTitle}>Reading List</h2>
-            <p style={styles.readingIntro}>
-              A rotating set of articles about children, education, health, and belonging.
-              The goal is to keep the page connected to the real issues children are facing now.
-            </p>
-          </div>
-        </div>
-
-        <div style={styles.carouselShell} className="about-carousel-shell">
-          <button style={styles.carouselButton} onClick={() => go(-1)} aria-label="Previous article">
-            <ChevronLeft size={22} />
-          </button>
-
-          <div style={styles.storyViewport}>
-            {loading || !story ? (
-              <div style={styles.storyEmpty}>
-                {loading ? 'Loading articles...' : 'Articles are unavailable right now.'}
-              </div>
-            ) : (
-              <AnimatePresence mode="wait">
-                <motion.article
-                  key={`${story.title}-${active}`}
-                  style={styles.storyCard}
-                  className="about-story-card"
-                  initial={{ opacity: 0, x: 28 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -28 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
-                >
-                  <div style={styles.storyImageWrap} className="about-image-card">
-                    <img src={story.image} alt="" aria-hidden="true" style={styles.storyImage} />
-                  </div>
-                  <div style={styles.storyContent}>
-                    <h3 style={styles.storyTitle}>{story.title}</h3>
-                    <a href={story.link} target="_blank" rel="noreferrer" style={styles.storyLink}>
-                      Read article <ExternalLink size={15} />
-                    </a>
-                  </div>
-                </motion.article>
-              </AnimatePresence>
-            )}
-          </div>
-
-          <button style={styles.carouselButton} onClick={() => go(1)} aria-label="Next article">
-            <ChevronRight size={22} />
-          </button>
-        </div>
-
-        <div style={styles.carouselFooter}>
-          <span />
-          <div style={styles.dots}>
-            {stories.map((item, index) => (
-              <button
-                key={`${item.title}-${index}`}
-                aria-label={`Show article ${index + 1}`}
-                onClick={() => setActive(index)}
-                style={{ ...styles.dot, background: index === active ? NAVY : 'rgba(26,58,107,0.18)' }}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
 
 function FounderCard({ initials, name, role, bio, color }) {
   return (
@@ -234,15 +85,6 @@ function FounderCard({ initials, name, role, bio, color }) {
 }
 
 export default function About() {
-  const heroStats = useMemo(
-    () => [
-      { label: 'Student-led', value: 'Built by young people who want to act now' },
-      { label: 'GTA-focused', value: 'Designed for children and families close to home' },
-      { label: 'Purpose-first', value: 'Education, health, and care before everything else' },
-    ],
-    []
-  )
-
   return (
     <div style={styles.page}>
       <section style={styles.hero}>
@@ -392,19 +234,6 @@ export default function About() {
         </div>
       </section>
 
-      <section style={styles.statsSection}>
-        <div className="container">
-          <div style={styles.statGrid} className="about-stat-grid">
-            {heroStats.map((stat) => (
-              <div key={stat.label} style={styles.statCard}>
-                <span style={styles.statLabel}>{stat.label}</span>
-                <p style={styles.statValue}>{stat.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="founders" style={styles.foundersSection}>
         <div className="container">
           <div style={styles.foundersHeader}>
@@ -417,7 +246,6 @@ export default function About() {
         </div>
       </section>
 
-      <NewsCarousel />
     </div>
   )
 }
@@ -487,7 +315,7 @@ const styles = {
   quickBand: { background: '#F5F3EF', padding: '34px 0' },
   quickGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(5, 1fr)',
+    gridTemplateColumns: 'repeat(4, 1fr)',
     gap: 14,
   },
   quickItem: {
@@ -642,34 +470,6 @@ const styles = {
     color: 'rgba(255,255,255,0.82)',
     maxWidth: 820,
     margin: '0 auto',
-  },
-  statsSection: { padding: '56px 0', background: '#fff' },
-  statGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: 18,
-  },
-  statCard: {
-    borderTop: `5px solid ${NAVY}`,
-    background: '#fff',
-    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
-    borderRadius: 6,
-    padding: '24px 24px 26px',
-  },
-  statLabel: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 750,
-    fontSize: '0.78rem',
-    letterSpacing: '0.16em',
-    textTransform: 'uppercase',
-    color: NAVY,
-  },
-  statValue: {
-    fontFamily: "'Inter', sans-serif",
-    fontSize: '0.98rem',
-    lineHeight: 1.65,
-    color: '#555',
-    margin: '10px 0 0',
   },
   foundersSection: { padding: '46px 0 84px', background: '#fff' },
   foundersHeader: { maxWidth: 760, marginBottom: 28 },

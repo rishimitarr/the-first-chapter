@@ -81,7 +81,7 @@ const PAGE_BG = '#fff'
 // Card with hover-tilt + colored shine , same animation pattern as the
 // Mission cards on the main page so the Care Kits page reads as part of
 // the same site.
-function CraftCard({ card, index }) {
+function CraftCard({ card }) {
   const controls = useAnimation()
   const hoverCountRef = useRef(0)
   const [hovered, setHovered] = useState(false)
@@ -182,7 +182,6 @@ function KitButton({ href, isMobile }) {
 // type simultaneously. Coming-soon variants are inert on hover.
 function PricingCard({
   label,
-  price,
   description,
   items,
   cta,
@@ -613,7 +612,7 @@ export default function CareKits() {
               { icon: Calculator, color: '#1A3A6B', name: 'Calculator',        desc: 'A basic calculator to support math work across grade levels.' },
               { icon: Eraser,     color: '#F7941D', name: 'Erasers',           desc: 'Soft erasers that keep the page clean and mistakes easy to fix.' },
               { icon: Ruler,      color: '#14B8A6', name: 'Ruler and Sharpener', desc: 'A 30 cm ruler and a handheld sharpener so nothing stops the work.' },
-            ].map((item, i) => {
+            ].map((item) => {
               const Icon = item.icon
               return (
                 <motion.div
@@ -664,7 +663,7 @@ export default function CareKits() {
                 { k: 'Across the GTA', v: 'Hospitals, shelters, family programs' },
                 { k: 'Personalized', v: 'Each kit packed with a single child in mind' },
                 { k: 'No cost', v: 'Delivered to families and partners for free' },
-              ].map((s, i) => (
+              ].map((s) => (
                 <motion.div
                   key={s.k}
                   whileHover={{
@@ -783,11 +782,11 @@ export default function CareKits() {
               One kit can change a{' '}
               <SparklesText
                 text="chapter"
-                colors={{ first: '#1A3A6B', second: '#FBB040' }}
+                colors={{ first: '#F7941D', second: '#FBB040' }}
                 count={12}
-                textStyle={{ color: '#FBB040' }}
+                textStyle={{ color: '#1A1A1A' }}
               />
-              <span style={{ color: '#FBB040' }}>.</span>
+              .
             </h2>
             <p style={styles.sponsorLead}>
               Every sponsored kit goes directly to a child who needs one. Your contribution

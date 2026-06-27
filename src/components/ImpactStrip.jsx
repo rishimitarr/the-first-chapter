@@ -47,7 +47,7 @@ export default function ImpactStrip() {
           </div>
 
           <div style={styles.grid} className="impact-strip-grid">
-            {pillars.map((p, i) => (
+            {pillars.map((p) => (
               <motion.div
                 key={p.title}
                 style={styles.card}

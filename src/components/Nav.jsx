@@ -33,21 +33,11 @@ const defaultLinks = [
   { label: 'Join Us', href: '/#join' },
 ]
 
-// On the /care-kits route the nav swaps to in-page anchors that mirror
-// the page's own sections.
-const careKitsLinks = [
-  { label: 'The Kit', href: '#the-kit' },
-  { label: "What's Inside", href: '#whats-inside' },
-  { label: "Who It's For", href: '#recipients' },
-  { label: 'How It Works', href: '#create-a-kit' },
-]
-
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
 
-  const onCareKits = location.pathname.startsWith('/care-kits')
-  const links = onCareKits ? careKitsLinks : defaultLinks
+  const links = defaultLinks
 
   const resolveHref = (l) => {
     if (l.route) return l.href
@@ -55,11 +45,7 @@ export default function Nav() {
     return l.href
   }
 
-  const onCareKitsLanding = location.pathname === '/care-kits'
-  const ctaHref = onCareKits
-    ? (onCareKitsLanding ? '#our-kits' : '#sponsor')
-    : (location.pathname === '/' ? '#join' : '/#join')
-  const ctaLabel = onCareKits ? (onCareKitsLanding ? 'See Our Kits' : 'Sponsor a Kit') : 'Get Involved'
+  const ctaHref = location.pathname === '/' ? '#join' : '/#join'
 
   return (
     <motion.nav
@@ -121,19 +107,8 @@ export default function Nav() {
             whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(26,58,107,0.45)' }}
             whileTap={{ scale: 0.97 }}
           >
-            {ctaLabel}
+            Get Involved
           </motion.a>
-          {onCareKits && (
-            <motion.a
-              href="/"
-              style={styles.homeBtn}
-              variants={linkVariants}
-              whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(247,148,29,0.45)' }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Home
-            </motion.a>
-          )}
         </motion.div>
 
         {/* Hamburger */}
@@ -205,17 +180,8 @@ export default function Nav() {
               style={styles.mobileCta}
               onClick={() => setMenuOpen(false)}
             >
-              {ctaLabel}
+              Get Involved
             </a>
-            {onCareKits && (
-              <a
-                href="/"
-                style={styles.mobileHome}
-                onClick={() => setMenuOpen(false)}
-              >
-                Home
-              </a>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -326,33 +292,6 @@ const styles = {
     fontSize: '0.95rem',
     color: '#fff',
     background: '#1A3A6B',
-    padding: '12px 24px',
-    borderRadius: 4,
-    textAlign: 'center',
-  },
-  homeBtn: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.9rem',
-    color: '#fff',
-    background: '#F7941D',
-    padding: '10px 22px',
-    borderRadius: 4,
-    marginLeft: 8,
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 6,
-    textDecoration: 'none',
-  },
-  mobileHome: {
-    display: 'inline-block',
-    marginTop: 10,
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.95rem',
-    color: '#fff',
-    background: '#F7941D',
     padding: '12px 24px',
     borderRadius: 4,
     textAlign: 'center',
