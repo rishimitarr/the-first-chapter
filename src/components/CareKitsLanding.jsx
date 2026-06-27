@@ -35,9 +35,10 @@ const LOGO_GREEN = '#57A018'
 const LOGO_ORANGE = '#F7941D'
 const LOGO_PINK = '#EE3093'
 const LOGO_TEAL = '#14B8A6'
+const LOGO_NAVY = '#1A3A6B'
 const ACCENTS = {
   green: { color: LOGO_GREEN, bg: 'rgba(87,160,24,0.08)', shadow: 'rgba(87,160,24,0.12)' },
-  navy: { color: '#1A3A6B', bg: 'rgba(26,58,107,0.08)', shadow: 'rgba(26,58,107,0.12)' },
+  navy: { color: LOGO_NAVY, bg: 'rgba(26,58,107,0.08)', shadow: 'rgba(26,58,107,0.12)' },
   amber: { color: LOGO_ORANGE, bg: 'rgba(247,148,29,0.09)', shadow: 'rgba(247,148,29,0.12)' },
   pink: { color: LOGO_PINK, bg: 'rgba(238,48,147,0.08)', shadow: 'rgba(238,48,147,0.12)' },
   teal: { color: LOGO_TEAL, bg: 'rgba(20,184,166,0.08)', shadow: 'rgba(20,184,166,0.12)' },
@@ -57,7 +58,6 @@ function KitCard({ kit, isMobile }) {
 
       <div style={{ ...styles.kitBody, padding: isMobile ? '22px 22px 24px' : '24px 26px 28px' }}>
         <div style={styles.kitBodyTop}>
-          <span style={{ ...styles.kitNumber, color: kit.color }}>{kit.num}</span>
           <h3 style={styles.kitCardTitle}>{kit.name}</h3>
           <p style={styles.kitCardDesc}>{kit.body}</p>
         </div>
@@ -89,7 +89,6 @@ function StepCard({ step, span, isMobile }) {
         <span style={{ ...styles.stepIconWrap, background: step.accent.bg }}>
           <Icon size={22} color={step.accent.color} strokeWidth={2} />
         </span>
-        <span style={{ ...styles.stepNumber, color: step.accent.color }}>{step.step}</span>
       </div>
       <span style={styles.stepTitle}>{step.title}</span>
       <span style={styles.stepDesc}>{step.desc}</span>
@@ -586,8 +585,8 @@ const styles = {
     fontWeight: 700,
     fontSize: '0.95rem',
     color: '#fff',
-    background: '#F7941D',
-    boxShadow: '0 6px 24px rgba(247,148,29,0.42)',
+    background: LOGO_NAVY,
+    boxShadow: '0 6px 24px rgba(26,58,107,0.34)',
     textDecoration: 'none',
   },
   heroGhost: {

@@ -474,8 +474,8 @@ export default function EducationKit() {
       <DonateFloat
         label="Donate Today"
         to="/care-kits#donate"
-        background={EDUCATION_BLUE}
-        shadow="0 6px 24px rgba(0,153,214,0.30)"
+        background={LOGO_NAVY}
+        shadow="0 6px 24px rgba(26,58,107,0.30)"
       />
     </div>
   )
@@ -497,8 +497,8 @@ const styles = {
     color: 'rgba(255,255,255,0.80)',
     textDecoration: 'none',
     letterSpacing: '0.02em',
-    border: '1px solid rgba(0,153,214,0.42)',
-    background: 'rgba(0,153,214,0.22)',
+    border: '1px solid rgba(26,58,107,0.50)',
+    background: 'rgba(26,58,107,0.58)',
     backdropFilter: 'blur(8px)',
     padding: '7px 16px',
     borderRadius: 4,
@@ -508,8 +508,8 @@ const styles = {
   heroLine: { display: 'block' },
   heroLead: { fontFamily: "'Inter', sans-serif", fontSize: 'clamp(1rem, 1.3vw, 1.2rem)', lineHeight: 1.65, color: 'rgba(255,255,255,0.92)', maxWidth: 620, margin: 0, textShadow: '0 1px 12px rgba(0,0,0,0.35)' },
   heroCtaRow: { display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' },
-  heroPrimary: { display: 'inline-flex', alignItems: 'center', padding: '14px 30px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#fff', background: EDUCATION_BLUE, boxShadow: '0 6px 24px rgba(0,153,214,0.34)', textDecoration: 'none' },
-  heroGhost: { display: 'inline-flex', alignItems: 'center', padding: '14px 26px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#ffffff', border: '1.5px solid rgba(255,255,255,0.55)', background: 'rgba(0,153,214,0.30)', backdropFilter: 'blur(10px)', textDecoration: 'none' },
+  heroPrimary: { display: 'inline-flex', alignItems: 'center', padding: '14px 30px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#fff', background: LOGO_NAVY, boxShadow: '0 6px 24px rgba(26,58,107,0.34)', textDecoration: 'none' },
+  heroGhost: { display: 'inline-flex', alignItems: 'center', padding: '14px 26px', borderRadius: 4, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: '#ffffff', border: '1.5px solid rgba(255,255,255,0.55)', background: 'rgba(26,58,107,0.58)', backdropFilter: 'blur(10px)', textDecoration: 'none' },
 
   scrollSection: { position: 'relative', height: `${SECTION_HEIGHT_VH}vh` },
   sticky: { position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' },
