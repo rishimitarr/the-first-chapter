@@ -341,7 +341,7 @@ const styles = {
     width: 52,
     borderRadius: 4,
     overflow: 'hidden',
-    background: '#ffffff',
+    background: '#F3F7FC',
     cursor: 'pointer',
     textDecoration: 'none',
     boxShadow: '0 4px 20px rgba(0,0,0,0.24)',

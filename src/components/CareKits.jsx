@@ -164,7 +164,7 @@ function KitButton({ href, isMobile }) {
         transition={{ duration: 0.2, ease: 'easeOut' }}
         style={styles.kitBtnIcon}
       >
-        <Backpack size={24} strokeWidth={2} color="#ffffff" />
+        <Backpack size={24} strokeWidth={2} color="#1A3A6B" />
       </motion.span>
       <motion.span
         animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.75 }}
@@ -945,9 +945,10 @@ const styles = {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
-    color: '#fff',
-    background: '#1A3A6B',
-    boxShadow: '0 6px 24px rgba(26,58,107,0.45)',
+    color: '#1A3A6B',
+    background: '#F3F7FC',
+    border: '1.5px solid rgba(243,247,252,0.9)',
+    boxShadow: '0 6px 24px rgba(0,0,0,0.22)',
     textDecoration: 'none',
   },
   heroGhost: {
@@ -958,9 +959,9 @@ const styles = {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',
-    color: '#ffffff',
-    border: '1.5px solid rgba(255,255,255,0.45)',
-    background: 'rgba(255,255,255,0.10)',
+    color: '#1A3A6B',
+    border: '1.5px solid rgba(243,247,252,0.9)',
+    background: '#F3F7FC',
     backdropFilter: 'blur(10px)',
     textDecoration: 'none',
   },
@@ -975,10 +976,11 @@ const styles = {
     width: 60,
     borderRadius: 4,
     overflow: 'hidden',
-    background: '#1A3A6B',
+    background: '#F3F7FC',
+    border: '1.5px solid rgba(243,247,252,0.9)',
     cursor: 'pointer',
     textDecoration: 'none',
-    boxShadow: '0 6px 24px rgba(26,58,107,0.45)',
+    boxShadow: '0 6px 24px rgba(0,0,0,0.22)',
     flexShrink: 0,
   },
   kitBtnIcon: {
@@ -989,7 +991,7 @@ const styles = {
   },
   kitBtnText: {
     position: 'absolute',
-    color: '#ffffff',
+    color: '#1A3A6B',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.95rem',

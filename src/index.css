@@ -157,13 +157,13 @@ ul { list-style: none; }
   justify-content: center;
   padding: 13px 32px;
   border-radius: 4px;
-  border: 1.5px solid rgba(255,255,255,0.55);
+  border: 1.5px solid rgba(243,247,252,0.9);
   cursor: pointer;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1rem;
-  color: #fff;
-  background: rgba(255,255,255,0.12);
+  color: #1A3A6B;
+  background: #F3F7FC;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
@@ -172,8 +172,8 @@ ul { list-style: none; }
 }
 
 .btn-glass:hover {
-  background: rgba(255,255,255,0.22);
-  border-color: rgba(255,255,255,0.85);
+  background: #FFFFFF;
+  border-color: #FFFFFF;
   transform: translateY(-3px);
 }
 
