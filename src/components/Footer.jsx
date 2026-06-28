@@ -41,8 +41,8 @@ export default function Footer() {
           {/* Contact */}
           <div style={styles.col} className="footer-col">
             <div style={styles.colLabel}>Contact</div>
-            <a href="mailto:thefirstchapternpo@gmail.com" style={styles.footerLink}>
-              thefirstchapternpo@gmail.com
+            <a href="mailto:info@thefirstchapternpo.org" style={styles.footerLink}>
+              info@thefirstchapternpo.org
             </a>
             <div style={styles.footerLink}>Greater Toronto Area, Ontario</div>
           </div>
