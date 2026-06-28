@@ -4,7 +4,6 @@ import {
   Heart,
   Pencil,
   Palette,
-  Calculator,
   Eraser,
   Ruler,
   ArrowLeft,
@@ -27,6 +26,7 @@ const FRAME_COUNT = 144
 const FRAME_VER = 'v3'
 const framePath = (i) =>
   `/kit-frames-webp/frame-${String(i).padStart(3, '0')}.webp?${FRAME_VER}`
+const ENABLE_KIT_ANIMATION = false
 
 const PAGE_BG = '#fff'
 const EDUCATION_BLUE = '#0099D6'
@@ -130,6 +130,8 @@ export default function EducationKit() {
   })
 
   useEffect(() => {
+    if (!ENABLE_KIT_ANIMATION) return undefined
+
     let cancelled = false
     const resetFrame = requestAnimationFrame(() => {
       if (cancelled) return
@@ -180,6 +182,8 @@ export default function EducationKit() {
   }, [frameNumbers, isMobile])
 
   useEffect(() => {
+    if (!ENABLE_KIT_ANIMATION) return undefined
+
     return scrollYProgress.on('change', (v) => {
       const t = Math.min(1, Math.max(0, v / ANIM_END))
       const nextFrame = t * (FRAME_COUNT - 1)
@@ -193,6 +197,8 @@ export default function EducationKit() {
   }, [isMobile, scrollYProgress])
 
   useEffect(() => {
+    if (!ENABLE_KIT_ANIMATION) return undefined
+
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -310,9 +316,8 @@ export default function EducationKit() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
             style={styles.heroLead}
           >
-            Stationery essentials and a comfort item, hand packed for one child in the
-            Greater Toronto Area who is navigating a hospital stay, shelter placement,
-            or home in transition.
+            A complete school supplies kit with the everyday classroom essentials a child
+            needs for back-to-school learning.
           </motion.p>
 
           <motion.div
@@ -321,7 +326,7 @@ export default function EducationKit() {
             transition={{ duration: 0.7, delay: 0.5 }}
             style={styles.heroCtaRow}
           >
-            <a href="#the-kit" style={styles.heroPrimary}>
+            <a href="#whats-inside" style={styles.heroPrimary}>
               See What's Inside
             </a>
             <Link to="/care-kits#donate" style={styles.heroGhost}>
@@ -332,26 +337,28 @@ export default function EducationKit() {
       </section>
 
       {/* SCROLL ANIMATION */}
-      <section ref={sectionRef} id="the-kit" style={{ ...styles.scrollSection, height: isMobile ? `${MOBILE_SECTION_HEIGHT_VH}vh` : `${SECTION_HEIGHT_VH}vh` }}>
-        <div style={isMobile ? styles.stickyMobile : styles.sticky}>
-          <div style={styles.kitLabelWrap}>
-            <span style={styles.kitEyebrow}>Presenting</span>
-            <span style={styles.kitTitle}>The Educational Kit</span>
-          </div>
-          <div style={styles.stage}>
-            <canvas ref={canvasRef} style={isMobile ? styles.canvasMobile : styles.canvas} />
-          </div>
-          <span style={styles.disclaimer}>Illustration is not accurate to scale or quantity.</span>
-          {!ready && (
-            <div style={styles.loader}>
-              <div style={styles.loaderTrack}>
-                <div style={{ ...styles.loaderFill, width: `${loadedPct}%` }} />
-              </div>
-              <span style={styles.loaderText}>Preparing kit {loadedPct}%</span>
+      {ENABLE_KIT_ANIMATION && (
+        <section ref={sectionRef} id="the-kit" style={{ ...styles.scrollSection, height: isMobile ? `${MOBILE_SECTION_HEIGHT_VH}vh` : `${SECTION_HEIGHT_VH}vh` }}>
+          <div style={isMobile ? styles.stickyMobile : styles.sticky}>
+            <div style={styles.kitLabelWrap}>
+              <span style={styles.kitEyebrow}>Presenting</span>
+              <span style={styles.kitTitle}>The Educational Kit</span>
             </div>
-          )}
-        </div>
-      </section>
+            <div style={styles.stage}>
+              <canvas ref={canvasRef} style={isMobile ? styles.canvasMobile : styles.canvas} />
+            </div>
+            <span style={styles.disclaimer}>Illustration is not accurate to scale or quantity.</span>
+            {!ready && (
+              <div style={styles.loader}>
+                <div style={styles.loaderTrack}>
+                  <div style={{ ...styles.loaderFill, width: `${loadedPct}%` }} />
+                </div>
+                <span style={styles.loaderText}>Preparing kit {loadedPct}%</span>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* WHAT'S INSIDE */}
       <section id="whats-inside" style={styles.section}>
@@ -367,20 +374,25 @@ export default function EducationKit() {
               What's Included
             </h2>
             <p style={styles.sectionLead}>
-              At its core, the Educational Kit is a stationery kit: the everyday supplies
-              that make school feel possible. Pencils, erasers, rulers. The things most kids
-              take for granted, and that children in crisis are the most likely to be without.
-              We source each item carefully so the kit feels complete, not makeshift.
+              Each school supplies kit includes 1 notebook, 2 folders, 1 pencil pouch,
+              4 pens, 3 pencils, 5 crayons, 1 glue stick, 1 highlighter, 1 ruler,
+              2 erasers, and 1 sharpener. These back-to-school essentials support
+              everyday classroom learning.
             </p>
 
             <div style={{ ...styles.insideGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
               {[
-                { icon: Heart,      color: LOGO_PINK,      name: 'Mini Plushie',        desc: 'A small comfort plushie tucked into every kit because kids need more than supplies.' },
-                { icon: Pencil,     color: EDUCATION_BLUE, name: 'Pencils',             desc: 'HB graphite pencils, ready to use for the first day back.' },
-                { icon: Palette,    color: LOGO_ORANGE,    name: 'Coloured Pencils',    desc: 'A set of vibrant pencil crayons for creative work, art, and expression.' },
-                { icon: Calculator, color: LOGO_NAVY,      name: 'Calculator',          desc: 'A basic calculator to support math work across grade levels.' },
-                { icon: Eraser,     color: LOGO_GREEN,     name: 'Erasers',             desc: 'Soft erasers that keep the page clean and mistakes easy to fix.' },
-                { icon: Ruler,      color: LOGO_TEAL,      name: 'Ruler and Sharpener', desc: 'A 30 cm ruler and a handheld sharpener so nothing stops the work.' },
+                { icon: Pencil,  color: EDUCATION_BLUE, name: '1 Notebook',     desc: 'A classroom notebook for daily writing, notes, and assignments.' },
+                { icon: Heart,   color: LOGO_PINK,      name: '2 Folders',      desc: 'Two folders to help organize handouts, homework, and school papers.' },
+                { icon: Pencil,  color: LOGO_NAVY,      name: '1 Pencil Pouch', desc: 'A pouch to keep writing tools and supplies together.' },
+                { icon: Pencil,  color: LOGO_ORANGE,    name: '4 Pens',         desc: 'Four pens for everyday classwork and written assignments.' },
+                { icon: Pencil,  color: LOGO_GREEN,     name: '3 Pencils',      desc: 'Three pencils for math, drafting, and daily schoolwork.' },
+                { icon: Palette, color: LOGO_TEAL,      name: '5 Crayons',      desc: 'Five crayons for creative work, diagrams, and classroom activities.' },
+                { icon: Heart,   color: LOGO_PINK,      name: '1 Glue Stick',   desc: 'One glue stick for crafts, projects, and classroom assignments.' },
+                { icon: Pencil,  color: EDUCATION_BLUE, name: '1 Highlighter',  desc: 'One highlighter to mark key notes and important learning materials.' },
+                { icon: Ruler,   color: LOGO_NAVY,      name: '1 Ruler',        desc: 'One ruler for measurement, math work, and neat page layouts.' },
+                { icon: Eraser,  color: LOGO_ORANGE,    name: '2 Erasers',      desc: 'Two erasers so mistakes are easy to fix during classwork.' },
+                { icon: Pencil,  color: LOGO_GREEN,     name: '1 Sharpener',    desc: 'One sharpener to keep pencils ready throughout the school day.' },
               ].map((item) => {
                 const Icon = item.icon
                 return (

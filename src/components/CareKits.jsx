@@ -18,7 +18,6 @@ import {
   Heart,
   Pencil,
   Palette,
-  Calculator,
   Eraser,
   Ruler,
   HandHeart,
@@ -594,24 +593,29 @@ export default function CareKits() {
           >
           <span style={styles.sectionEyebrow}>What's Inside</span>
           <h2 style={styles.sectionH2}>
-            Six supplies. One{' '}
+            School supplies. One{' '}
             <span style={styles.h2Em}>complete kit.</span>
           </h2>
           <p style={styles.sectionLead}>
-            At its core, the Educational Kit is a stationery kit: the everyday supplies
-            that make school feel possible. Pencils, erasers, rulers. The things most kids
-            take for granted, and that children in crisis are the most likely to be without.
-            We source each item carefully so the kit feels complete, not makeshift.
+            Each school supplies kit includes 1 notebook, 2 folders, 1 pencil pouch,
+            4 pens, 3 pencils, 5 crayons, 1 glue stick, 1 highlighter, 1 ruler,
+            2 erasers, and 1 sharpener. These back-to-school essentials support
+            everyday classroom learning.
           </p>
 
           <div style={styles.insideGrid}>
             {[
-              { icon: Heart,      color: '#EE3093', name: 'Mini Plushie',      desc: 'A small comfort plushie tucked into every kit because kids need more than supplies.' },
-              { icon: Pencil,     color: '#1A3A6B', name: 'Pencils',           desc: 'HB graphite pencils, ready to use and ready for the first day back.' },
-              { icon: Palette,    color: '#0099D6', name: 'Coloured Pencils',  desc: 'A set of vibrant pencil crayons for creative work, art, and self expression.' },
-              { icon: Calculator, color: '#1A3A6B', name: 'Calculator',        desc: 'A basic calculator to support math work across grade levels.' },
-              { icon: Eraser,     color: '#F7941D', name: 'Erasers',           desc: 'Soft erasers that keep the page clean and mistakes easy to fix.' },
-              { icon: Ruler,      color: '#14B8A6', name: 'Ruler and Sharpener', desc: 'A 30 cm ruler and a handheld sharpener so nothing stops the work.' },
+              { icon: Pencil,  color: '#0099D6', name: '1 Notebook',     desc: 'A classroom notebook for daily writing, notes, and assignments.' },
+              { icon: Heart,   color: '#EE3093', name: '2 Folders',      desc: 'Two folders to help organize handouts, homework, and school papers.' },
+              { icon: Pencil,  color: '#1A3A6B', name: '1 Pencil Pouch', desc: 'A pouch to keep writing tools and supplies together.' },
+              { icon: Pencil,  color: '#F7941D', name: '4 Pens',         desc: 'Four pens for everyday classwork and written assignments.' },
+              { icon: Pencil,  color: '#57A018', name: '3 Pencils',      desc: 'Three pencils for math, drafting, and daily schoolwork.' },
+              { icon: Palette, color: '#14B8A6', name: '5 Crayons',      desc: 'Five crayons for creative work, diagrams, and classroom activities.' },
+              { icon: Heart,   color: '#EE3093', name: '1 Glue Stick',   desc: 'One glue stick for crafts, projects, and classroom assignments.' },
+              { icon: Pencil,  color: '#0099D6', name: '1 Highlighter',  desc: 'One highlighter to mark key notes and important learning materials.' },
+              { icon: Ruler,   color: '#1A3A6B', name: '1 Ruler',        desc: 'One ruler for measurement, math work, and neat page layouts.' },
+              { icon: Eraser,  color: '#F7941D', name: '2 Erasers',      desc: 'Two erasers so mistakes are easy to fix during classwork.' },
+              { icon: Pencil,  color: '#57A018', name: '1 Sharpener',    desc: 'One sharpener to keep pencils ready throughout the school day.' },
             ].map((item) => {
               const Icon = item.icon
               return (
@@ -736,7 +740,7 @@ export default function CareKits() {
             <div style={styles.stepsGrid}>
               {[
                 { icon: HandHeart, color: '#EE3093', step: '01', title: 'You sponsor a kit', desc: 'A single donation funds one full Educational Kit for one child in the Greater Toronto Area.' },
-                { icon: ShoppingBag, color: '#0099D6', step: '02', title: 'We source the supplies', desc: 'Pencils, plushie, calculator, ruler, and the rest. Bought from Canadian suppliers wherever possible.' },
+                { icon: ShoppingBag, color: '#0099D6', step: '02', title: 'We source the supplies', desc: 'Notebooks, folders, writing tools, crayons, glue, a ruler, erasers, and a sharpener. Bought from Canadian suppliers wherever possible.' },
                 { icon: PackageOpen, color: '#1A3A6B', step: '03', title: 'Volunteers hand pack it', desc: 'A volunteer assembles your kit one piece at a time, with a short handwritten note tucked inside.' },
                 { icon: Truck, color: '#1A3A6B', step: '04', title: 'A child receives it', desc: 'We deliver directly to hospital wards, family shelters, and partner programs across the GTA.' },
                 { icon: Mail, color: '#F7941D', step: '05', title: 'A card in your name', desc: 'Tucked inside the kit, a small card carries your name and a note that shares your generosity with the child who receives it.' },
@@ -798,14 +802,19 @@ export default function CareKits() {
               <PricingCard
                 label="Educational Kit"
                 comingSoon
-                description="Stationery essentials and a small comfort item, hand packed for one child in the Greater Toronto Area."
+                description="Back-to-school essentials for everyday classroom learning."
                 items={[
-                  'Pencils and coloured pencils',
-                  'Calculator',
-                  'Ruler and sharpener',
-                  'Erasers',
-                  'Mini plushie',
-                  'Handwritten note',
+                  '1 notebook',
+                  '2 folders',
+                  '1 pencil pouch',
+                  '4 pens',
+                  '3 pencils',
+                  '5 crayons',
+                  '1 glue stick',
+                  '1 highlighter',
+                  '1 ruler',
+                  '2 erasers',
+                  '1 sharpener',
                 ]}
                 background="linear-gradient(155deg, #1A3A6B 0%, #0f2347 100%)"
                 BGComponent={BGCircles}
