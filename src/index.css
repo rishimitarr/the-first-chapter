@@ -233,6 +233,21 @@ ul { list-style: none; }
   filter: saturate(1.04) contrast(1.03);
 }
 
+.reading-story-card img {
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
+}
+
+.reading-story-card:hover img {
+  transform: scale(1.045);
+  filter: saturate(1.04) contrast(1.03) brightness(0.9);
+}
+
+.reading-carousel-shell button:focus-visible,
+.reading-story-card a:focus-visible {
+  outline: 3px solid rgba(0,153,214,0.45);
+  outline-offset: 3px;
+}
+
 /* ── Responsive helpers ── */
 @media (max-width: 900px) {
   .hero-grid-override {
@@ -341,6 +356,27 @@ ul { list-style: none; }
   .about-carousel-shell {
     grid-template-columns: 40px 1fr 40px !important;
     gap: 10px !important;
+  }
+  .reading-carousel-shell {
+    overflow: visible !important;
+  }
+  .reading-header {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .reading-story-viewport {
+    min-height: 380px !important;
+    border-radius: 8px !important;
+  }
+  .reading-story-card {
+    min-height: 380px !important;
+  }
+  .reading-story-content {
+    width: 100% !important;
+    padding: 0 24px 28px !important;
+  }
+  .reading-story-track {
+    grid-template-columns: 1fr !important;
   }
   .about-hero-title {
     white-space: normal !important;

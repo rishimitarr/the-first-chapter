@@ -5,6 +5,11 @@ import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
 const NAVY = '#1A3A6B'
 const CHARCOAL = '#1A1A1A'
 
+const sectionVariant = {
+  hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+}
+
 const todayKey = () => new Date().toISOString().slice(0, 10)
 const feedCacheKey = () => `tfc-home-reading-real-news-v2-${todayKey()}`
 const isGenericNewsImage = (image = '') =>
@@ -12,6 +17,94 @@ const isGenericNewsImage = (image = '') =>
 
 const hasCleanArticleImages = (items = []) =>
   items.length > 0 && items.every((story) => story.image && !isGenericNewsImage(story.image))
+
+const SAFE_TITLE_LENGTH = 78
+const MAX_SUMMARY_WORDS = 10
+const LOW_SIGNAL_TITLE_WORDS = new Set([
+  'a',
+  'an',
+  'the',
+  'of',
+  'to',
+  'into',
+  'about',
+  'after',
+  'before',
+  'during',
+  'over',
+  'under',
+  'that',
+])
+
+const normalizeTitle = (title = '') =>
+  title
+    .replace(/\s+/g, ' ')
+    .replace(/\s+-\s+[^-]+$/, '')
+    .replace(/\s+\|\s+.+$/, '')
+    .trim()
+
+const compressTitlePhrases = (title) =>
+  title
+    .replace(/\bcelebrates a school year of turning cafeterias into hubs of\b/gi, 'Celebrates')
+    .replace(/\bturning cafeterias into hubs of\b/gi, '')
+    .replace(/\ba school year of\b/gi, '')
+    .replace(/\blevels in Scotland as\b/gi, '')
+    .replace(/\byouth violence and youth unemployment\b/gi, 'youth violence and unemployment')
+    .replace(/\bnew report shows that\b/gi, '')
+    .replace(/\bnew report shows\b/gi, '')
+    .replace(/\bstudy finds that\b/gi, '')
+    .replace(/\bstudy finds\b/gi, '')
+    .replace(/\baccording to experts\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const summarizeByClause = (title) => {
+  const clauses = title
+    .split(/\s*(?::|;|\s+-\s+|\s+—\s+|\s+–\s+)\s*/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+
+  if (clauses.length < 2) return title
+
+  const meaningful = clauses
+    .filter((part) => !/^(opinion|analysis|watch|video|live updates)$/i.test(part))
+    .sort((a, b) => Math.abs(SAFE_TITLE_LENGTH - a.length) - Math.abs(SAFE_TITLE_LENGTH - b.length))
+
+  return meaningful[0] || title
+}
+
+const summarizeByWords = (title) => {
+  const words = title.split(' ').filter(Boolean)
+  if (words.length <= MAX_SUMMARY_WORDS) return title
+
+  const compressedWords = words.filter((word, index) => {
+    if (index === 0) return true
+    return !LOW_SIGNAL_TITLE_WORDS.has(word.toLowerCase().replace(/[^a-z]/g, ''))
+  })
+  const sourceWords = compressedWords.length >= 6 ? compressedWords : words
+  const firstWords = sourceWords.slice(0, MAX_SUMMARY_WORDS)
+  const lastWord = words.at(-1)
+  const includesLocation = /^(in|for|from|across|amid)$/i.test(words.at(-2) || '')
+
+  if (includesLocation && !firstWords.includes(words.at(-2))) {
+    return `${firstWords.slice(0, MAX_SUMMARY_WORDS - 2).join(' ')} ${words.at(-2)} ${lastWord}`
+  }
+
+  return firstWords.join(' ')
+}
+
+const summarizeTitle = (title = '') => {
+  const clean = normalizeTitle(title)
+  if (clean.length <= SAFE_TITLE_LENGTH) return clean
+
+  const compressed = compressTitlePhrases(clean)
+  if (compressed.length <= SAFE_TITLE_LENGTH) return compressed
+
+  const clause = summarizeByClause(compressed)
+  if (clause.length <= SAFE_TITLE_LENGTH) return clause
+
+  return summarizeByWords(clause)
+}
 
 export default function ReadingList() {
   const [stories, setStories] = useState([])
@@ -70,6 +163,7 @@ export default function ReadingList() {
   }, [stories.length])
 
   const story = stories[active]
+  const displayTitle = story ? summarizeTitle(story.title) : ''
   const go = (direction) => {
     if (stories.length === 0) return
     setActive((current) => (current + direction + stories.length) % stories.length)
@@ -78,81 +172,97 @@ export default function ReadingList() {
   return (
     <section id="reading" style={styles.section}>
       <div className="container">
-        <div style={styles.header}>
-          <h2 style={styles.title}>Reading List</h2>
-          <p style={styles.intro}>
-            A rotating set of articles about children, education, health, and belonging.
-            The goal is to keep this page connected to the real issues children are facing now.
-          </p>
-        </div>
+        <motion.div
+          variants={sectionVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+        >
+          <div style={styles.header} className="reading-header">
+            <h2 style={styles.title}>Reading List</h2>
+            <p style={styles.intro}>
+              A rotating set of articles about children, education, health, and belonging.
+              The goal is to keep this page connected to the real issues children are facing now.
+            </p>
+          </div>
 
-        <div style={styles.carouselShell} className="about-carousel-shell">
-          <button style={styles.carouselButton} onClick={() => go(-1)} aria-label="Previous article">
-            <ChevronLeft size={22} />
-          </button>
+          <div style={styles.carouselShell} className="reading-carousel-shell">
+            <div style={styles.storyViewport} className="reading-story-viewport">
+              {loading || !story ? (
+                <div style={styles.storyEmpty}>
+                  {loading ? 'Loading articles...' : 'Articles are unavailable right now.'}
+                </div>
+              ) : (
+                <div style={styles.storyTrack} className="reading-story-track">
+                  <AnimatePresence mode="wait">
+                    <motion.article
+                      key={`${story.title}-${active}`}
+                      style={styles.storyCard}
+                      className="reading-story-card"
+                      initial={{ opacity: 0, x: 46, scale: 0.985 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -46, scale: 0.985 }}
+                      transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <img src={story.image} alt="" aria-hidden="true" style={styles.storyImage} />
+                      <div style={styles.storyShade} />
+                      <div style={styles.storyContent} className="reading-story-content">
+                        <span style={styles.storyKicker}>Article spotlight</span>
+                        <h3 style={styles.storyTitle} title={story.title}>{displayTitle}</h3>
+                        <a href={story.link} target="_blank" rel="noreferrer" style={styles.storyLink}>
+                          Read article <ExternalLink size={16} />
+                        </a>
+                      </div>
+                    </motion.article>
+                  </AnimatePresence>
+                </div>
+              )}
+            </div>
 
-          <div style={styles.storyViewport}>
-            {loading || !story ? (
-              <div style={styles.storyEmpty}>
-                {loading ? 'Loading articles...' : 'Articles are unavailable right now.'}
+            <div style={styles.carouselFooter}>
+              <div style={styles.dots}>
+                {stories.map((item, index) => (
+                  <button
+                    key={`${item.title}-${index}`}
+                    aria-label={`Show article ${index + 1}`}
+                    onClick={() => setActive(index)}
+                    style={{
+                      ...styles.dot,
+                      width: index === active ? 22 : 8,
+                      background: index === active ? NAVY : 'rgba(26,58,107,0.2)',
+                    }}
+                  />
+                ))}
               </div>
-            ) : (
-              <AnimatePresence mode="wait">
-                <motion.article
-                  key={`${story.title}-${active}`}
-                  style={styles.storyCard}
-                  className="about-story-card"
-                  initial={{ opacity: 0, x: 28 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -28 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
-                >
-                  <div style={styles.storyImageWrap} className="about-image-card">
-                    <img src={story.image} alt="" aria-hidden="true" style={styles.storyImage} />
-                  </div>
-                  <div style={styles.storyContent}>
-                    <h3 style={styles.storyTitle}>{story.title}</h3>
-                    <a href={story.link} target="_blank" rel="noreferrer" style={styles.storyLink}>
-                      Read article <ExternalLink size={15} />
-                    </a>
-                  </div>
-                </motion.article>
-              </AnimatePresence>
-            )}
-          </div>
 
-          <button style={styles.carouselButton} onClick={() => go(1)} aria-label="Next article">
-            <ChevronRight size={22} />
-          </button>
-        </div>
-
-        <div style={styles.carouselFooter}>
-          <span />
-          <div style={styles.dots}>
-            {stories.map((item, index) => (
-              <button
-                key={`${item.title}-${index}`}
-                aria-label={`Show article ${index + 1}`}
-                onClick={() => setActive(index)}
-                style={{ ...styles.dot, background: index === active ? NAVY : 'rgba(26,58,107,0.18)' }}
-              />
-            ))}
+              <div style={styles.carouselControls}>
+                <button style={styles.carouselButton} onClick={() => go(-1)} aria-label="Previous article">
+                  <ChevronLeft size={22} />
+                </button>
+                <button style={styles.carouselButton} onClick={() => go(1)} aria-label="Next article">
+                  <ChevronRight size={22} />
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
 }
 
 const styles = {
-  section: { padding: '82px 0 92px', background: '#F5F3EF' },
-  header: { display: 'block', maxWidth: 760, marginBottom: 30 },
+  section: { padding: '86px 0 96px', background: '#fff' },
+  header: {
+    maxWidth: 760,
+    marginBottom: 34,
+  },
   title: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 750,
+    fontWeight: 800,
     fontSize: 'clamp(1.9rem, 3vw, 2.55rem)',
     lineHeight: 1.12,
-    letterSpacing: '-0.015em',
+    letterSpacing: 0,
     margin: 0,
     color: CHARCOAL,
   },
@@ -164,38 +274,30 @@ const styles = {
     margin: '14px 0 0',
   },
   carouselShell: {
-    display: 'grid',
-    gridTemplateColumns: '48px 1fr 48px',
-    gap: 18,
-    alignItems: 'stretch',
+    position: 'relative',
   },
-  carouselButton: {
-    border: '1px solid rgba(26,58,107,0.18)',
-    borderRadius: 4,
-    background: '#fff',
-    color: NAVY,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-  },
-  storyViewport: { minHeight: 270, overflow: 'hidden' },
-  storyCard: {
-    minHeight: 270,
-    background: '#fff',
-    borderRadius: 6,
-    padding: 0,
-    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
-    border: '1px solid rgba(0,0,0,0.06)',
+  storyViewport: {
+    minHeight: 430,
     overflow: 'hidden',
-    display: 'grid',
-    gridTemplateColumns: '0.42fr 0.58fr',
+    borderRadius: 8,
+  },
+  storyTrack: {
+    display: 'block',
+  },
+  storyCard: {
+    position: 'relative',
+    minHeight: 430,
+    background: NAVY,
+    borderRadius: 8,
+    padding: 0,
+    overflow: 'hidden',
+    boxShadow: '0 18px 46px rgba(26,58,107,0.17)',
   },
   storyEmpty: {
-    minHeight: 270,
+    minHeight: 430,
     background: '#fff',
-    borderRadius: 6,
-    border: '1px solid rgba(0,0,0,0.06)',
+    borderRadius: 8,
+    border: '1px solid rgba(26,58,107,0.1)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -203,52 +305,96 @@ const styles = {
     fontSize: '0.95rem',
     color: '#666',
   },
-  storyImageWrap: {
-    position: 'relative',
-    minHeight: 270,
-    background: '#E9ECEF',
-  },
   storyImage: {
+    position: 'absolute',
+    inset: 0,
     width: '100%',
     height: '100%',
     objectFit: 'cover',
   },
+  storyShade: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(90deg, rgba(8,20,38,0.9) 0%, rgba(13,33,61,0.62) 43%, rgba(13,33,61,0.18) 100%)',
+  },
   storyContent: {
-    padding: '34px 36px',
+    position: 'absolute',
+    inset: 'auto auto 0 0',
+    width: 'min(760px, 74%)',
+    padding: '0 42px 42px',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'flex-start',
+  },
+  storyKicker: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginBottom: 13,
+    padding: '7px 11px',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.13)',
+    border: '1px solid rgba(255,255,255,0.18)',
+    color: 'rgba(255,255,255,0.86)',
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.68rem',
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
   },
   storyTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 750,
-    fontSize: 'clamp(1.25rem, 2vw, 1.7rem)',
-    lineHeight: 1.2,
-    margin: '0 0 22px',
+    fontWeight: 800,
+    fontSize: 'clamp(1.65rem, 3.35vw, 2.82rem)',
+    lineHeight: 1.08,
+    letterSpacing: 0,
+    color: '#fff',
+    textWrap: 'balance',
+    margin: '0 0 24px',
   },
   storyLink: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 8,
+    padding: '12px 16px',
+    borderRadius: 4,
+    background: '#fff',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
-    fontSize: '0.88rem',
+    fontSize: '0.9rem',
     color: NAVY,
+    boxShadow: '0 10px 24px rgba(0,0,0,0.14)',
   },
   carouselFooter: {
     display: 'flex',
     justifyContent: 'space-between',
-    gap: 18,
+    gap: 22,
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: 24,
   },
-  dots: { display: 'flex', gap: 8 },
+  dots: { display: 'flex', gap: 9, alignItems: 'center' },
   dot: {
-    width: 9,
-    height: 9,
-    borderRadius: '50%',
+    height: 8,
+    borderRadius: 999,
     border: 0,
     cursor: 'pointer',
+    transition: 'width 0.22s ease, background 0.22s ease',
+  },
+  carouselControls: {
+    display: 'flex',
+    gap: 12,
+  },
+  carouselButton: {
+    width: 48,
+    height: 48,
+    border: '1px solid rgba(26,58,107,0.2)',
+    borderRadius: 999,
+    background: '#fff',
+    color: NAVY,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    boxShadow: '0 8px 24px rgba(26,58,107,0.1)',
+    transition: 'transform 0.2s ease, border-color 0.2s ease, color 0.2s ease',
   },
 }
