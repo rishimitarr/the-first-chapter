@@ -350,9 +350,14 @@ export default function CareKitsLanding() {
                   When a child's life shifts, school and normal routines can pause overnight.
                   Care Kits bring useful supplies and a little comfort right to that moment.
                 </p>
-                <p style={{ ...styles.sectionLeadWide, marginBottom: 0 }}>
+                <p style={styles.sectionLeadWide}>
                   Each kit is packed by a volunteer, funded by one donor, and delivered free of
                   charge through hospital and shelter partners across the GTA.
+                </p>
+                <p style={{ ...styles.sectionLeadWide, marginBottom: 0 }}>
+                  A Care Kit cannot change the circumstances a child is facing, but it can make the
+                  first days feel less overwhelming. Each one is a practical reminder that the child
+                  and family are seen, supported, and not alone.
                 </p>
               </div>
 
