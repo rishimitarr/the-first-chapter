@@ -207,7 +207,6 @@ export default function ReadingList() {
                       <img src={story.image} alt="" aria-hidden="true" style={styles.storyImage} />
                       <div style={styles.storyShade} />
                       <div style={styles.storyContent} className="reading-story-content">
-                        <span style={styles.storyKicker}>Article spotlight</span>
                         <h3 style={styles.storyTitle} title={story.title}>{displayTitle}</h3>
                         <a href={story.link} target="_blank" rel="noreferrer" style={styles.storyLink}>
                           Read article <ExternalLink size={16} />
@@ -325,21 +324,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-  },
-  storyKicker: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    marginBottom: 13,
-    padding: '7px 11px',
-    borderRadius: 999,
-    background: 'rgba(255,255,255,0.13)',
-    border: '1px solid rgba(255,255,255,0.18)',
-    color: 'rgba(255,255,255,0.86)',
-    fontFamily: "'Inter', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.68rem',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
   },
   storyTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
