@@ -1,13 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useScroll } from 'framer-motion'
-import {
-  Heart,
-  Pencil,
-  Palette,
-  Eraser,
-  Ruler,
-  ArrowLeft,
-} from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Nav from './Nav'
 import Footer from './Footer'
@@ -32,8 +25,6 @@ const PAGE_BG = '#fff'
 const EDUCATION_BLUE = '#0099D6'
 const LOGO_GREEN = '#57A018'
 const LOGO_ORANGE = '#F7941D'
-const LOGO_PINK = '#EE3093'
-const LOGO_TEAL = '#14B8A6'
 const LOGO_NAVY = '#1A3A6B'
 const NEUTRAL_ACCENT = '#1A1A1A'
 
@@ -45,10 +36,6 @@ const colorShadow = (color, opacity = 0.18) => {
   return `rgba(${r},${g},${b},${opacity})`
 }
 
-const fromLeft = {
-  hidden: { opacity: 0, x: -150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
-  visible: { opacity: 1, x: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
-}
 const fromRight = {
   hidden: { opacity: 0, x: 150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
   visible: { opacity: 1, x: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
@@ -56,6 +43,62 @@ const fromRight = {
 const fromBottom = {
   hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+}
+
+const bottomRevealWithDelay = (delay = 0) => ({
+  hidden: fromBottom.hidden,
+  visible: {
+    ...fromBottom.visible,
+    transition: { ...fromBottom.visible.transition, delay },
+  },
+})
+
+const KIT_CONTENTS = [
+  { label: '1x Notebook', alt: 'Notebook', img: '/kit-items/notebook.png' },
+  { label: '2x Folders', alt: 'School folders', img: '/kit-items/folders.png' },
+  { label: '1x Pencil Pouch', alt: 'Pencil pouch', img: '/kit-items/pencil-pouch.png' },
+  { label: '4x Pens', alt: 'Pens', img: '/kit-items/pens.png' },
+  { label: '3x Pencils', alt: 'Pencils', img: '/kit-items/pencils.png' },
+  { label: '5x Crayons', alt: 'Crayons', img: '/kit-items/crayons.png' },
+  { label: '1x Glue Stick', alt: 'Glue stick', img: '/kit-items/glue-stick.png' },
+  { label: '1x Highlighter', alt: 'Highlighter', img: '/kit-items/highlighter.png' },
+  { label: '1x Ruler', alt: 'Ruler', img: '/kit-items/ruler.png' },
+  { label: '2x Erasers', alt: 'Erasers', img: '/kit-items/erasers.png' },
+  { label: '1x Sharpener', alt: 'Sharpener', img: '/kit-items/sharpener.png' },
+]
+
+function KitContentCard({ item, index, rowIndex = 0, isMobile }) {
+  return (
+    <motion.article
+      style={{
+        ...styles.kitContentCard,
+        ...(isMobile ? styles.kitContentCardMobile : null),
+        width: isMobile ? '100%' : 280,
+      }}
+      variants={bottomRevealWithDelay(rowIndex * 0.05)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+      whileHover={{
+        y: -3,
+        boxShadow: '0 14px 38px rgba(0,0,0,0.08)',
+        transition: { duration: 0.25, ease: 'easeOut' },
+      }}
+    >
+      <div style={{ ...styles.kitContentImageWrap, ...(isMobile ? styles.kitContentImageWrapMobile : null) }}>
+        <img
+          src={item.img}
+          alt={item.alt}
+          loading={index < 4 ? 'eager' : 'lazy'}
+          decoding="async"
+          width="180"
+          height="160"
+          style={{ ...styles.kitContentImage, ...(isMobile ? styles.kitContentImageMobile : null) }}
+        />
+      </div>
+      <p style={{ ...styles.kitContentLabel, ...(isMobile ? styles.kitContentLabelMobile : null) }}>{item.label}</p>
+    </motion.article>
+  )
 }
 
 // ─── CraftCard ────────────────────────────────────────────────────────────────
@@ -94,9 +137,11 @@ export default function EducationKit() {
   const lastDrawnFrame = useRef(-1)
   const [loadedPct, setLoadedPct] = useState(0)
   const [ready, setReady] = useState(false)
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  const [viewportWidth, setViewportWidth] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth : 1440
   )
+  const isMobile = viewportWidth <= 768
+  const isTablet = viewportWidth <= 1100
   const frameNumbers = useMemo(() => {
     if (!isMobile) return Array.from({ length: FRAME_COUNT }, (_, i) => i + 1)
     const frames = []
@@ -106,7 +151,7 @@ export default function EducationKit() {
   }, [isMobile])
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768)
+    const check = () => setViewportWidth(window.innerWidth)
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
@@ -361,56 +406,87 @@ export default function EducationKit() {
       )}
 
       {/* WHAT'S INSIDE */}
-      <section id="whats-inside" style={styles.section}>
-        <div style={styles.sectionInner}>
-          <motion.div
-            variants={fromLeft}
+      <section
+        id="whats-inside"
+        style={{
+          ...styles.kitContentsSection,
+          padding: isMobile ? '56px 24px 72px' : isTablet ? '80px 24px' : '120px 24px 100px',
+        }}
+      >
+        <div style={styles.kitContentsInner}>
+          <motion.header
+            style={styles.kitContentsHeader}
+            variants={fromBottom}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            <span style={styles.sectionEyebrow}>Kit Contents</span>
-            <h2 style={{ ...styles.sectionH2, maxWidth: 'none', whiteSpace: isMobile ? 'normal' : 'nowrap' }}>
-              What's Included
+            <h2
+              style={{
+                ...styles.kitContentsTitle,
+                fontSize: isMobile ? 38 : isTablet ? 52 : 64,
+              }}
+            >
+              What's in the Kit
             </h2>
-            <p style={styles.sectionLead}>
-              Each school supplies kit includes 1 notebook, 2 folders, 1 pencil pouch,
-              4 pens, 3 pencils, 5 crayons, 1 glue stick, 1 highlighter, 1 ruler,
-              2 erasers, and 1 sharpener. These back-to-school essentials support
-              everyday classroom learning.
+            <p
+              style={{
+                ...styles.kitContentsLead,
+                fontSize: isMobile ? 20 : isTablet ? 26 : 28,
+              }}
+            >
+              Each school supplies kit includes the following essentials to support everyday
+              classroom learning.
             </p>
+          </motion.header>
 
-            <div style={{ ...styles.insideGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
-              {[
-                { icon: Pencil,  color: EDUCATION_BLUE, name: '1 Notebook',     desc: 'A classroom notebook for daily writing, notes, and assignments.' },
-                { icon: Heart,   color: LOGO_PINK,      name: '2 Folders',      desc: 'Two folders to help organize handouts, homework, and school papers.' },
-                { icon: Pencil,  color: LOGO_NAVY,      name: '1 Pencil Pouch', desc: 'A pouch to keep writing tools and supplies together.' },
-                { icon: Pencil,  color: LOGO_ORANGE,    name: '4 Pens',         desc: 'Four pens for everyday classwork and written assignments.' },
-                { icon: Pencil,  color: LOGO_GREEN,     name: '3 Pencils',      desc: 'Three pencils for math, drafting, and daily schoolwork.' },
-                { icon: Palette, color: LOGO_TEAL,      name: '5 Crayons',      desc: 'Five crayons for creative work, diagrams, and classroom activities.' },
-                { icon: Heart,   color: LOGO_PINK,      name: '1 Glue Stick',   desc: 'One glue stick for crafts, projects, and classroom assignments.' },
-                { icon: Pencil,  color: EDUCATION_BLUE, name: '1 Highlighter',  desc: 'One highlighter to mark key notes and important learning materials.' },
-                { icon: Ruler,   color: LOGO_NAVY,      name: '1 Ruler',        desc: 'One ruler for measurement, math work, and neat page layouts.' },
-                { icon: Eraser,  color: LOGO_ORANGE,    name: '2 Erasers',      desc: 'Two erasers so mistakes are easy to fix during classwork.' },
-                { icon: Pencil,  color: LOGO_GREEN,     name: '1 Sharpener',    desc: 'One sharpener to keep pencils ready throughout the school day.' },
-              ].map((item) => {
-                const Icon = item.icon
-                return (
-                  <motion.div
-                    key={item.name}
-                    whileHover={{ y: -6, boxShadow: `0 16px 36px ${colorShadow(item.color, 0.16)}`, transition: { type: 'spring', stiffness: 280, damping: 18 } }}
-                    style={styles.insideCard}
-                  >
-                    <span style={{ ...styles.insideIconWrap, background: `${item.color}18` }}>
-                      <Icon size={22} color={item.color} strokeWidth={2} />
-                    </span>
-                    <span style={styles.insideName}>{item.name}</span>
-                    <span style={styles.insideDesc}>{item.desc}</span>
-                  </motion.div>
-                )
-              })}
+          {isTablet ? (
+            <div
+              style={{
+                ...styles.kitContentsGrid,
+                gridTemplateColumns: isMobile ? 'repeat(2, minmax(0, 1fr))' : 'repeat(2, minmax(0, 280px))',
+                width: isMobile ? '100%' : 'auto',
+                gap: isMobile ? 14 : 32,
+              }}
+            >
+              {KIT_CONTENTS.map((item, index) => (
+                <KitContentCard
+                  key={item.label}
+                  item={item}
+                  index={index}
+                  rowIndex={isMobile ? index : index % 2}
+                  isMobile={isMobile}
+                />
+              ))}
             </div>
-          </motion.div>
+          ) : (
+            <div style={styles.kitContentsRows}>
+              {[KIT_CONTENTS.slice(0, 4), KIT_CONTENTS.slice(4, 8)].map((row, rowIndex) => (
+                <div key={rowIndex} style={styles.kitContentsRow}>
+                  {row.map((item, index) => (
+                    <KitContentCard
+                      key={item.label}
+                      item={item}
+                      index={rowIndex * 4 + index}
+                      rowIndex={index}
+                      isMobile={false}
+                    />
+                  ))}
+                </div>
+              ))}
+              <div style={styles.kitContentsLastRow}>
+                {KIT_CONTENTS.slice(8).map((item, index) => (
+                  <KitContentCard
+                    key={item.label}
+                    item={item}
+                    index={8 + index}
+                    rowIndex={index}
+                    isMobile={false}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -459,7 +535,7 @@ export default function EducationKit() {
       <section id="craft" style={styles.section}>
         <div style={styles.sectionInner}>
           <motion.div
-            variants={fromRight}
+            variants={isMobile ? fromBottom : fromRight}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
@@ -469,7 +545,7 @@ export default function EducationKit() {
               Kit Assembly
             </h2>
 
-            <div style={{ ...styles.cardGrid, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
+            <div style={{ ...styles.cardGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)' }}>
               {[
                 { num: '01', color: EDUCATION_BLUE, title: 'Sourced with intent', body: 'Every supply is chosen for durability, child safety, and usefulness in real classrooms.', img: '/pillar-edu-a.jpg', credit: 'Unsplash' },
                 { num: '02', color: LOGO_ORANGE, title: 'Packed by hand', body: 'Volunteers assemble each kit one at a time, with care built into every pouch.', img: '/care-kits-about.jpg', credit: 'Annie Spratt' },
@@ -545,16 +621,123 @@ const styles = {
   h2Em: { color: NEUTRAL_ACCENT, fontStyle: 'normal' },
   sectionLead: { fontFamily: "'Inter', sans-serif", fontSize: 'clamp(1rem, 1.25vw, 1.18rem)', lineHeight: 1.7, color: '#555', maxWidth: 760, margin: '0 0 48px' },
 
+  kitContentsSection: {
+    position: 'relative',
+    background: '#FFFFFF',
+  },
+  kitContentsInner: {
+    width: '100%',
+    maxWidth: 1400,
+    margin: '0 auto',
+  },
+  kitContentsHeader: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 72,
+  },
+  kitContentsTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    lineHeight: 1.05,
+    letterSpacing: 0,
+    color: '#1D1D1F',
+    margin: '0 0 24px',
+  },
+  kitContentsLead: {
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 400,
+    lineHeight: 1.6,
+    color: '#555',
+    maxWidth: 700,
+    margin: 0,
+  },
+  kitContentsRows: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 40,
+  },
+  kitContentsRow: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 280px)',
+    gap: 32,
+    justifyContent: 'center',
+  },
+  kitContentsLastRow: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: 32,
+  },
+  kitContentsGrid: {
+    display: 'grid',
+    justifyContent: 'center',
+    gap: 32,
+  },
+  kitContentCard: {
+    minHeight: 370,
+    background: '#FFFFFF',
+    border: '1px solid #ECECEC',
+    borderRadius: 28,
+    boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '44px 28px 32px',
+    cursor: 'default',
+    overflow: 'hidden',
+  },
+  kitContentCardMobile: {
+    minHeight: 212,
+    borderRadius: 18,
+    padding: '24px 12px 20px',
+    boxShadow: '0 6px 22px rgba(0,0,0,0.045)',
+  },
+  kitContentImageWrap: {
+    width: 180,
+    height: 190,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  kitContentImageWrapMobile: {
+    width: '100%',
+    height: 122,
+  },
+  kitContentImage: {
+    display: 'block',
+    maxWidth: 180,
+    maxHeight: 160,
+    width: 'auto',
+    height: 'auto',
+    objectFit: 'contain',
+  },
+  kitContentImageMobile: {
+    maxWidth: 118,
+    maxHeight: 112,
+  },
+  kitContentLabel: {
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 500,
+    fontSize: 24,
+    lineHeight: 1.25,
+    color: '#222',
+    textAlign: 'center',
+    margin: '28px 0 0',
+  },
+  kitContentLabelMobile: {
+    fontSize: 17,
+    lineHeight: 1.2,
+    marginTop: 14,
+  },
+
   statRow: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 18 },
   statCard: { background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 6, padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' },
   statKey: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: EDUCATION_BLUE },
   statVal: { fontFamily: "'Inter', sans-serif", fontSize: '1rem', lineHeight: 1.5, color: '#555' },
-
-  insideGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 },
-  insideCard: { background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 6, padding: '26px 24px', display: 'flex', flexDirection: 'column', gap: 10, boxShadow: '0 2px 16px rgba(0,0,0,0.07)', cursor: 'default' },
-  insideIconWrap: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: 8 },
-  insideName: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '1.05rem', color: '#1A1A1A', letterSpacing: '-0.01em' },
-  insideDesc: { fontFamily: "'Inter', sans-serif", fontSize: '0.95rem', lineHeight: 1.6, color: '#555' },
 
   cardGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 },
   craftCard: { background: '#fff', borderRadius: 6, overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.07)', cursor: 'default', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' },
