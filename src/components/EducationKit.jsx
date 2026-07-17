@@ -52,6 +52,7 @@ const bottomRevealWithDelay = (delay = 0) => ({
     transition: { ...fromBottom.visible.transition, delay },
   },
 })
+const revealViewport = { once: false, amount: 0.18, margin: '0px 0px -12% 0px' }
 
 const KIT_CONTENTS = [
   { label: '1x Notebook', alt: 'Notebook', img: '/kit-items/notebook.png' },
@@ -78,7 +79,7 @@ function KitContentCard({ item, index, rowIndex = 0, isMobile }) {
       variants={bottomRevealWithDelay(rowIndex * 0.05)}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+      viewport={revealViewport}
       whileHover={{
         y: -3,
         boxShadow: '0 14px 38px rgba(0,0,0,0.08)',
@@ -419,7 +420,7 @@ export default function EducationKit() {
             variants={fromBottom}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+            viewport={revealViewport}
           >
             <h2
               style={{
@@ -497,7 +498,7 @@ export default function EducationKit() {
             variants={fromBottom}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+            viewport={revealViewport}
           >
             <span style={styles.sectionEyebrow}>Recipients</span>
             <h2 style={styles.sectionH2}>
@@ -538,7 +539,7 @@ export default function EducationKit() {
             variants={isMobile ? fromBottom : fromRight}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+            viewport={revealViewport}
           >
             <span style={styles.sectionEyebrow}>Process</span>
             <h2 style={styles.sectionH2}>
