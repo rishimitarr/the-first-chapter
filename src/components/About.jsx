@@ -191,10 +191,9 @@ export default function About() {
             <div style={styles.splitCopy}>
               <h2 style={styles.sectionTitle}>Our Mission</h2>
               <p style={styles.bodyText}>
-                Our mission is to support children through education-focused care kits,
-                health and wellness fundraising, and community awareness. We are building
-                the foundation carefully so every future project is useful, transparent,
-                and rooted in real needs.
+                Our mission is to equip children facing hardship with thoughtfully assembled educational care kits, 
+                while building a community of donors, advocates, and partner organizations committed to closing the gap in access to learning. 
+                Every kit we create is a deliberate act of care, and every partnership we form is a step toward lasting, community-driven change.
               </p>
               <a href="/care-kits" style={styles.primaryButton}>Explore Care Kits</a>
             </div>
