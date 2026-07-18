@@ -52,7 +52,7 @@ const bottomRevealWithDelay = (delay = 0) => ({
     transition: { ...fromBottom.visible.transition, delay },
   },
 })
-const revealViewport = { once: false, amount: 0.18, margin: '0px 0px -12% 0px' }
+const revealViewport = { once: false, amount: 0.42, margin: '0px' }
 
 const KIT_CONTENTS = [
   { label: '1x Notebook', alt: 'Notebook', img: '/kit-items/notebook.png' },
