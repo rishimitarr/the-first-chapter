@@ -225,10 +225,9 @@ export default function About() {
           <HeartPulse size={58} strokeWidth={1.8} style={styles.purposeIcon} />
           <h2 style={styles.purposeTitle}>Our Purpose</h2>
           <p style={styles.purposeText}>
-            We are not here to tell stories of impact before the work has earned them.
-            We are here to build the structure for future impact: responsible fundraising,
-            useful programs, trusted partnerships, and a clear focus on children who need
-            education and health support.
+            The First Chapter exists to close the gap between a child's potential 
+            and the resources available to them. Through educational care kits and trusted community partnerships, 
+            we put learning tools directly into the hands of children in Brampton and beyond who would otherwise go without.
           </p>
         </div>
       </section>
