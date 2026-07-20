@@ -239,8 +239,8 @@ export default function About() {
             <h2 style={styles.sectionTitle}>Founders</h2>
           </div>
           <div style={styles.founderGrid} className="about-founder-grid">
-            <FounderCard initials="RM" name="Rishi Mitra" role="Co-Founder" bio={RISHI_BIO} color={NAVY} />
-            <FounderCard initials="VM" name="Veer Malik" role="Co-Founder" bio={VEER_BIO} color={CHARCOAL} />
+            <FounderCard initials="RM" name="Rishi Mitra" role="Co-Founder & CAO " bio={RISHI_BIO} color={NAVY} />
+            <FounderCard initials="VM" name="Veer Malik" role="Co-Founder & CEO" bio={VEER_BIO} color={CHARCOAL} />
           </div>
         </div>
       </section>
