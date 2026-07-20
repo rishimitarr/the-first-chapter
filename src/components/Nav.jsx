@@ -45,7 +45,7 @@ export default function Nav() {
     return l.href
   }
 
-  const ctaHref = location.pathname === '/' ? '#join' : '/#join'
+  const ctaHref = '/care-kits#donate'
 
   return (
     <motion.nav
@@ -107,7 +107,7 @@ export default function Nav() {
             whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(26,58,107,0.45)' }}
             whileTap={{ scale: 0.97 }}
           >
-            Get Involved
+            Donate Today
           </motion.a>
         </motion.div>
 
@@ -180,7 +180,7 @@ export default function Nav() {
               style={styles.mobileCta}
               onClick={() => setMenuOpen(false)}
             >
-              Get Involved
+              Donate Today
             </a>
           </motion.div>
         )}
