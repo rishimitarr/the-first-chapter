@@ -225,7 +225,7 @@ const DONATION_KITS = [
     shadow: '0 14px 38px rgba(0,153,214,0.22)',
     copy: 'Back-to-school essentials for everyday classroom learning.',
     items: ['1 notebook', '2 folders', '1 pencil pouch', '4 pens', '3 pencils', '5 crayons', '1 glue stick', '1 highlighter', '1 ruler', '2 erasers', '1 sharpener'],
-    href: 'mailto:info@thefirstchapternpo.org?subject=Donate%20an%20Educational%20Kit',
+    href: '/donate',
     comingSoon: false,
   },
   {
