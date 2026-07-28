@@ -6,7 +6,6 @@ import App from './App.jsx'
 import CareKitsLanding from './components/CareKitsLanding.jsx'
 import EducationKit from './components/EducationKit.jsx'
 import AboutPage from './pages/AboutPage.jsx'
-import DonationComingSoon from './pages/DonationComingSoon.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 
 document.addEventListener('touchmove', (e) => {
@@ -23,7 +22,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/about" element={<AboutPage />} />
         <Route path="/care-kits" element={<CareKitsLanding />} />
         <Route path="/care-kits/education" element={<EducationKit />} />
-        <Route path="/donate" element={<DonationComingSoon />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
