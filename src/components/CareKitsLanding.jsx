@@ -14,7 +14,7 @@ import {
 import Nav from './Nav'
 import Footer from './Footer'
 import SparklesText from './SparklesText'
-import DonateFloat from './DonateFloat'
+
 
 const fromLeft = {
   hidden: { opacity: 0, x: -150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
@@ -217,36 +217,7 @@ const STEPS = [
   { icon: Mail, accent: ACCENTS.pink, step: '05', title: 'A card in your name', desc: 'A small card inside the kit carries your name so your generosity reaches the child directly.', span: 3 },
 ]
 
-const DONATION_KITS = [
-  {
-    name: 'Educational Kit',
-    color: LOGO_BLUE,
-    background: `linear-gradient(155deg, ${LOGO_BLUE} 0%, ${LOGO_BLUE} 100%)`,
-    shadow: '0 14px 38px rgba(0,153,214,0.22)',
-    copy: 'Back-to-school essentials for everyday classroom learning.',
-    items: ['1 notebook', '2 folders', '1 pencil pouch', '4 pens', '3 pencils', '5 crayons', '1 glue stick', '1 highlighter', '1 ruler', '2 erasers', '1 sharpener'],
-    href: '/donate',
-    comingSoon: false,
-  },
-  {
-    name: 'Comfort Kit',
-    color: LOGO_ORANGE,
-    background: `linear-gradient(155deg, ${LOGO_ORANGE} 0%, ${LOGO_ORANGE} 100%)`,
-    shadow: '0 14px 38px rgba(247,148,29,0.18)',
-    copy: 'A care package concept currently in development.',
-    items: ['Comfort supplies', 'Volunteer packed'],
-    comingSoon: true,
-  },
-  {
-    name: 'Health Kit',
-    color: LOGO_PINK,
-    background: `linear-gradient(155deg, ${LOGO_PINK} 0%, ${LOGO_PINK} 100%)`,
-    shadow: '0 14px 38px rgba(238,48,147,0.18)',
-    copy: 'A wellness kit concept currently in development.',
-    items: ['Wellness essentials', 'Partner delivered'],
-    comingSoon: true,
-  },
-]
+
 
 const ROTATE_WORDS = ['One Story.', 'One Chapter.', 'One Beginning.', 'One Promise.', 'One Change.']
 
@@ -477,31 +448,7 @@ export default function CareKitsLanding() {
         </div>
       </section>
 
-      {/* ── DONATE ── */}
-      <section id="donate" style={styles.donateSection}>
-        <div style={styles.sectionInner}>
-          <motion.div
-            variants={fromBottom}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
-          >
-            <span style={styles.eyebrow}>Donate</span>
-            <h2 style={styles.sectionH2}>Donate a Kit</h2>
-            <p style={{ ...styles.sectionLead, marginBottom: 42 }}>
-              Each Educational Kit is $6 and goes toward supplies for one child.
-            </p>
-            <div style={{ ...styles.donateGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, minmax(0, 1fr))' }}>
-              {DONATION_KITS.map((kit) => (
-                <DonationKitCard key={kit.name} kit={kit} />
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       <Footer />
-      <DonateFloat label="Donate Today" to="/donate" />
     </div>
   )
 }

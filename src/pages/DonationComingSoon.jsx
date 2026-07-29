@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
+import DonationKitCard from '../components/DonationKitCard'
 
 const STRIPE_PUBLISHABLE_KEY =
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -159,76 +160,28 @@ export default function DonationComingSoon() {
             </motion.div>
           </div>
 
-          <div className="donation-grid" style={styles.donationGrid}>
-            <motion.aside
-              className="donation-summary-card"
-              style={styles.summaryCard}
+            <div className="donation-grid" style={styles.donationGrid}>
+            <motion.div
               initial={{ opacity: 0, x: -32 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div style={styles.cardTop}>
-                <div>
-                  <span style={styles.cardLabel}>Current kit</span>
-                  <h2 style={styles.kitTitle}>Educational Kit</h2>
-                </div>
-              </div>
-
-              <div style={styles.priceRow}>
-                <span style={styles.price}>${KIT_PRICE}</span>
-                <span style={styles.priceMeta}>CAD / kit</span>
-              </div>
-
-              <p style={styles.cardCopy}>
-                Built for everyday classroom learning: writing tools, paper supplies, creative
-                materials, and small essentials a student can use immediately.
-              </p>
-
-              <div style={styles.quantityBlock}>
-                <span style={styles.quantityLabel}>Number of kits</span>
-                <div style={styles.quantityControls}>
-                  <button
-                    type="button"
-                    onClick={decrement}
-                    className="donation-qty-button"
-                    style={styles.qtyButton}
-                    aria-label="Decrease kits"
-                  >
-                    <Minus size={16} />
-                  </button>
-                  <span style={styles.qtyValue}>{quantity}</span>
-                  <button
-                    type="button"
-                    onClick={increment}
-                    className="donation-qty-button"
-                    style={styles.qtyButton}
-                    aria-label="Increase kits"
-                  >
-                    <Plus size={16} />
-                  </button>
-                </div>
-              </div>
-
-              <div style={styles.totalRow}>
-                <span>Total donation</span>
-                <strong>
-                  ${total} CAD
-                  {checkoutPending && !completedSession ? (
-                    <span style={styles.totalPending}> · updating payment</span>
-                  ) : null}
-                </strong>
-              </div>
-
-              <ul style={styles.itemGrid}>
-                {KIT_ITEMS.map((item) => (
-                  <li key={item} style={styles.item}>
-                    <Check size={15} strokeWidth={3} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.aside>
+              {
+                /* Replace the white summary card with the colorful donation card */
+              }
+              <DonationKitCard
+                kit={{
+                  name: 'Educational Kit',
+                  background: 'linear-gradient(155deg, #0099D6 0%, #0099D6 100%)',
+                  shadow: '0 14px 38px rgba(0,153,214,0.22)',
+                  copy: 'Built for everyday classroom learning: writing tools, paper supplies, creative materials, and small essentials a student can use immediately.',
+                  items: KIT_ITEMS,
+                  href: '/donate',
+                  comingSoon: false,
+                }}
+              />
+            </motion.div>
 
             <motion.div
               style={styles.paymentCard}
@@ -250,9 +203,8 @@ export default function DonationComingSoon() {
                 <>
                   <div style={styles.paymentHeader}>
                     <div>
-                      <span style={styles.cardLabel}>Secure payment</span>
-                      <h2 style={styles.paymentTitle}>Complete your donation</h2>
-                    </div>
+                        <h2 style={styles.paymentTitle}>Complete your donation</h2>
+                      </div>
                   </div>
                   <EmbeddedCheckout quantity={checkoutQuantity} />
                 </>
@@ -521,7 +473,7 @@ const styles = {
     fontWeight: 850,
     fontSize: 'clamp(1.35rem, 2vw, 1.85rem)',
     lineHeight: 1.1,
-    color: '#1A3A6B',
+    color: '#1A1A1A',
     margin: '6px 0 0',
     letterSpacing: '-0.035em',
     whiteSpace: 'nowrap',
