@@ -375,7 +375,7 @@ export default function EducationKit() {
             <a href="#whats-inside" style={styles.heroPrimary}>
               See What's Inside
             </a>
-            <Link to="/care-kits#donate" style={styles.heroGhost}>
+            <Link to="/donate" style={styles.heroGhost}>
               Donate Today
             </Link>
           </motion.div>
@@ -562,7 +562,7 @@ export default function EducationKit() {
       <Footer />
       <DonateFloat
         label="Donate Today"
-        to="/care-kits#donate"
+        to="/donate"
         background={LOGO_NAVY}
         shadow="0 6px 24px rgba(26,58,107,0.30)"
       />

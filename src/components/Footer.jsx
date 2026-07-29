@@ -77,6 +77,8 @@ export default function Footer() {
 
 const styles = {
   footer: {
+    position: 'relative',
+    zIndex: 2,
     background: '#1A3A6B',
     color: '#fff',
     padding: '64px 0 32px',

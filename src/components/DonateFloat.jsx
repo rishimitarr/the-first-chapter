@@ -13,7 +13,7 @@ export default function DonateFloat({
 }) {
   const [visible, setVisible] = useState(true)
   const wrapStyle = { ...styles.wrap, background, boxShadow: shadow }
-  const kitHref = to || href || '/care-kits#donate'
+  const kitHref = to || href || '/donate'
   const KitLink = to ? Link : 'a'
   const kitLinkProps = to ? { to: kitHref } : { href: kitHref }
   const action =

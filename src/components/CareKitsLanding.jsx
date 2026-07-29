@@ -501,7 +501,7 @@ export default function CareKitsLanding() {
       </section>
 
       <Footer />
-      <DonateFloat label="Donate Today" to="/care-kits#donate" />
+      <DonateFloat label="Donate Today" to="/donate" />
     </div>
   )
 }

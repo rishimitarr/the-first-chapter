@@ -45,7 +45,7 @@ export default function Nav() {
     return l.href
   }
 
-  const ctaHref = '/care-kits#donate'
+  const ctaTo = '/donate'
 
   return (
     <motion.nav
@@ -100,15 +100,11 @@ export default function Nav() {
               </motion.a>
             )
           })}
-          <motion.a
-            href={ctaHref}
-            style={styles.ctaBtn}
-            variants={linkVariants}
-            whileHover={{ scale: 1.04, boxShadow: '0 8px 24px rgba(26,58,107,0.45)' }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Donate Today
-          </motion.a>
+          <motion.div variants={linkVariants} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+            <Link to={ctaTo} style={styles.ctaBtn}>
+              Donate Today
+            </Link>
+          </motion.div>
         </motion.div>
 
         {/* Hamburger */}
@@ -175,13 +171,13 @@ export default function Nav() {
                 </a>
               )
             })}
-            <a
-              href={ctaHref}
+            <Link
+              to={ctaTo}
               style={styles.mobileCta}
               onClick={() => setMenuOpen(false)}
             >
               Donate Today
-            </a>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

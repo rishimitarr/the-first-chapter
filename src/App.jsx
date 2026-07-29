@@ -21,7 +21,7 @@ function App() {
         <Join />
       </main>
       <Footer />
-      <DonateFloat variant="kit" to="/care-kits#donate" />
+      <DonateFloat variant="kit" to="/donate" />
     </>
   )
 }
