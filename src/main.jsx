@@ -22,7 +22,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/mission" element={<Navigate to="/about" replace />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/impact" element={<ImpactPage />} />
+        <Route path="/event-gallery" element={<ImpactPage />} />
+        <Route path="/impact" element={<Navigate to="/event-gallery" replace />} />
         <Route path="/care-kits" element={<CareKitsLanding />} />
         <Route path="/care-kits/education" element={<EducationKit />} />
         <Route path="/donate" element={<DonationComingSoon />} />

@@ -54,12 +54,11 @@ export default function EventRecap({ event, variant = 'full' }) {
               viewport={{ once: true, margin: '-120px' }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="section-tag">Our Impact</span>
+              <span className="section-tag">Latest Event</span>
               <h2 id="latest-event-teaser" style={styles.teaserTitle}>
                 {event.title}
               </h2>
-              <p style={styles.teaserText}>{event.intro}</p>
-              <Link to="/impact" style={styles.teaserButton}>
+              <Link to="/event-gallery" style={styles.teaserButton}>
                 Read More
               </Link>
             </motion.div>
@@ -100,7 +99,7 @@ export default function EventRecap({ event, variant = 'full' }) {
           viewport={{ once: true, margin: '-120px' }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="section-tag">Our Impact</span>
+          <span className="section-tag">Event Gallery</span>
           <h1 id="event-recap-title" style={styles.title}>
             {event.title}
           </h1>
@@ -138,7 +137,6 @@ export default function EventRecap({ event, variant = 'full' }) {
           viewport={{ once: true, margin: '-120px' }}
           transition={{ duration: 0.6, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p style={styles.summaryLead}>{event.intro}</p>
           <div style={styles.summaryText}>
             {event.summary.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -256,14 +254,6 @@ const styles = {
     color: '#1A1A1A',
     margin: 0,
   },
-  teaserText: {
-    fontFamily: "'Inter', sans-serif",
-    fontSize: '1.05rem',
-    lineHeight: 1.8,
-    color: '#555',
-    margin: 0,
-    maxWidth: 520,
-  },
   teaserButton: {
     display: 'inline-block',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -346,6 +336,8 @@ const styles = {
     borderRadius: 6,
     overflow: 'hidden',
     boxShadow: '0 18px 44px rgba(0,0,0,0.10)',
+    maxWidth: 720,
+    margin: '0 auto',
   },
   heroImage: {
     width: '100%',
@@ -355,14 +347,6 @@ const styles = {
   summaryWrap: {
     maxWidth: 760,
     margin: '36px auto 0',
-  },
-  summaryLead: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 700,
-    fontSize: '1.35rem',
-    lineHeight: 1.5,
-    color: '#1A3A6B',
-    margin: '0 0 18px',
   },
   summaryText: {
     display: 'flex',
@@ -399,7 +383,6 @@ const styles = {
     gap: 16,
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    gap: 16,
     paddingBottom: 8,
   },
   carouselItem: {

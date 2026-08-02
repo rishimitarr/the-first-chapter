@@ -131,7 +131,7 @@ export default function Hero() {
   })
 
   return (
-    <section style={styles.hero}>
+    <section style={styles.hero} className="home-hero">
       {/* Background crossfade */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.img

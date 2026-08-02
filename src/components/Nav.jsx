@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -29,14 +29,25 @@ const linkVariants = {
 
 const defaultLinks = [
   { label: 'About Us', href: '/about', route: true },
-  { label: 'Our Impact', href: '/impact', route: true },
   { label: 'Care Kits', href: '/care-kits', route: true },
   { label: 'Join Us', href: '/#join' },
 ]
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
+
+  const isHome = location.pathname === '/'
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const atTop = isHome && !scrolled
 
   const links = defaultLinks
 
@@ -50,13 +61,18 @@ export default function Nav() {
 
   return (
     <motion.nav
-      style={styles.nav}
+      style={{
+        ...styles.nav,
+        background: atTop ? 'transparent' : '#fff',
+        boxShadow: atTop ? 'none' : '0 2px 20px rgba(0,0,0,0.07)',
+      }}
+      className={atTop ? 'nav-overlay' : undefined}
       variants={navVariants}
       initial="hidden"
       animate="visible"
     >
       {/* Rainbow bar */}
-      <div style={styles.rainbow} />
+      <div style={{ ...styles.rainbow, background: atTop ? 'transparent' : styles.rainbow.background }} />
 
       <div style={styles.inner} className="nav-inner-height">
         {/* Logo */}
@@ -64,7 +80,11 @@ export default function Nav() {
           <img
             src="/New First Chapter Logo.png"
             alt="The First Chapter"
-            style={styles.logoImg}
+            style={{
+              ...styles.logoImg,
+              mixBlendMode: atTop ? 'normal' : 'multiply',
+              ...(atTop ? { filter: 'brightness(0) invert(1)' } : {}),
+            }}
             className="nav-logo-img"
           />
         </Link>
@@ -82,7 +102,11 @@ export default function Nav() {
             if (l.route) {
               return (
                 <motion.div key={l.href} variants={linkVariants} whileHover={{ y: -2 }}>
-                  <Link to={href} className="nav-link-item" style={styles.navLink}>
+                  <Link
+                    to={href}
+                    className="nav-link-item"
+                    style={{ ...styles.navLink, ...navLinkStyle(atTop) }}
+                  >
                     {l.label}
                   </Link>
                 </motion.div>
@@ -93,7 +117,7 @@ export default function Nav() {
                 key={l.href}
                 href={href}
                 className="nav-link-item"
-                style={styles.navLink}
+                style={{ ...styles.navLink, ...navLinkStyle(atTop) }}
                 variants={linkVariants}
                 whileHover={{ y: -2 }}
               >
@@ -102,7 +126,14 @@ export default function Nav() {
             )
           })}
           <motion.div variants={linkVariants} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-            <Link to={ctaTo} style={styles.ctaBtn}>
+            <Link
+              to={ctaTo}
+              style={{
+                ...styles.ctaBtn,
+                background: atTop ? 'rgba(255,255,255,0.94)' : '#1A3A6B',
+                color: atTop ? '#1A3A6B' : '#fff',
+              }}
+            >
               Donate Today
             </Link>
           </motion.div>
@@ -119,18 +150,21 @@ export default function Nav() {
           <span
             style={{
               ...styles.bar,
+              background: atTop ? '#fff' : '#1A3A6B',
               ...(menuOpen ? { transform: 'translateY(7px) rotate(45deg)' } : {}),
             }}
           />
           <span
             style={{
               ...styles.bar,
+              background: atTop ? '#fff' : '#1A3A6B',
               ...(menuOpen ? { opacity: 0 } : {}),
             }}
           />
           <span
             style={{
               ...styles.bar,
+              background: atTop ? '#fff' : '#1A3A6B',
               ...(menuOpen ? { transform: 'translateY(-7px) rotate(-45deg)' } : {}),
             }}
           />
@@ -184,6 +218,13 @@ export default function Nav() {
       </AnimatePresence>
     </motion.nav>
   )
+}
+
+function navLinkStyle(atTop) {
+  return {
+    color: atTop ? '#fff' : '#1A1A1A',
+    ...(atTop ? { textShadow: '0 1px 14px rgba(0,0,0,0.5)' } : {}),
+  }
 }
 
 const styles = {

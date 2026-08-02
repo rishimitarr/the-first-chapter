@@ -242,6 +242,25 @@ ul { list-style: none; }
   width: calc(100% - 28px);
 }
 
+/* ── Transparent nav over hero ── */
+.nav-overlay .nav-link-item:hover {
+  color: #fff !important;
+}
+
+.nav-overlay .nav-link-item::after {
+  background: #fff;
+}
+
+.home-hero {
+  margin-top: -156px;
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    margin-top: -106px;
+  }
+}
+
 .about-image-card {
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
