@@ -1,16 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Heart, Loader2, Minus, Plus } from 'lucide-react'
+import { ArrowLeft, Check, Heart, Loader2, Minus, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
-import DonationKitCard from '../components/DonationKitCard'
+// DonationKitCard not used on this page; left intentionally commented
 
 const STRIPE_PUBLISHABLE_KEY =
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 
 const KIT_PRICE = 6
+const KIT_ITEMS = [
+  '1 notebook',
+  '2 folders',
+  '1 pencil pouch',
+  '4 pens',
+  '3 pencils',
+  '5 crayons',
+  '1 glue stick',
+  '1 highlighter',
+  '1 ruler',
+  '2 erasers',
+  '1 sharpener',
+]
 
 let stripePromise
 
@@ -105,7 +118,7 @@ export default function DonationComingSoon() {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1)
   const params = new URLSearchParams(window.location.search)
   const completedSession = params.has('session_id')
-  const total = quantity * KIT_PRICE
+  const total = useMemo(() => quantity * KIT_PRICE, [quantity])
   const checkoutPending = quantity !== checkoutQuantity
 
   useEffect(() => {
@@ -142,39 +155,16 @@ export default function DonationComingSoon() {
               <div style={styles.heroMetaRow}>
                 <span style={styles.heroMetaPill}>$6 CAD per kit</span>
                 <span style={styles.heroMetaPill}>Packed by volunteers</span>
-                <span style={styles.heroMetaPill}>Shared through local outreach</span>
+                <span style={styles.heroMetaPill}>Delivered through partners</span>
               </div>
             </motion.div>
           </div>
 
-<<<<<<< Updated upstream
             <div className="donation-grid" style={styles.donationGrid}>
-            <motion.div
-              initial={{ opacity: 0, x: -32 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {
-                /* Replace the white summary card with the colorful donation card */
-              }
-              <DonationKitCard
-                kit={{
-                  name: 'Educational Kit',
-                  background: 'linear-gradient(155deg, #0099D6 0%, #0099D6 100%)',
-                  shadow: '0 14px 38px rgba(0,153,214,0.22)',
-                  copy: 'Built for everyday classroom learning: writing tools, paper supplies, creative materials, and small essentials a student can use immediately.',
-                  items: KIT_ITEMS,
-                  href: '/donate',
-                  comingSoon: false,
-                }}
-              />
-            </motion.div>
+            {/* left card removed; Stripe payment will span full width */}
 
-=======
->>>>>>> Stashed changes
             <motion.div
-              style={styles.paymentCard}
+              style={{ ...styles.paymentCard, gridColumn: '1 / -1' }}
               initial={{ opacity: 0, x: 32 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-80px' }}
@@ -193,59 +183,38 @@ export default function DonationComingSoon() {
                 <>
                   <div style={styles.paymentHeader}>
                     <div>
-<<<<<<< Updated upstream
-                        <h2 style={styles.paymentTitle}>Complete your donation</h2>
-                      </div>
-=======
                       <h2 style={styles.paymentTitle}>Complete your donation</h2>
-                      <p style={styles.paymentCopy}>
-                        Choose the number of kits you want to fund, then review the total before
-                        payment loads.
-                      </p>
-                    </div>
-                    <div style={styles.totalBadge}>
-                      <span style={styles.totalBadgeLabel}>Total</span>
-                      <strong style={styles.totalBadgeValue}>
-                        ${total} CAD
-                        {checkoutPending ? <span style={styles.totalPending}> updating</span> : null}
-                      </strong>
-                    </div>
->>>>>>> Stashed changes
-                  </div>
 
-                  <div style={styles.quantityBlock}>
-                    <span style={styles.quantityLabel}>Number of kits</span>
-                    <div style={styles.quantityControls}>
-                      <button
-                        type="button"
-                        onClick={decrement}
-                        className="donation-qty-button"
-                        style={styles.qtyButton}
-                        aria-label="Decrease kits"
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span style={styles.qtyValue}>{quantity}</span>
-                      <button
-                        type="button"
-                        onClick={increment}
-                        className="donation-qty-button"
-                        style={styles.qtyButton}
-                        aria-label="Increase kits"
-                      >
-                        <Plus size={16} />
-                      </button>
+                      <div style={{ marginTop: 12 }}>
+                        <div style={styles.quantityBlock}>
+                          <span style={styles.quantityLabel}>Number of kits</span>
+                          <div style={styles.quantityControls}>
+                            <button
+                              type="button"
+                              onClick={decrement}
+                              className="donation-qty-button"
+                              style={styles.qtyButton}
+                              aria-label="Decrease kits"
+                            >
+                              −
+                            </button>
+                            <span style={styles.qtyValue}>{quantity}</span>
+                            <button
+                              type="button"
+                              onClick={increment}
+                              className="donation-qty-button"
+                              style={styles.qtyButton}
+                              aria-label="Increase kits"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                        <div style={{ marginTop: 8, color: '#374151', fontWeight: 700 }}>
+                          Total: CA${(quantity * KIT_PRICE).toFixed(2)}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-
-                  <div style={styles.totalRow}>
-                    <span>Total donation</span>
-                    <strong>
-                      ${total} CAD
-                      {checkoutPending && !completedSession ? (
-                        <span style={styles.totalPending}> · updating payment</span>
-                      ) : null}
-                    </strong>
                   </div>
 
                   <EmbeddedCheckout quantity={checkoutQuantity} />
@@ -355,6 +324,76 @@ const styles = {
   donationSection: {
     padding: '0 0 clamp(82px, 10vw, 132px)',
   },
+  donationGrid: {
+    maxWidth: 1120,
+    margin: '0 auto',
+    padding: '0 24px',
+    display: 'grid',
+    gridTemplateColumns: 'minmax(300px, 0.86fr) minmax(360px, 1.14fr)',
+    gap: 28,
+    alignItems: 'start',
+  },
+  summaryCard: {
+    borderRadius: 6,
+    background: '#FFFFFF',
+    border: '1px solid rgba(26,58,107,0.12)',
+    boxShadow: '0 18px 48px rgba(26,58,107,0.12)',
+    padding: 'clamp(24px, 3vw, 34px)',
+    position: 'sticky',
+    top: 184,
+  },
+  cardTop: {
+    display: 'flex',
+    gap: 16,
+    alignItems: 'flex-start',
+  },
+  cardLabel: {
+    display: 'block',
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.68rem',
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    color: '#8A94A6',
+  },
+  kitTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '1.45rem',
+    lineHeight: 1.1,
+    margin: '5px 0 0',
+    color: '#1A1A1A',
+  },
+  priceRow: {
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: 9,
+    marginTop: 30,
+    paddingBottom: 22,
+    borderBottom: '1px solid rgba(26,58,107,0.10)',
+  },
+  price: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 900,
+    fontSize: '3.4rem',
+    lineHeight: 1,
+    color: '#1A3A6B',
+    letterSpacing: '-0.06em',
+  },
+  priceMeta: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '0.82rem',
+    textTransform: 'uppercase',
+    color: '#64748B',
+  },
+  cardCopy: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.98rem',
+    lineHeight: 1.72,
+    color: '#4B5563',
+    margin: '22px 0',
+  },
   quantityBlock: {
     display: 'flex',
     alignItems: 'center',
@@ -410,31 +449,35 @@ const styles = {
     color: '#64748B',
     letterSpacing: 0,
   },
+  itemGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    gap: 10,
+    marginTop: 22,
+    padding: 0,
+  },
+  item: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 9,
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.92rem',
+    color: '#4B5563',
+  },
   paymentCard: {
     borderRadius: 6,
     background: '#FFFFFF',
     border: '1px solid rgba(26,58,107,0.12)',
     boxShadow: '0 18px 48px rgba(26,58,107,0.12)',
-    padding: 'clamp(24px, 4vw, 40px)',
-    minHeight: 760,
-    maxWidth: 1120,
-    margin: '0 auto',
-    width: 'calc(100% - 48px)',
+    padding: 'clamp(20px, 3vw, 30px)',
+    minHeight: 640,
   },
   paymentHeader: {
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: 20,
     marginBottom: 22,
-    alignItems: 'flex-start',
-  },
-  paymentCopy: {
-    fontFamily: "'Inter', sans-serif",
-    fontSize: '0.98rem',
-    lineHeight: 1.7,
-    color: '#4B5563',
-    margin: '10px 0 0',
-    maxWidth: 640,
   },
   paymentTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -444,36 +487,11 @@ const styles = {
     color: '#1A1A1A',
     margin: '6px 0 0',
     letterSpacing: '-0.035em',
-  },
-  totalBadge: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-    alignItems: 'flex-end',
-    padding: '14px 16px',
-    borderRadius: 6,
-    background: '#F8FAFC',
-    border: '1px solid rgba(26,58,107,0.10)',
-    minWidth: 160,
-  },
-  totalBadgeLabel: {
-    fontFamily: "'Inter', sans-serif",
-    fontSize: '0.68rem',
-    fontWeight: 700,
-    letterSpacing: '0.14em',
-    textTransform: 'uppercase',
-    color: '#8A94A6',
-  },
-  totalBadgeValue: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontSize: '1.15rem',
-    fontWeight: 850,
-    color: '#1A1A1A',
     whiteSpace: 'nowrap',
   },
   checkoutShell: {
     position: 'relative',
-    minHeight: 560,
+    minHeight: 520,
   },
   checkoutLoading: {
     minHeight: 260,
