@@ -6,6 +6,7 @@ import App from './App.jsx'
 import CareKitsLanding from './components/CareKitsLanding.jsx'
 import EducationKit from './components/EducationKit.jsx'
 import AboutPage from './pages/AboutPage.jsx'
+import ImpactPage from './pages/ImpactPage.jsx'
 import DonationComingSoon from './pages/DonationComingSoon.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/mission" element={<Navigate to="/about" replace />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/impact" element={<ImpactPage />} />
         <Route path="/care-kits" element={<CareKitsLanding />} />
         <Route path="/care-kits/education" element={<EducationKit />} />
         <Route path="/donate" element={<DonationComingSoon />} />

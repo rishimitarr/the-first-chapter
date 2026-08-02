@@ -29,6 +29,7 @@ const linkVariants = {
 
 const defaultLinks = [
   { label: 'About Us', href: '/about', route: true },
+  { label: 'Our Impact', href: '/impact', route: true },
   { label: 'Care Kits', href: '/care-kits', route: true },
   { label: 'Join Us', href: '/#join' },
 ]

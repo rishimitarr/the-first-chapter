@@ -260,6 +260,35 @@ ul { list-style: none; }
   filter: saturate(1.04) contrast(1.03);
 }
 
+.event-recap-teaser-grid {
+  align-items: center;
+}
+
+.event-recap-meta-grid {
+  align-items: stretch;
+}
+
+.event-recap-gallery-grid {
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .event-recap-teaser-grid,
+  .event-recap-meta-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .event-recap-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .event-recap-gallery-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 .reading-story-card img {
   transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
 }
