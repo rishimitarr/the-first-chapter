@@ -234,7 +234,7 @@ const styles = {
   page: {
     minHeight: '100vh',
     position: 'relative',
-    overflow: 'hidden',
+    overflow: 'clip',
     background: '#FFFFFF',
     color: '#1A1A1A',
   },
