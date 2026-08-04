@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
+const sectionVariant = {
+  hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+}
+
 function buildSizes(image) {
   const src = image.src
   const variants = Array.isArray(image.variants) ? image.variants : []
@@ -46,44 +51,38 @@ export default function EventRecap({ event, variant = 'full' }) {
     return (
       <section style={styles.teaserSection} aria-labelledby="latest-event-teaser">
         <div className="container">
-          <div style={styles.teaserGrid} className="event-recap-teaser-grid">
-            <motion.div
-              style={styles.teaserCopy}
-              initial={{ opacity: 0, x: -28 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-120px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <span className="section-tag">Latest Event</span>
-              <h2 id="latest-event-teaser" style={styles.teaserTitle}>
-                {event.title}
-              </h2>
-              <Link to="/event-gallery" style={styles.teaserButton}>
-                Read More
-              </Link>
-            </motion.div>
+          <motion.div
+            variants={sectionVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+          >
+            <div style={styles.teaserGrid} className="event-recap-teaser-grid">
+              <div style={styles.teaserCopy}>
+                <span className="section-tag">Latest Event</span>
+                <h2 id="latest-event-teaser" style={styles.teaserTitle}>
+                  {event.title}
+                </h2>
+                <Link to="/event-gallery" style={styles.teaserButton}>
+                  Read More
+                </Link>
+              </div>
 
-            <motion.div
-              style={styles.teaserImageWrap}
-              className="about-image-card"
-              initial={{ opacity: 0, x: 28 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-120px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <img
-                src={featured.src}
-                srcSet={featured.srcSet}
-                sizes={featured.sizes}
-                width={featured.width}
-                height={featured.height}
-                alt={event.hero.alt}
-                style={styles.teaserImage}
-                loading="eager"
-                decoding="async"
-              />
-            </motion.div>
-          </div>
+              <div style={styles.teaserImageWrap} className="about-image-card">
+                <img
+                  src={featured.src}
+                  srcSet={featured.srcSet}
+                  sizes={featured.sizes}
+                  width={featured.width}
+                  height={featured.height}
+                  alt={event.hero.alt}
+                  style={styles.teaserImage}
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     )
@@ -235,7 +234,7 @@ const styles = {
   },
   teaserGrid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1.05fr',
+    gridTemplateColumns: '1fr 360px',
     gap: 44,
     alignItems: 'center',
   },
@@ -248,7 +247,7 @@ const styles = {
   teaserTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
-    fontSize: 'clamp(2.4rem, 5vw, 4rem)',
+    fontSize: 'clamp(2.8rem, 5.8vw, 4.6rem)',
     lineHeight: 1.06,
     letterSpacing: '-0.025em',
     color: '#1A1A1A',
@@ -267,15 +266,15 @@ const styles = {
     boxShadow: '0 8px 24px rgba(26,58,107,0.18)',
   },
   teaserImageWrap: {
+    width: 'min(360px, 100%)',
+    margin: '0 auto',
     overflow: 'hidden',
     borderRadius: 6,
     boxShadow: '0 18px 44px rgba(26,58,107,0.12)',
   },
   teaserImage: {
     width: '100%',
-    height: '100%',
-    minHeight: 420,
-    objectFit: 'cover',
+    height: 'auto',
     display: 'block',
   },
   pageSection: {
