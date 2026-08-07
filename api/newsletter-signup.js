@@ -1,6 +1,6 @@
 /* global process */
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY || 're_CpywtYBN_KoZoF53yrQFdLWCTCB61UrC3'
+const RESEND_API_KEY = process.env.RESEND_API_KEY
 
 const json = (res, status, body) => {
   res.statusCode = status
