@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { InfiniteSlider } from './ui/infinite-slider'
 
 const sectionVariant = {
   hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
@@ -57,33 +57,83 @@ export default function EventRecap({ event, variant = 'full' }) {
             whileInView="visible"
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
-            <div style={styles.teaserGrid} className="event-recap-teaser-grid">
-              <div style={styles.teaserCopy}>
-                <span className="section-tag">Latest Event</span>
-                <h2 id="latest-event-teaser" style={styles.teaserTitle}>
-                  {event.title}
-                </h2>
-                <Link to="/event-gallery" style={styles.teaserButton}>
-                  Read More
-                </Link>
-              </div>
-
-              <div style={styles.teaserImageWrap} className="about-image-card">
-                <img
-                  src={featured.src}
-                  srcSet={featured.srcSet}
-                  sizes={featured.sizes}
-                  width={featured.width}
-                  height={featured.height}
-                  alt={event.hero.alt}
-                  style={styles.teaserImage}
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
+            <div style={styles.teaserHeader}>
+              <span className="section-tag">Latest Event</span>
+              <h2 id="latest-event-teaser" style={styles.teaserTitle}>
+                {event.title}
+              </h2>
+              <p style={styles.teaserDescription}>
+                {event.intro}
+              </p>
             </div>
           </motion.div>
         </div>
+
+        <motion.div
+          style={styles.sliderFullWidth}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <InfiniteSlider durationOnHover={75} gap={24}>
+            {event.photos.map((photo, index) => (
+              <button
+                key={photo.src}
+                type="button"
+                style={styles.sliderImageBtn}
+                onClick={() => setActiveIndex(index)}
+                aria-label={`View photo: ${photo.alt}`}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  style={styles.sliderImage}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            ))}
+          </InfiniteSlider>
+        </motion.div>
+
+        <AnimatePresence>
+          {activeIndex !== null ? (
+            <motion.div
+              style={styles.modalOverlay}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveIndex(null)}
+              role="presentation"
+            >
+              <motion.div
+                style={styles.modalPanel}
+                initial={{ opacity: 0, scale: 0.96, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 16 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+              >
+                <button
+                  type="button"
+                  style={styles.modalClose}
+                  onClick={() => setActiveIndex(null)}
+                  aria-label="Close image viewer"
+                >
+                  Close
+                </button>
+                <img
+                  src={event.photos[activeIndex].src}
+                  alt={event.photos[activeIndex].alt}
+                  style={styles.modalImage}
+                />
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </section>
     )
   }
@@ -229,53 +279,55 @@ export default function EventRecap({ event, variant = 'full' }) {
 
 const styles = {
   teaserSection: {
-    padding: '88px 0',
+    padding: '88px 0 0',
     background: '#fff',
   },
-  teaserGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 360px',
-    gap: 44,
-    alignItems: 'center',
-  },
-  teaserCopy: {
+  teaserHeader: {
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: 18,
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 40,
   },
   teaserTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
-    fontSize: 'clamp(2.8rem, 5.8vw, 4.6rem)',
-    lineHeight: 1.06,
+    fontSize: 'clamp(2.2rem, 4.5vw, 3.4rem)',
+    lineHeight: 1.1,
     letterSpacing: '-0.025em',
     color: '#1A1A1A',
     margin: 0,
   },
-  teaserButton: {
-    display: 'inline-block',
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.92rem',
-    color: '#fff',
-    background: '#1A3A6B',
-    padding: '14px 28px',
-    borderRadius: 4,
-    letterSpacing: '0.01em',
-    boxShadow: '0 8px 24px rgba(26,58,107,0.18)',
+  teaserDescription: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: 'clamp(1rem, 1.3vw, 1.12rem)',
+    lineHeight: 1.75,
+    color: '#4B5563',
+    margin: 0,
+    maxWidth: 600,
   },
-  teaserImageWrap: {
-    width: 'min(360px, 100%)',
-    margin: '0 auto',
+  sliderFullWidth: {
+    marginTop: 40,
     overflow: 'hidden',
-    borderRadius: 6,
-    boxShadow: '0 18px 44px rgba(26,58,107,0.12)',
   },
-  teaserImage: {
-    width: '100%',
-    height: 'auto',
+  sliderImageBtn: {
+    border: 'none',
+    padding: 0,
+    background: 'transparent',
+    cursor: 'pointer',
+    borderRadius: 6,
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  sliderImage: {
+    height: 320,
+    width: 400,
+    objectFit: 'cover',
     display: 'block',
+    borderRadius: 6,
+    boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+    transition: 'transform 0.35s ease, filter 0.35s ease',
   },
   pageSection: {
     padding: '80px 0 88px',

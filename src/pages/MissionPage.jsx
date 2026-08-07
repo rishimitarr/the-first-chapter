@@ -1,7 +1,6 @@
 import Nav from '../components/Nav'
 import Mission from '../components/Mission'
 import Footer from '../components/Footer'
-import DonateFloat from '../components/DonateFloat'
 
 export default function MissionPage() {
   return (
@@ -11,7 +10,6 @@ export default function MissionPage() {
         <Mission />
       </main>
       <Footer />
-      <DonateFloat />
     </>
   )
 }

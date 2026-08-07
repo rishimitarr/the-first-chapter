@@ -1,7 +1,6 @@
 import Nav from '../components/Nav'
 import About from '../components/About'
 import Footer from '../components/Footer'
-import DonateFloat from '../components/DonateFloat'
 
 export default function AboutPage() {
   return (
@@ -11,7 +10,6 @@ export default function AboutPage() {
         <About />
       </main>
       <Footer />
-      <DonateFloat />
     </>
   )
 }

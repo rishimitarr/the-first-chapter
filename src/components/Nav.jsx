@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
+import DonateFloat from './DonateFloat'
 
 const navVariants = {
   hidden: { y: -140, opacity: 0 },
@@ -57,9 +58,10 @@ export default function Nav() {
     return l.href
   }
 
-  const ctaTo = '/donate'
+  const openDonate = () => window.dispatchEvent(new CustomEvent('open-donate-modal'))
 
   return (
+    <>
     <motion.nav
       style={{
         ...styles.nav,
@@ -126,8 +128,8 @@ export default function Nav() {
             )
           })}
           <motion.div variants={linkVariants} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-            <Link
-              to={ctaTo}
+            <button
+              onClick={openDonate}
               style={{
                 ...styles.ctaBtn,
                 background: atTop ? 'rgba(255,255,255,0.94)' : '#1A3A6B',
@@ -135,7 +137,7 @@ export default function Nav() {
               }}
             >
               Donate Today
-            </Link>
+            </button>
           </motion.div>
         </motion.div>
 
@@ -206,17 +208,18 @@ export default function Nav() {
                 </a>
               )
             })}
-            <Link
-              to={ctaTo}
+            <button
+              onClick={() => { setMenuOpen(false); openDonate() }}
               style={styles.mobileCta}
-              onClick={() => setMenuOpen(false)}
             >
               Donate Today
-            </Link>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.nav>
+    <DonateFloat variant="kit" />
+    </>
   )
 }
 

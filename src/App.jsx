@@ -7,7 +7,6 @@ import ProgramCards from './components/ProgramCards'
 import ReadingList from './components/ReadingList'
 import Join from './components/Join'
 import Footer from './components/Footer'
-import DonateFloat from './components/DonateFloat'
 import { getLatestEventRecap } from './data/eventRecaps'
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
         <Join />
       </main>
       <Footer />
-      <DonateFloat variant="kit" to="/donate" />
     </>
   )
 }

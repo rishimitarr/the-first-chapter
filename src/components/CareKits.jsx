@@ -783,9 +783,9 @@ export default function CareKits() {
           >
             <span style={styles.sectionEyebrow}>Sponsor a Kit</span>
             <h2 style={styles.sponsorH2}>
-              One kit can change a{' '}
+              Make a{' '}
               <SparklesText
-                text="chapter"
+                text="Difference"
                 colors={{ first: '#F7941D', second: '#FBB040' }}
                 count={12}
                 textStyle={{ color: '#1A1A1A' }}

@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HeartHandshake, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const slides = [
   {
@@ -42,66 +41,10 @@ const slides = [
   },
 ]
 
-const MotionLink = motion.create(Link)
-
-function MissionButton({ href, isMobile }) {
-  const [hovered, setHovered] = useState(false)
-
-  if (isMobile) {
-    return (
-      <a href={href} style={{ ...styles.missionBtn, width: 'auto', padding: '0 28px', textDecoration: 'none' }}>
-        <span style={{ ...styles.missionText, position: 'relative' }}>Support Our Mission</span>
-      </a>
-    )
-  }
-
-  return (
-    <motion.a
-      href={href}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      animate={{ width: hovered ? 230 : 52 }}
-      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-      whileTap={{ scale: 0.96 }}
-      style={styles.missionBtn}
-    >
-      <motion.span
-        animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        style={styles.missionGlow}
-      />
-      <motion.span
-        animate={{ opacity: hovered ? 0 : 1, scale: hovered ? 0.4 : 1 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-        style={styles.missionIcon}
-      >
-        <HeartHandshake size={24} strokeWidth={2} color="#1A3A6B" />
-      </motion.span>
-      <motion.span
-        animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.75 }}
-        transition={{ duration: 0.22, delay: hovered ? 0.14 : 0, ease: 'easeOut' }}
-        style={styles.missionText}
-      >
-        Support Our Mission
-      </motion.span>
-    </motion.a>
-  )
-}
-
 export default function Hero() {
-  const triggered = true
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState(1)
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
-  )
   const intervalRef = useRef(null)
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768)
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
   const startAutoplay = useCallback(() => {
     clearInterval(intervalRef.current)
@@ -123,12 +66,6 @@ export default function Hero() {
   }, [startAutoplay])
 
   const slide = slides[current]
-
-  const fadeUp = (delay) => ({
-    initial: { opacity: 0, y: 40 },
-    animate: triggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 },
-    transition: { duration: 0.7, delay: delay / 1000, ease: [0.22, 1, 0.36, 1] },
-  })
 
   return (
     <section style={styles.hero} className="home-hero">
@@ -169,18 +106,6 @@ export default function Hero() {
             <span style={{ whiteSpace: 'nowrap' }}>{slide.accent}</span>
           </motion.h1>
         </AnimatePresence>
-
-        <motion.div style={styles.btns} className="hero-btns" {...fadeUp(500)}>
-          <MissionButton href="#join" isMobile={isMobile} />
-          <MotionLink
-            to="/about"
-            className="btn-glass"
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Learn More
-          </MotionLink>
-        </motion.div>
       </div>
 
       {/* Photo credit */}

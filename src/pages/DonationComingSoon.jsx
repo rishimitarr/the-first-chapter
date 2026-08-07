@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Check, Heart, Loader2, Minus, Plus } from 'lucide-react'
+import { ArrowLeft, Heart, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import Nav from '../components/Nav'
@@ -10,20 +10,7 @@ import Footer from '../components/Footer'
 const STRIPE_PUBLISHABLE_KEY =
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 
-const KIT_PRICE = 6
-const KIT_ITEMS = [
-  '1 notebook',
-  '2 folders',
-  '1 pencil pouch',
-  '4 pens',
-  '3 pencils',
-  '5 crayons',
-  '1 glue stick',
-  '1 highlighter',
-  '1 ruler',
-  '2 erasers',
-  '1 sharpener',
-]
+const MIN_DONATION = 2
 
 let stripePromise
 
@@ -33,7 +20,7 @@ function getStripe() {
   return stripePromise
 }
 
-function EmbeddedCheckout({ quantity }) {
+function EmbeddedCheckout({ amountCents }) {
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
 
@@ -59,7 +46,7 @@ function EmbeddedCheckout({ quantity }) {
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ quantity }),
+            body: JSON.stringify({ amountCents }),
           })
           const data = await response.json()
           if (!response.ok) throw new Error(data.error || 'Unable to start donation.')
@@ -92,7 +79,7 @@ function EmbeddedCheckout({ quantity }) {
       cancelled = true
       checkout?.destroy()
     }
-  }, [quantity])
+  }, [amountCents])
 
   return (
     <div style={styles.checkoutShell}>
@@ -114,20 +101,28 @@ function EmbeddedCheckout({ quantity }) {
 }
 
 export default function DonationComingSoon() {
-  const [quantity, setQuantity] = useState(1)
-  const [checkoutQuantity, setCheckoutQuantity] = useState(1)
+  const [amount, setAmount] = useState('')
+  const [checkoutAmount, setCheckoutAmount] = useState(null)
   const params = new URLSearchParams(window.location.search)
   const completedSession = params.has('session_id')
-  const total = useMemo(() => quantity * KIT_PRICE, [quantity])
-  const checkoutPending = quantity !== checkoutQuantity
+  const numericAmount = useMemo(() => {
+    const parsed = parseFloat(amount)
+    return isNaN(parsed) ? 0 : parsed
+  }, [amount])
+  const isValid = numericAmount >= MIN_DONATION
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setCheckoutQuantity(quantity), 450)
+    if (!isValid) return undefined
+    const timer = window.setTimeout(() => setCheckoutAmount(numericAmount), 450)
     return () => window.clearTimeout(timer)
-  }, [quantity])
+  }, [numericAmount, isValid])
 
-  const increment = () => setQuantity((value) => Math.min(100, value + 1))
-  const decrement = () => setQuantity((value) => Math.max(1, value - 1))
+  const handleAmountChange = (e) => {
+    const value = e.target.value
+    if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
+      setAmount(value)
+    }
+  }
 
   return (
     <div style={styles.page}>
@@ -148,12 +143,12 @@ export default function DonationComingSoon() {
               </Link>
               <h1 style={styles.title}>Donate an Educational Kit.</h1>
               <p style={styles.lead}>
-                Choose how many kits to fund, then complete your donation securely on this page.
-                Each kit is packed by volunteers and delivered through local care partners in the
-                Greater Toronto Area.
+                Enter any amount of $2 or more, then complete your donation securely on this page.
+                Every $6 funds one kit packed by volunteers and delivered through local care partners
+                in the Greater Toronto Area.
               </p>
               <div style={styles.heroMetaRow}>
-                <span style={styles.heroMetaPill}>$6 CAD per kit</span>
+                <span style={styles.heroMetaPill}>$6 = 1 kit</span>
                 <span style={styles.heroMetaPill}>Packed by volunteers</span>
                 <span style={styles.heroMetaPill}>Delivered through partners</span>
               </div>
@@ -186,38 +181,48 @@ export default function DonationComingSoon() {
                       <h2 style={styles.paymentTitle}>Complete your donation</h2>
 
                       <div style={{ marginTop: 12 }}>
-                        <div style={styles.quantityBlock}>
-                          <span style={styles.quantityLabel}>Number of kits</span>
-                          <div style={styles.quantityControls}>
-                            <button
-                              type="button"
-                              onClick={decrement}
-                              className="donation-qty-button"
-                              style={styles.qtyButton}
-                              aria-label="Decrease kits"
-                            >
-                              −
-                            </button>
-                            <span style={styles.qtyValue}>{quantity}</span>
-                            <button
-                              type="button"
-                              onClick={increment}
-                              className="donation-qty-button"
-                              style={styles.qtyButton}
-                              aria-label="Increase kits"
-                            >
-                              +
-                            </button>
+                        <div style={styles.amountBlock}>
+                          <label style={styles.amountLabel} htmlFor="donation-amount">
+                            Donation amount (CAD)
+                          </label>
+                          <div style={styles.amountInputWrap}>
+                            <span style={styles.currencySymbol}>CA$</span>
+                            <input
+                              id="donation-amount"
+                              type="text"
+                              inputMode="decimal"
+                              autoComplete="off"
+                              placeholder="0.00"
+                              value={amount}
+                              onChange={handleAmountChange}
+                              style={styles.amountInput}
+                            />
                           </div>
+                          {amount !== '' && !isValid && (
+                            <span style={styles.amountError}>Minimum donation is CA${MIN_DONATION.toFixed(2)}</span>
+                          )}
                         </div>
-                        <div style={{ marginTop: 8, color: '#374151', fontWeight: 700 }}>
-                          Total: CA${(quantity * KIT_PRICE).toFixed(2)}
-                        </div>
+                        {isValid && (
+                          <div style={{ marginTop: 8, color: '#374151', fontWeight: 700 }}>
+                            Total: CA${numericAmount.toFixed(2)}
+                            <span style={{ fontWeight: 500, color: '#6B7280', marginLeft: 6, fontSize: '0.88rem' }}>
+                              (about {Math.floor(numericAmount / 6)} kit{Math.floor(numericAmount / 6) !== 1 ? 's' : ''})
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  <EmbeddedCheckout quantity={checkoutQuantity} />
+                  {isValid && checkoutAmount !== null ? (
+                    <EmbeddedCheckout amountCents={Math.round(checkoutAmount * 100)} />
+                  ) : (
+                    <div style={styles.checkoutShell}>
+                      <div style={styles.checkoutLoading}>
+                        Enter CA${MIN_DONATION.toFixed(2)} or more to continue.
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </motion.div>
@@ -396,9 +401,8 @@ const styles = {
   },
   quantityBlock: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 16,
+    flexDirection: 'column',
+    gap: 8,
     padding: '16px 0',
     borderTop: '1px solid rgba(26,58,107,0.10)',
     borderBottom: '1px solid rgba(26,58,107,0.10)',
@@ -408,7 +412,21 @@ const styles = {
     fontWeight: 800,
     color: '#1A1A1A',
   },
-  quantityControls: {
+  amountBlock: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+    padding: '16px 0',
+    borderTop: '1px solid rgba(26,58,107,0.10)',
+    borderBottom: '1px solid rgba(26,58,107,0.10)',
+  },
+  amountLabel: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '0.9rem',
+    color: '#1A1A1A',
+  },
+  amountInputWrap: {
     display: 'flex',
     alignItems: 'center',
     border: '1px solid rgba(26,58,107,0.16)',
@@ -416,23 +434,31 @@ const styles = {
     overflow: 'hidden',
     background: '#F8FAFC',
   },
-  qtyButton: {
-    width: 38,
-    height: 38,
-    border: 'none',
-    background: 'transparent',
-    color: '#1A3A6B',
-    cursor: 'pointer',
-    display: 'grid',
-    placeItems: 'center',
-    transition: 'background 0.2s ease',
+  currencySymbol: {
+    paddingLeft: 14,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 750,
+    fontSize: '1rem',
+    color: '#64748B',
+    userSelect: 'none',
   },
-  qtyValue: {
-    minWidth: 42,
-    textAlign: 'center',
+  amountInput: {
+    flex: 1,
+    border: 'none',
+    outline: 'none',
+    background: 'transparent',
+    padding: '12px 14px 12px 6px',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 850,
+    fontSize: '1.1rem',
     color: '#1A1A1A',
+    minWidth: 0,
+  },
+  amountError: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    color: '#DC2626',
   },
   totalRow: {
     display: 'flex',

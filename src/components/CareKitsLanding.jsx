@@ -13,7 +13,6 @@ import {
 } from 'lucide-react'
 import Nav from './Nav'
 import Footer from './Footer'
-import SparklesText from './SparklesText'
 
 
 const fromLeft = {
@@ -51,11 +50,6 @@ function KitCard({ kit, isMobile }) {
       transition={{ duration: 0.22, ease: 'easeOut' }}
       style={{ ...styles.kitCard, opacity: kit.comingSoon ? 0.72 : 1 }}
     >
-      <div style={styles.kitImgWrap}>
-        <img src={kit.img} alt={kit.name} style={styles.kitImg} />
-        <span style={styles.kitCredit}>Photo: {kit.credit}</span>
-      </div>
-
       <div style={{ ...styles.kitBody, padding: isMobile ? '22px 22px 24px' : '24px 26px 28px' }}>
         <div style={styles.kitBodyTop}>
           <h3 style={styles.kitCardTitle}>{kit.name}</h3>
@@ -429,14 +423,7 @@ export default function CareKitsLanding() {
           >
             <span style={styles.eyebrow}>How It Works</span>
             <h2 style={{ ...styles.sectionH2, maxWidth: 'none' }}>
-              One kit can change a{' '}
-              <SparklesText
-                text="chapter"
-                colors={{ first: '#F7941D', second: '#FBB040' }}
-                count={12}
-                textStyle={{ color: '#1A1A1A' }}
-              />
-              .
+              How Your Donation Works
             </h2>
 
             <div style={{ ...styles.stepsGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(6, 1fr)' }}>

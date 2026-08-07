@@ -4,7 +4,6 @@ import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Nav from './Nav'
 import Footer from './Footer'
-import DonateFloat from './DonateFloat'
 
 // ── Timing knobs ──────────────────────────────────────────────────────────────
 const SCROLL_START = '38%'
@@ -105,19 +104,22 @@ function KitContentCard({ item, index, rowIndex = 0, isMobile }) {
 // ─── CraftCard ────────────────────────────────────────────────────────────────
 
 function CraftCard({ card, index }) {
+  const isFirst = index === 0
+  const isLast = index === 2
+
   return (
     <motion.div
-      style={styles.craftCard}
+      style={{
+        ...styles.craftCard,
+        borderRight: index < 2 ? 'none' : undefined,
+        borderRadius: isFirst ? '6px 0 0 6px' : isLast ? '0 6px 6px 0' : 0,
+      }}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -6, boxShadow: `0 16px 40px ${colorShadow(card.color, 0.16)}` }}
     >
-      <div style={styles.craftImgWrap}>
-        <img src={card.img} alt={card.title} style={styles.craftImg} />
-        <span style={styles.craftCredit}>Photo: {card.credit}</span>
-      </div>
       <div style={styles.craftBody}>
         <span style={{ ...styles.craftNumber, color: card.color }}>{card.num}</span>
         <h3 style={styles.craftCardTitle}>{card.title}</h3>
@@ -375,9 +377,12 @@ export default function EducationKit() {
             <a href="#whats-inside" style={styles.heroPrimary}>
               See What's Inside
             </a>
-            <Link to="/donate" style={styles.heroGhost}>
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('open-donate-modal'))}
+              style={styles.heroGhost}
+            >
               Donate Today
-            </Link>
+            </button>
           </motion.div>
         </div>
       </section>
@@ -546,11 +551,19 @@ export default function EducationKit() {
               Kit Assembly
             </h2>
 
+            <div style={styles.kitImageWrap}>
+              <img
+                src="/educationak%20kit%20image%202.0.png"
+                alt="Educational care kit contents laid out"
+                style={styles.kitImage}
+              />
+            </div>
+
             <div style={{ ...styles.cardGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)' }}>
               {[
-                { num: '01', color: EDUCATION_BLUE, title: 'Sourced with intent', body: 'Every supply is chosen for durability, child safety, and usefulness in real classrooms.', img: '/pillar-edu-a.jpg', credit: 'Unsplash' },
-                { num: '02', color: LOGO_ORANGE, title: 'Packed by hand', body: 'Volunteers assemble each kit one at a time, with care built into every pouch.', img: '/care-kits-about.jpg', credit: 'Annie Spratt' },
-                { num: '03', color: LOGO_GREEN, title: 'Delivered with care', body: 'Kits are handed to trusted hospital, shelter, and family program partners across the GTA.', img: '/pillar-health-b.jpg', credit: 'Unsplash' },
+                { num: '01', color: EDUCATION_BLUE, title: 'Sourced with intent', body: 'Every supply is chosen for durability, child safety, and usefulness in real classrooms.' },
+                { num: '02', color: LOGO_ORANGE, title: 'Packed by hand', body: 'Volunteers assemble each kit one at a time, with care built into every pouch.' },
+                { num: '03', color: LOGO_GREEN, title: 'Delivered with care', body: 'Kits are handed to trusted hospital, shelter, and family program partners across the GTA.' },
               ].map((c, i) => (
                 <CraftCard key={c.title} card={c} index={i} />
               ))}
@@ -560,12 +573,6 @@ export default function EducationKit() {
       </section>
 
       <Footer />
-      <DonateFloat
-        label="Donate Today"
-        to="/donate"
-        background={LOGO_NAVY}
-        shadow="0 6px 24px rgba(26,58,107,0.30)"
-      />
     </div>
   )
 }
@@ -740,12 +747,11 @@ const styles = {
   statKey: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: EDUCATION_BLUE },
   statVal: { fontFamily: "'Inter', sans-serif", fontSize: '1rem', lineHeight: 1.5, color: '#555' },
 
-  cardGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 },
-  craftCard: { background: '#fff', borderRadius: 6, overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.07)', cursor: 'default', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' },
-  craftImgWrap: { height: 240, overflow: 'hidden', position: 'relative' },
-  craftImg: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' },
-  craftCredit: { position: 'absolute', bottom: 8, right: 10, fontFamily: "'Inter', sans-serif", fontSize: '0.6rem', color: 'rgba(255,255,255,0.42)', letterSpacing: '0.02em', pointerEvents: 'none' },
+  cardGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 },
+  craftCard: { background: '#fff', cursor: 'default', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', borderRight: 'none' },
   craftBody: { padding: '24px 26px 28px' },
+  kitImageWrap: { marginBottom: 24, borderRadius: 8, overflow: 'hidden', background: '#f8fafc' },
+  kitImage: { width: '100%', height: 'auto', display: 'block', objectFit: 'contain' },
   craftNumber: { display: 'block', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '0.86rem', letterSpacing: '0.18em', marginBottom: 10 },
   craftCardTitle: { fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '1.3rem', letterSpacing: '-0.01em', margin: '0 0 10px', color: '#1A1A1A' },
   craftCardBody: { fontFamily: "'Inter', sans-serif", fontSize: '1rem', lineHeight: 1.7, color: '#555', margin: 0 },

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 const navLinks = [
   { label: 'Our Mission', href: '/mission', route: true },
   { label: 'About Us', href: '/about', route: true },
-  { label: 'Event Gallery', href: '/event-gallery', route: true },
   { label: 'Care Kits', href: '/care-kits', route: true },
   { label: 'Join Our Team', href: '/#join', route: false },
 ]

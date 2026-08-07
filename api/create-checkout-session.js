@@ -1,6 +1,6 @@
 /* global process */
 
-const KIT_PRICE_CENTS = 600
+const MIN_AMOUNT_CENTS = 200
 const KIT_CURRENCY = 'cad'
 const KIT_NAME = 'Educational Kit'
 
@@ -43,23 +43,26 @@ export default async function handler(req, res) {
 
   try {
     const body = await parseBody(req)
-    const quantity = Math.max(1, Math.min(100, Number.parseInt(body.quantity, 10) || 1))
+    const rawAmount = Number.parseInt(body.amountCents, 10)
+    const amountCents = Math.max(MIN_AMOUNT_CENTS, isNaN(rawAmount) ? MIN_AMOUNT_CENTS : rawAmount)
     const origin = getOrigin(req)
+
+    const donationLabel = `CA$${(amountCents / 100).toFixed(2)} donation`
 
     const params = new URLSearchParams({
       mode: 'payment',
       ui_mode: 'embedded_page',
       submit_type: 'donate',
       return_url: `${origin}/donate?session_id={CHECKOUT_SESSION_ID}`,
-      'line_items[0][quantity]': String(quantity),
+      'line_items[0][quantity]': '1',
       'line_items[0][price_data][currency]': KIT_CURRENCY,
-      'line_items[0][price_data][unit_amount]': String(KIT_PRICE_CENTS),
+      'line_items[0][price_data][unit_amount]': String(amountCents),
       'line_items[0][price_data][product_data][name]': KIT_NAME,
       'line_items[0][price_data][product_data][description]':
         'One volunteer-packed school supply kit for a child in the Greater Toronto Area.',
-      'payment_intent_data[description]': `${quantity} ${KIT_NAME}${quantity === 1 ? '' : 's'} donation`,
+      'payment_intent_data[description]': `${donationLabel} for ${KIT_NAME}`,
       'metadata[kit]': KIT_NAME,
-      'metadata[quantity]': String(quantity),
+      'metadata[amount_cents]': String(amountCents),
     })
 
     const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {

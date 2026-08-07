@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import SparklesText from './SparklesText'
 
 const sectionVariant = {
   hidden: { opacity: 0, x: -150, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
@@ -22,7 +23,12 @@ export default function HomeAbout() {
               <span className="section-tag">Who We Are</span>
               <h2 style={styles.heading}>
                 We believe every child deserves their{' '}
-                <span style={styles.accent}>first chapter.</span>
+                <SparklesText
+                  text="first chapter."
+                  colors={{ first: '#1A3A6B', second: '#1A3A6B' }}
+                  count={12}
+                  textStyle={styles.accent}
+                />
               </h2>
               <div style={styles.actions}>
                 <Link to="/about" style={styles.primaryBtn}>Our Purpose</Link>
