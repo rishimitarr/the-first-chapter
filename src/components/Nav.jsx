@@ -290,6 +290,7 @@ const styles = {
     cursor: 'pointer',
     display: 'inline-block',
     letterSpacing: '0.01em',
+    border: 'none',
   },
   hamburger: {
     display: 'flex',

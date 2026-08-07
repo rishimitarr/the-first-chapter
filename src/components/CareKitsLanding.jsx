@@ -204,11 +204,34 @@ const KITS = [
 ]
 
 const STEPS = [
-  { icon: HandHeart, accent: ACCENTS.green, step: '01', title: 'You sponsor a kit', desc: 'A single donation funds one full Care Kit for one child in the Greater Toronto Area.', span: 2 },
-  { icon: ShoppingBag, accent: ACCENTS.amber, step: '02', title: 'We source the supplies', desc: 'Every item is selected from Canadian suppliers whenever possible, with quality guiding each choice.', span: 2 },
-  { icon: PackageOpen, accent: ACCENTS.navy, step: '03', title: 'Volunteers hand pack it', desc: 'A volunteer assembles your kit one piece at a time, with a short handwritten note tucked inside.', span: 2 },
-  { icon: Truck, accent: ACCENTS.teal, step: '04', title: 'A child receives it', desc: 'We deliver directly to hospital wards, family shelters, and partner programs across the GTA.', span: 3 },
-  { icon: Mail, accent: ACCENTS.pink, step: '05', title: 'A card in your name', desc: 'A small card inside the kit carries your name so your generosity reaches the child directly.', span: 3 },
+  { step: '01', title: 'You sponsor a kit', desc: 'A single donation funds one full Care Kit for one child in the Greater Toronto Area.', img: '/make the donation.jpg' },
+  { step: '02', title: 'We source the supplies', desc: 'Every item is selected from Canadian suppliers whenever possible, with quality guiding each choice.', img: '/source the supplies.jpg' },
+  { step: '03', title: 'Volunteers hand pack it', desc: 'A volunteer assembles your kit one piece at a time, with a short handwritten note tucked inside.', img: '/pack the boxes.jpg' },
+  { step: '04', title: 'A child receives it', desc: 'We deliver directly to hospital wards, family shelters, and partner programs across the GTA.', img: '/child recieves it.jpg' },
+  { step: '05', title: 'A card in your name', desc: 'A small card inside the kit carries your name so your generosity reaches the child directly.', img: '/card in your name.jpg' },
+]
+
+const CARE_KIT_CARDS = [
+  {
+    title: 'Useful Supplies and Comfort',
+    body: 'Each kit contains practical items selected to bring comfort and normalcy during difficult times. From school supplies to cozy essentials, everything is chosen with care.',
+    img: '/supplies and comfort.jpg',
+  },
+  {
+    title: 'Packed with Care',
+    body: 'Volunteers hand-pack each kit, one piece at a time. Every item is placed thoughtfully, with a handwritten note tucked inside to let the child know someone cares.',
+    img: '/Packing.jpg',
+  },
+  {
+    title: 'Funded by One Donor',
+    body: 'A single donation sponsors one complete kit for one child. Your generosity directly impacts a child in need across the Greater Toronto Area.',
+    img: '/Funded By One.jpg',
+  },
+  {
+    title: 'Delivered by Us',
+    body: 'Our team delivers kits directly to hospital wards, family shelters, and partner programs. We ensure every kit reaches children who need it most.',
+    img: '/Delivered by us.jpg',
+  },
 ]
 
 
@@ -305,81 +328,32 @@ export default function CareKitsLanding() {
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
             <span style={styles.eyebrow}>What Are Care Kits?</span>
-            <div style={{ ...styles.aboutRow, flexDirection: isMobile ? 'column' : 'row' }}>
-              {/* Text column */}
-              <div style={styles.aboutText}>
-                <h2 style={{ ...styles.sectionH2, maxWidth: 'none' }}>
-                  Care Kits
-                </h2>
-                <p style={{ ...styles.sectionLeadWide, marginTop: 32 }}>
-                  When a child's life shifts, school and normal routines can pause overnight.
-                  Care Kits bring useful supplies and a little comfort right to that moment.
-                </p>
-                <p style={styles.sectionLeadWide}>
-                  Each kit is packed by a volunteer, funded by one donor, and delivered free of
-                  charge through hospital and shelter partners across the GTA.
-                </p>
-                <p style={{ ...styles.sectionLeadWide, marginBottom: 0 }}>
-                  A Care Kit cannot change the circumstances a child is facing, but it can make the
-                  first days feel less overwhelming. Each one is a practical reminder that the child
-                  and family are seen, supported, and not alone.
-                </p>
-              </div>
-
-              {/* Image column */}
-              <motion.div
-                style={{ ...styles.aboutImgWrap, flex: isMobile ? '1 1 auto' : '0 0 300px', width: isMobile ? '100%' : undefined }}
-                whileHover={{ scale: 1.03, zIndex: 2, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } }}
-              >
-                <div style={styles.aboutImgClip}>
-                  <motion.img
-                    src="/care-kits-about.jpg"
-                    alt="Child focused on schoolwork"
-                    style={{ ...styles.aboutImg, aspectRatio: isMobile ? '4/3' : '3/4' }}
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  />
-                </div>
-                <span style={styles.aboutImgCaption}>Photo by Annie Spratt / Unsplash</span>
-              </motion.div>
-            </div>
-
-            {/* Pillar cards */}
-            <div style={{ ...styles.pillarRow, gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)' }}>
-              {[
-                {
-                  Icon: HandHeart,
-                  accent: ACCENTS.green,
-                  title: 'Packed with Care',
-                  body: 'Each item is chosen with purpose and placed by a volunteer.',
-                },
-                {
-                  Icon: Heart,
-                  accent: ACCENTS.pink,
-                  title: 'Funded by One Donor',
-                  body: 'One sponsorship funds one complete kit for one child.',
-                },
-                {
-                  Icon: Truck,
-                  accent: ACCENTS.teal,
-                  title: 'Delivered by Us',
-                  body: 'Our team brings kits directly to trusted local partners.',
-                },
-              ].map((p) => (
-                <motion.div
-                  key={p.title}
-                  style={styles.pillarCard}
-                  whileHover={{ y: -6, boxShadow: `0 18px 42px ${p.accent.shadow}`, transition: { duration: 0.35 } }}
-                >
-                  <div style={{ ...styles.pillarIconWrap, background: p.accent.bg }}>
-                    <p.Icon size={26} color={p.accent.color} strokeWidth={1.8} />
-                  </div>
-                  <h4 style={styles.pillarTitle}>{p.title}</h4>
-                  <p style={styles.pillarBody}>{p.body}</p>
-                </motion.div>
-              ))}
-            </div>
+            <h2 style={styles.sectionH2}>
+              Care Kits
+            </h2>
           </motion.div>
+
+          <div style={{ ...styles.careKitGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)' }}>
+            {CARE_KIT_CARDS.map((card, i) => (
+              <motion.div
+                key={card.title}
+                style={styles.careKitCard}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(0,0,0,0.13)', transition: { duration: 0.22, ease: 'easeOut' } }}
+              >
+                <div style={styles.careKitImgWrap}>
+                  <img src={card.img} alt={card.title} style={styles.careKitImg} />
+                </div>
+                <div style={styles.careKitText}>
+                  <h3 style={styles.careKitTitle}>{card.title}</h3>
+                  <p style={styles.careKitBody}>{card.body}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -425,13 +399,30 @@ export default function CareKitsLanding() {
             <h2 style={{ ...styles.sectionH2, maxWidth: 'none' }}>
               How Your Donation Works
             </h2>
-
-            <div style={{ ...styles.stepsGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(6, 1fr)' }}>
-              {STEPS.map((s, i) => (
-                <StepCard key={s.step} step={s} index={i} span={s.span} isMobile={isMobile} />
-              ))}
-            </div>
           </motion.div>
+
+          <div style={{ ...styles.howItWorksGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)' }}>
+            {STEPS.map((s, i) => (
+              <motion.div
+                key={s.step}
+                style={styles.howItWorksCard}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(0,0,0,0.13)', transition: { duration: 0.22, ease: 'easeOut' } }}
+              >
+                <div style={styles.howItWorksImgWrap}>
+                  <img src={s.img} alt={s.title} style={styles.howItWorksImg} />
+                  <span style={styles.howItWorksStep}>{s.step}</span>
+                </div>
+                <div style={styles.howItWorksText}>
+                  <h3 style={styles.howItWorksTitle}>{s.title}</h3>
+                  <p style={styles.howItWorksBody}>{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -629,46 +620,55 @@ const styles = {
     textAlign: 'right',
   },
 
-  // pillar cards
-  pillarRow: {
+  // care kit cards
+  careKitGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(2, 1fr)',
     gap: 24,
-    marginTop: 56,
+    marginTop: 48,
   },
-  pillarCard: {
-    background: '#fff',
-    borderRadius: 6,
-    border: '1px solid rgba(0,0,0,0.06)',
-    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
-    padding: '32px 28px',
+  careKitCard: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 14,
-    cursor: 'default',
+    borderRadius: 6,
+    overflow: 'hidden',
+    border: '1px solid rgba(0,0,0,0.07)',
+    background: '#fff',
   },
-  pillarIconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  careKitImgWrap: {
+    position: 'relative',
+    height: 220,
+    overflow: 'hidden',
     flexShrink: 0,
   },
-  pillarTitle: {
+  careKitImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+  },
+  careKitText: {
+    padding: '24px 24px 28px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    flex: 1,
+    background: '#fff',
+  },
+  careKitTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 700,
-    fontSize: '1.05rem',
+    fontWeight: 800,
+    fontSize: '1.4rem',
     color: '#1A1A1A',
     margin: 0,
-    lineHeight: 1.3,
+    lineHeight: 1.2,
+    letterSpacing: '-0.02em',
   },
-  pillarBody: {
+  careKitBody: {
     fontFamily: "'Inter', sans-serif",
-    fontSize: '0.92rem',
+    fontSize: '0.95rem',
+    lineHeight: 1.75,
     color: '#555',
-    lineHeight: 1.7,
     margin: 0,
   },
 
@@ -934,56 +934,69 @@ const styles = {
     border: '1.5px solid rgba(255,255,255,0.4)',
   },
 
-  // steps
-  stepsGrid: {
+  // how it works cards
+  howItWorksGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(6, 1fr)',
-    gridTemplateRows: 'auto auto',
-    gap: 16,
+    gridTemplateColumns: 'repeat(5, 1fr)',
+    gap: 24,
     marginTop: 48,
   },
-  stepCard: {
-    position: 'relative',
-    background: '#FFFFFF',
-    border: '1px solid rgba(0,0,0,0.06)',
+  howItWorksCard: {
+    display: 'flex',
+    flexDirection: 'column',
     borderRadius: 6,
-    padding: '22px 18px 24px',
+    overflow: 'hidden',
+    border: '1px solid rgba(0,0,0,0.07)',
+    background: '#fff',
+  },
+  howItWorksImgWrap: {
+    position: 'relative',
+    height: 200,
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  howItWorksImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+  },
+  howItWorksStep: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '0.8rem',
+    color: '#fff',
+    background: 'rgba(0,0,0,0.5)',
+    padding: '4px 10px',
+    borderRadius: 4,
+    letterSpacing: '0.1em',
+  },
+  howItWorksText: {
+    padding: '20px 20px 24px',
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
-    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
-    cursor: 'default',
-    overflow: 'hidden',
+    flex: 1,
+    background: '#fff',
   },
-  stepHeaderRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
-  stepIconWrap: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 44,
-    height: 44,
-    borderRadius: 8,
-  },
-  stepNumber: {
+  howItWorksTitle: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 800,
-    fontSize: '0.78rem',
-    letterSpacing: '0.2em',
-    opacity: 0.82,
-  },
-  stepTitle: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontWeight: 700,
-    fontSize: '0.95rem',
+    fontSize: '1.1rem',
     color: '#1A1A1A',
-    letterSpacing: '-0.015em',
-    lineHeight: 1.25,
+    margin: 0,
+    lineHeight: 1.2,
+    letterSpacing: '-0.02em',
   },
-  stepDesc: {
+  howItWorksBody: {
     fontFamily: "'Inter', sans-serif",
-    fontSize: '0.92rem',
-    lineHeight: 1.55,
+    fontSize: '0.9rem',
+    lineHeight: 1.7,
     color: '#555',
+    margin: 0,
   },
 
   footnote: {

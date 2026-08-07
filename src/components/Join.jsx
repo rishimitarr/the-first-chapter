@@ -1,27 +1,69 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-
-const roles = [
-  { label: 'Volunteer Coordinator' },
-  { label: 'Education Program Lead' },
-  { label: 'Community Outreach' },
-  { label: 'Marketing & Social Media' },
-  { label: 'Event Organizer' },
-]
 
 const sectionVariant = {
   hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
 }
 
+const inputStyle = {
+  fontFamily: "'Inter', sans-serif",
+  fontSize: '0.95rem',
+  padding: '12px 14px',
+  border: '1.5px solid #dde4ed',
+  borderRadius: 4,
+  outline: 'none',
+  color: '#1A1A1A',
+  background: '#fff',
+  transition: 'border-color 0.2s, box-shadow 0.2s',
+  width: '100%',
+  boxSizing: 'border-box',
+}
+
 export default function Join() {
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '' })
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [focusedField, setFocusedField] = useState(null)
+
+  function handleChange(e) {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setError('')
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/newsletter-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong. Please try again.')
+        return
+      }
+
+      setSubmitted(true)
+    } catch (err) {
+      setError('Network error. Please check your connection and try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section id="join" style={styles.section}>
-      {/* Background image */}
       <div style={styles.bg} />
-      {/* Dark overlay */}
       <div style={styles.overlay} />
 
-      {/* Background photo credit */}
       <p style={styles.bgCredit}>Photo: Artem Kniaz / Unsplash</p>
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
@@ -32,93 +74,111 @@ export default function Join() {
           viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
         >
           <div style={styles.grid} className="join-grid">
-            {/* Left , text */}
             <div style={styles.left}>
-              <span style={styles.tag}>Join Our Team</span>
+              <span style={styles.tag}>Join Us</span>
               <h2 style={styles.heading}>
-                Be part of something that matters.
+                Stay in the loop
               </h2>
               <p style={styles.body}>
-                We&apos;re always looking for passionate, driven individuals who want to make
-                a real difference in children&apos;s lives across the GTA. No experience
-                required. Just heart.
+                Get updates on our mission, upcoming events, and ways you can help children 
+                across the Greater Toronto Area access the education they deserve.
               </p>
-
-              <ul style={styles.roleList}>
-                {roles.map((r) => (
-                  <li key={r.label} style={styles.roleItem}>
-                    <span style={styles.roleDot} />
-                    <span style={styles.roleLabel}>{r.label}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
 
-            {/* Right , form card */}
             <div>
               <div style={styles.formCard} className="join-form-card">
-                <h3 style={styles.formTitle}>Express Your Interest</h3>
-                <p style={styles.formSub}>Fill out the form and we&apos;ll be in touch soon.</p>
-
-                <form
-                  action="https://formspree.io/f/mjgjzyje"
-                  method="POST"
-                  style={styles.form}
-                >
-                  <input type="hidden" name="_subject" value="New volunteer interest , The First Chapter" />
-
-                  <div style={styles.field}>
-                    <label style={styles.fieldLabel}>Full Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      style={styles.fieldInput}
-                      placeholder="Jane Smith"
-                      required
-                    />
+                {submitted ? (
+                  <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px', color: '#6a9e62' }}>&#10003;</div>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1A1A1A', marginBottom: '8px' }}>
+                      You're on the list!
+                    </h3>
+                    <p style={{ fontSize: '1rem', color: '#888' }}>
+                      Check your inbox for a welcome message from us.
+                    </p>
                   </div>
+                ) : (
+                  <>
+                    <h3 style={styles.formTitle}>Get Updates</h3>
+                    <p style={styles.formSub}>Join our newsletter to stay connected.</p>
 
-                  <div style={styles.field}>
-                    <label style={styles.fieldLabel}>Email Address</label>
-                    <input
-                      type="email"
-                      name="_replyto"
-                      style={styles.fieldInput}
-                      placeholder="jane@example.com"
-                      required
-                    />
-                  </div>
+                    <form onSubmit={handleSubmit} style={styles.form}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div style={styles.field}>
+                          <label style={styles.fieldLabel}>First Name</label>
+                          <input
+                            type="text"
+                            name="firstName"
+                            value={form.firstName}
+                            onChange={handleChange}
+                            required
+                            placeholder="First name"
+                            style={{
+                              ...inputStyle,
+                              borderColor: focusedField === 'firstName' ? '#1A3A6B' : '#dde4ed',
+                            }}
+                            onFocus={() => setFocusedField('firstName')}
+                            onBlur={() => setFocusedField(null)}
+                          />
+                        </div>
+                        <div style={styles.field}>
+                          <label style={styles.fieldLabel}>Last Name</label>
+                          <input
+                            type="text"
+                            name="lastName"
+                            value={form.lastName}
+                            onChange={handleChange}
+                            placeholder="Last name"
+                            style={{
+                              ...inputStyle,
+                              borderColor: focusedField === 'lastName' ? '#1A3A6B' : '#dde4ed',
+                            }}
+                            onFocus={() => setFocusedField('lastName')}
+                            onBlur={() => setFocusedField(null)}
+                          />
+                        </div>
+                      </div>
 
-                  <div style={styles.field}>
-                    <label style={styles.fieldLabel}>Role of Interest</label>
-                    <select name="role" style={styles.fieldInput}>
-                      <option value="">Select a role...</option>
-                      {roles.map((r) => (
-                        <option key={r.label}>{r.label}</option>
-                      ))}
-                      <option>Other</option>
-                    </select>
-                  </div>
+                      <div style={styles.field}>
+                        <label style={styles.fieldLabel}>Email Address</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={form.email}
+                          onChange={handleChange}
+                          required
+                          placeholder="you@example.com"
+                          style={{
+                            ...inputStyle,
+                            borderColor: focusedField === 'email' ? '#1A3A6B' : '#dde4ed',
+                          }}
+                          onFocus={() => setFocusedField('email')}
+                          onBlur={() => setFocusedField(null)}
+                        />
+                      </div>
 
-                  <div style={styles.field}>
-                    <label style={styles.fieldLabel}>Why do you want to join?</label>
-                    <textarea
-                      name="message"
-                      style={{ ...styles.fieldInput, ...styles.textarea }}
-                      placeholder="Tell us about yourself and why you want to get involved..."
-                      required
-                    />
-                  </div>
+                      {error && (
+                        <p style={{ fontSize: '14px', color: '#e74c3c', margin: 0 }}>
+                          {error}
+                        </p>
+                      )}
 
-                  <motion.button
-                    type="submit"
-                    style={styles.submitBtn}
-                    whileHover={{ y: -2, boxShadow: '0 10px 28px rgba(26,58,107,0.35)' }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    Send My Interest
-                  </motion.button>
-                </form>
+                      <motion.button
+                        type="submit"
+                        disabled={loading}
+                        style={{
+                          ...styles.submitBtn,
+                          background: loading ? '#4a6a9b' : '#1A3A6B',
+                          cursor: loading ? 'not-allowed' : 'pointer',
+                        }}
+                        whileHover={!loading ? { y: -2, boxShadow: '0 10px 28px rgba(26,58,107,0.35)' } : {}}
+                        whileTap={!loading ? { scale: 0.97 } : {}}
+                      >
+                        {loading ? 'Signing up...' : 'Get Updates'}
+                      </motion.button>
+                    </form>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -197,30 +257,6 @@ const styles = {
     color: 'rgba(255,255,255,0.72)',
     margin: 0,
   },
-  roleList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 16,
-    marginTop: 8,
-  },
-  roleItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 14,
-  },
-  roleDot: {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    flexShrink: 0,
-    background: 'rgba(255,255,255,0.5)',
-  },
-  roleLabel: {
-    fontFamily: "'Inter', sans-serif",
-    fontWeight: 500,
-    fontSize: '1.05rem',
-    color: 'rgba(255,255,255,0.85)',
-  },
   formCard: {
     background: '#fff',
     borderRadius: 6,
@@ -256,22 +292,6 @@ const styles = {
     fontSize: '0.95rem',
     color: '#1A1A1A',
     letterSpacing: '0.03em',
-  },
-  fieldInput: {
-    fontFamily: "'Inter', sans-serif",
-    fontSize: '0.95rem',
-    padding: '12px 14px',
-    border: '1.5px solid #dde4ed',
-    borderRadius: 4,
-    outline: 'none',
-    color: '#1A1A1A',
-    background: '#fff',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-    width: '100%',
-  },
-  textarea: {
-    minHeight: 100,
-    resize: 'vertical',
   },
   submitBtn: {
     background: '#1A3A6B',
