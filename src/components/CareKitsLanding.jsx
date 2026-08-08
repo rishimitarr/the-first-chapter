@@ -333,27 +333,30 @@ export default function CareKitsLanding() {
             </h2>
           </motion.div>
 
-          <div style={{ ...styles.careKitGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)' }}>
-            {CARE_KIT_CARDS.map((card, i) => (
-              <motion.div
-                key={card.title}
-                style={styles.careKitCard}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(0,0,0,0.13)', transition: { duration: 0.22, ease: 'easeOut' } }}
-              >
-                <div style={styles.careKitImgWrap}>
-                  <img src={card.img} alt={card.title} style={styles.careKitImg} />
+          <motion.div
+            variants={fromBottom}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <div style={{ ...styles.careKitGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)' }}>
+              {CARE_KIT_CARDS.map((card) => (
+                <div
+                  key={card.title}
+                  style={styles.careKitCard}
+                >
+                  <div style={styles.careKitImgWrap}>
+                    <img src={card.img} alt={card.title} style={styles.careKitImg} />
+                  </div>
+                  <div style={styles.careKitText}>
+                    <h3 style={styles.careKitTitle}>{card.title}</h3>
+                    <p style={styles.careKitBody}>{card.body}</p>
+                  </div>
                 </div>
-                <div style={styles.careKitText}>
-                  <h3 style={styles.careKitTitle}>{card.title}</h3>
-                  <p style={styles.careKitBody}>{card.body}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -401,28 +404,31 @@ export default function CareKitsLanding() {
             </h2>
           </motion.div>
 
-          <div style={{ ...styles.howItWorksGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)' }}>
-            {STEPS.map((s, i) => (
-              <motion.div
-                key={s.step}
-                style={styles.howItWorksCard}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(0,0,0,0.13)', transition: { duration: 0.22, ease: 'easeOut' } }}
-              >
-                <div style={styles.howItWorksImgWrap}>
-                  <img src={s.img} alt={s.title} style={styles.howItWorksImg} />
-                  <span style={styles.howItWorksStep}>{s.step}</span>
+          <motion.div
+            variants={fromBottom}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <div style={{ ...styles.howItWorksGrid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)' }}>
+              {STEPS.map((s) => (
+                <div
+                  key={s.step}
+                  style={styles.howItWorksCard}
+                >
+                  <div style={styles.howItWorksImgWrap}>
+                    <img src={s.img} alt={s.title} style={styles.howItWorksImg} />
+                    <span style={styles.howItWorksStep}>{s.step}</span>
+                  </div>
+                  <div style={styles.howItWorksText}>
+                    <h3 style={styles.howItWorksTitle}>{s.title}</h3>
+                    <p style={styles.howItWorksBody}>{s.desc}</p>
+                  </div>
                 </div>
-                <div style={styles.howItWorksText}>
-                  <h3 style={styles.howItWorksTitle}>{s.title}</h3>
-                  <p style={styles.howItWorksBody}>{s.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -626,6 +632,7 @@ const styles = {
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: 24,
     marginTop: 48,
+    willChange: 'opacity',
   },
   careKitCard: {
     display: 'flex',
@@ -634,12 +641,14 @@ const styles = {
     overflow: 'hidden',
     border: '1px solid rgba(0,0,0,0.07)',
     background: '#fff',
+    contain: 'layout style',
   },
   careKitImgWrap: {
     position: 'relative',
     height: 220,
     overflow: 'hidden',
     flexShrink: 0,
+    contain: 'strict',
   },
   careKitImg: {
     width: '100%',
@@ -940,6 +949,7 @@ const styles = {
     gridTemplateColumns: 'repeat(5, 1fr)',
     gap: 24,
     marginTop: 48,
+    willChange: 'opacity',
   },
   howItWorksCard: {
     display: 'flex',
@@ -948,12 +958,14 @@ const styles = {
     overflow: 'hidden',
     border: '1px solid rgba(0,0,0,0.07)',
     background: '#fff',
+    contain: 'layout style',
   },
   howItWorksImgWrap: {
     position: 'relative',
     height: 200,
     overflow: 'hidden',
     flexShrink: 0,
+    contain: 'strict',
   },
   howItWorksImg: {
     width: '100%',

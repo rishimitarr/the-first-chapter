@@ -2,6 +2,20 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { InfiniteSlider } from './ui/infinite-slider'
 
+function EventTitle({ title }) {
+  if (title.includes('TD')) {
+    const parts = title.split('TD')
+    return (
+      <>
+        {parts[0]}
+        <img src="/TD Logo.webp" alt="TD" style={{ height: '1.2em', verticalAlign: 'text-bottom', display: 'inline-block', margin: '0 4px', borderRadius: '4px', objectFit: 'contain' }} />
+        {parts[1]}
+      </>
+    )
+  }
+  return title
+}
+
 const sectionVariant = {
   hidden: { opacity: 0, y: 120, scale: 0.96, transition: { duration: 0.3, ease: 'easeIn' } },
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
@@ -60,7 +74,7 @@ export default function EventRecap({ event, variant = 'full' }) {
             <div style={styles.teaserHeader}>
               <span className="section-tag">Latest Event</span>
               <h2 id="latest-event-teaser" style={styles.teaserTitle}>
-                {event.title}
+                <EventTitle title={event.title} />
               </h2>
               <p style={styles.teaserDescription}>
                 {event.intro}
@@ -150,7 +164,7 @@ export default function EventRecap({ event, variant = 'full' }) {
         >
           <span className="section-tag">Event Gallery</span>
           <h1 id="event-recap-title" style={styles.title}>
-            {event.title}
+            <EventTitle title={event.title} />
           </h1>
           <div style={styles.metaRow} className="event-recap-meta-grid">
             <MetaChip label="Date" value={event.date} />

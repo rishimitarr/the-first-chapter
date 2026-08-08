@@ -115,9 +115,6 @@ export default function About() {
             >
                 <img src={aboutImages.hero.src} alt={aboutImages.hero.alt} style={styles.heroImage} />
               <span style={styles.imageCredit}>Photo: {aboutImages.hero.credit}</span>
-              <div style={styles.heroImageNote}>
-                Built around supplies, care, and community support.
-              </div>
             </motion.div>
           </div>
         </div>

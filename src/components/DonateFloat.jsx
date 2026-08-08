@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Heart, Loader2 } from 'lucide-react'
+import { X, Heart, Loader2, ChevronLeft, Bell } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -155,6 +155,10 @@ function DonateFloatWidget() {
   const [view, setView] = useState('card')
   const [amount, setAmount] = useState('')
   const [checkoutAmount, setCheckoutAmount] = useState(null)
+  const [nextTimeEmail, setNextTimeEmail] = useState('')
+  const [nextTimeLoading, setNextTimeLoading] = useState(false)
+  const [nextTimeSubmitted, setNextTimeSubmitted] = useState(false)
+  const [nextTimeError, setNextTimeError] = useState('')
 
   const numericAmount = useMemo(() => {
     const parsed = parseFloat(amount)
@@ -177,7 +181,8 @@ function DonateFloatWidget() {
     setView('modal')
   }
 
-  const closeModal = () => setView('pill')
+  const closeModal = () => setView('nexttime')
+  const closeNextTime = () => setView('pill')
 
   useEffect(() => {
     if (!isValid) return undefined
@@ -186,13 +191,37 @@ function DonateFloatWidget() {
   }, [numericAmount, isValid])
 
   useEffect(() => {
-    if (view === 'modal') {
+    if (view === 'modal' || view === 'nexttime') {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
     }
     return () => { document.body.style.overflow = '' }
   }, [view])
+
+  const handleNextTimeSubmit = async (e) => {
+    e.preventDefault()
+    if (!nextTimeEmail) return
+    setNextTimeLoading(true)
+    setNextTimeError('')
+    try {
+      const res = await fetch('/api/newsletter-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName: 'Supporter', lastName: '', email: nextTimeEmail }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setNextTimeError(data.error || 'Something went wrong. Please try again.')
+        return
+      }
+      setNextTimeSubmitted(true)
+    } catch {
+      setNextTimeError('Network error. Please check your connection and try again.')
+    } finally {
+      setNextTimeLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (view !== 'modal') return
@@ -318,11 +347,6 @@ function DonateFloatWidget() {
                     Toronto Area. Your donation provides the school supplies
                     a child needs to begin their learning journey.
                   </p>
-                  <div style={s.leftPills}>
-                    <span style={s.leftPill}>$6 = 1 kit</span>
-                    <span style={s.leftPill}>Packed by volunteers</span>
-                    <span style={s.leftPill}>Delivered through partners</span>
-                  </div>
                 </div>
               </div>
 
@@ -375,6 +399,120 @@ function DonateFloatWidget() {
                   <div style={s.checkoutPlaceholder}>
                     Enter CA${MIN_DONATION.toFixed(2)} or more to continue.
                   </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Maybe Next Time? ── */}
+      <AnimatePresence>
+        {view === 'nexttime' && (
+          <motion.div
+            key="donate-modal-backdrop"
+            className="donate-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={closeNextTime}
+          >
+            <motion.div
+              className="donate-modal-grid"
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Left Card (same as donation modal) */}
+              <div className="donate-modal-left">
+                <img
+                  src={IMG_LEFT_CARD}
+                  alt="Educational care kit supplies"
+                  style={s.leftImage}
+                  draggable={false}
+                />
+                <div style={s.leftContent}>
+                  <img
+                    src={IMG_LOGO}
+                    alt="The First Chapter"
+                    style={s.leftLogo}
+                  />
+                  <h2 style={s.leftHeading}>
+                    Help a Child Start Their First Chapter
+                  </h2>
+                  <p style={s.leftBody}>
+                    Every $6 funds one educational care kit, packed by
+                    volunteers and delivered to children in the Greater
+                    Toronto Area. Your donation provides the school supplies
+                    a child needs to begin their learning journey.
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Card - Maybe Next Time */}
+              <div className="donate-modal-right" style={s.nextTimeRight}>
+                <button
+                  style={s.nextTimeBack}
+                  onClick={closeNextTime}
+                  aria-label="Go back"
+                >
+                  <ChevronLeft size={20} strokeWidth={2.5} />
+                </button>
+
+                <h3 style={s.nextTimeTitle}>Maybe next time?</h3>
+
+                {nextTimeSubmitted ? (
+                  <div style={s.nextTimeSuccess}>
+                    <div style={s.nextTimeSuccessIcon}>&#10003;</div>
+                    <h4 style={s.nextTimeSuccessHeading}>You're on the list!</h4>
+                    <p style={s.nextTimeSuccessText}>
+                      We'll keep you updated on our mission and upcoming events.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div style={s.nextTimeIconWrap}>
+                      <Bell size={32} color="#FBB040" strokeWidth={2} />
+                    </div>
+                    <p style={s.nextTimeBody}>
+                      Please leave your email address below, and we'll send you a gentle reminder later.
+                    </p>
+
+                    <form onSubmit={handleNextTimeSubmit} style={s.nextTimeForm}>
+                      <input
+                        type="email"
+                        placeholder="Email address"
+                        value={nextTimeEmail}
+                        onChange={(e) => { setNextTimeEmail(e.target.value); setNextTimeError('') }}
+                        style={s.nextTimeInput}
+                        required
+                      />
+                      {nextTimeError && (
+                        <span style={s.nextTimeError}>{nextTimeError}</span>
+                      )}
+                      <button
+                        type="submit"
+                        disabled={nextTimeLoading || !nextTimeEmail}
+                        style={s.nextTimeSubmit}
+                      >
+                        {nextTimeLoading ? (
+                          <Loader2 size={18} style={{ animation: 'stripeSpin 0.85s linear infinite' }} />
+                        ) : (
+                          'Remind me later'
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={closeNextTime}
+                        style={s.nextTimeDismiss}
+                      >
+                        No thanks
+                      </button>
+                    </form>
+                  </>
                 )}
               </div>
             </motion.div>
@@ -435,7 +573,7 @@ const s = {
     zIndex: 999,
     width: 'min(340px, calc(100vw - 32px))',
     background: '#FFFFFF',
-    border: '1px solid rgba(26,58,107,0.10)',
+    border: 'none',
     borderRadius: 12,
     boxShadow: '0 20px 50px rgba(26,58,107,0.18)',
     overflow: 'hidden',
@@ -487,7 +625,7 @@ const s = {
   },
   cardPriceAmount: {
     fontWeight: 900,
-    fontSize: '1.3rem',
+    fontSize: '1.8rem',
     lineHeight: 1,
   },
   cardPriceText: {
@@ -734,5 +872,143 @@ const s = {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: '0.88rem',
+  },
+
+  /* ── Maybe Next Time ── */
+  nextTimeRight: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    padding: '48px 32px',
+  },
+  nextTimeBack: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: '#1A1A1A',
+    padding: 4,
+    borderRadius: 4,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'opacity 0.2s',
+  },
+  nextTimeTitle: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 850,
+    fontSize: 'clamp(1.4rem, 2.2vw, 1.75rem)',
+    lineHeight: 1.1,
+    letterSpacing: '-0.035em',
+    color: '#1A1A1A',
+    margin: '0 0 24px',
+  },
+  nextTimeIconWrap: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    background: 'rgba(251,176,64,0.15)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  nextTimeBody: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.95rem',
+    lineHeight: 1.6,
+    color: '#555',
+    margin: '0 0 28px',
+    maxWidth: 320,
+  },
+  nextTimeForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+    width: '100%',
+    maxWidth: 320,
+  },
+  nextTimeInput: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.95rem',
+    padding: '14px 16px',
+    border: '1.5px solid #dde4ed',
+    borderRadius: 8,
+    outline: 'none',
+    background: '#F8FAFC',
+    color: '#1A1A1A',
+    transition: 'border-color 0.2s, background 0.2s',
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+  nextTimeError: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    color: '#DC2626',
+  },
+  nextTimeSubmit: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.95rem',
+    padding: '14px 24px',
+    borderRadius: 8,
+    border: 'none',
+    background: '#57A018',
+    color: '#FFFFFF',
+    cursor: 'pointer',
+    transition: 'background 0.2s, transform 0.1s',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  nextTimeDismiss: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    fontSize: '0.95rem',
+    padding: '14px 24px',
+    borderRadius: 8,
+    border: '1.5px solid #dde4ed',
+    background: 'transparent',
+    color: '#1A1A1A',
+    cursor: 'pointer',
+    transition: 'background 0.2s',
+  },
+  nextTimeSuccess: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 12,
+    padding: '20px 0',
+  },
+  nextTimeSuccessIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    background: 'rgba(87,160,24,0.2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '1.8rem',
+    color: '#57A018',
+  },
+  nextTimeSuccessHeading: {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 800,
+    fontSize: '1.3rem',
+    color: '#1A1A1A',
+    margin: 0,
+  },
+  nextTimeSuccessText: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '0.9rem',
+    color: '#555',
+    margin: 0,
+    textAlign: 'center',
   },
 }

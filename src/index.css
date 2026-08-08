@@ -576,3 +576,30 @@ ul { list-style: none; }
     flex: 1 1 0%;
   }
 }
+
+/* ── Maybe Next Time input styles ── */
+.nextTimeInput:focus {
+  border-color: #57A018;
+  background: #fff;
+}
+
+.nextTimeSubmit:hover:not(:disabled) {
+  background: #4a8a15;
+}
+
+.nextTimeSubmit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.nextTimeSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.nextTimeDismiss:hover {
+  background: #f1f5f9;
+}
+
+.nextTimeBack:hover {
+  opacity: 0.7;
+}

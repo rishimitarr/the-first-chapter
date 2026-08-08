@@ -5,7 +5,7 @@ export const eventRecaps = [
     date: 'August 2026',
     location: 'Mississauga, Ontario',
     intro:
-      'A busy summer festival stop where our team met families, shared program information, and introduced The First Chapter to new community members.',
+      'A busy summer event where our team met families, shared program information, and introduced The First Chapter to new community members.',
     summary: [
       'At TD Mosaic Festival in Mississauga, our volunteers spoke with families across the grounds, shared printed information about our programs, and introduced The First Chapter to attendees who were meeting us for the first time.',
       'We spent the day answering questions, connecting with parents, and sharing details about our care kit and community outreach work.',
