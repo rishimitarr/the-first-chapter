@@ -2,6 +2,32 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { InfiniteSlider } from './ui/infinite-slider'
 
+function VideoCard({ photo, index, onClick }) {
+  return (
+    <button
+      type="button"
+      style={styles.sliderImageBtn}
+      onClick={() => onClick(index)}
+      aria-label={`View: ${photo.alt}`}
+    >
+      <div style={{ position: 'relative' }}>
+        <img
+          src={photo.poster}
+          alt={photo.alt}
+          style={styles.sliderImage}
+          loading="lazy"
+          decoding="async"
+        />
+        <div style={styles.playBadge}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <polygon points="8,5 19,12 8,19" />
+          </svg>
+        </div>
+      </div>
+    </button>
+  )
+}
+
 function EventTitle({ title }) {
   if (title.includes('TD')) {
     const parts = title.split('TD')
@@ -9,6 +35,16 @@ function EventTitle({ title }) {
       <>
         {parts[0]}
         <img src="/TD Logo.webp" alt="TD" style={{ height: '1.2em', verticalAlign: 'text-bottom', display: 'inline-block', margin: '0 4px', borderRadius: '4px', objectFit: 'contain' }} />
+        {parts[1]}
+      </>
+    )
+  }
+  if (title.includes('APC')) {
+    const parts = title.split('APC')
+    return (
+      <>
+        {parts[0]}
+        <img src="/apc-logo.png" alt="APC" style={{ height: '1.4em', verticalAlign: 'middle', display: 'inline-block', margin: '0 6px', borderRadius: '4px', objectFit: 'contain' }} />
         {parts[1]}
       </>
     )
@@ -72,7 +108,7 @@ export default function EventRecap({ event, variant = 'full' }) {
             viewport={{ once: false, margin: '-250px 0px -80px 0px' }}
           >
             <div style={styles.teaserHeader}>
-              <span className="section-tag">Latest Event</span>
+              {!event.hideSectionTag && <span className="section-tag">Latest Events</span>}
               <h2 id="latest-event-teaser" style={styles.teaserTitle}>
                 <EventTitle title={event.title} />
               </h2>
@@ -90,23 +126,32 @@ export default function EventRecap({ event, variant = 'full' }) {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <InfiniteSlider durationOnHover={75} gap={24}>
+          <InfiniteSlider durationOnHover={75} gap={24} duration={event.sliderDuration || 25}>
             {event.photos.map((photo, index) => (
-              <button
-                key={photo.src}
-                type="button"
-                style={styles.sliderImageBtn}
-                onClick={() => setActiveIndex(index)}
-                aria-label={`View photo: ${photo.alt}`}
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  style={styles.sliderImage}
-                  loading="lazy"
-                  decoding="async"
+              photo.type === 'video' ? (
+                <VideoCard
+                  key={photo.src}
+                  photo={photo}
+                  index={index}
+                  onClick={setActiveIndex}
                 />
-              </button>
+              ) : (
+                <button
+                  key={photo.src}
+                  type="button"
+                  style={styles.sliderImageBtn}
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`View: ${photo.alt}`}
+                >
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    style={styles.sliderImage}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+              )
             ))}
           </InfiniteSlider>
         </motion.div>
@@ -135,15 +180,26 @@ export default function EventRecap({ event, variant = 'full' }) {
                   type="button"
                   style={styles.modalClose}
                   onClick={() => setActiveIndex(null)}
-                  aria-label="Close image viewer"
+                  aria-label="Close viewer"
                 >
                   Close
                 </button>
-                <img
-                  src={event.photos[activeIndex].src}
-                  alt={event.photos[activeIndex].alt}
-                  style={styles.modalImage}
-                />
+                {event.photos[activeIndex].type === 'video' ? (
+                  <video
+                    key={event.photos[activeIndex].src}
+                    src={event.photos[activeIndex].src}
+                    poster={event.photos[activeIndex].poster}
+                    style={styles.modalImage}
+                    controls
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={event.photos[activeIndex].src}
+                    alt={event.photos[activeIndex].alt}
+                    style={styles.modalImage}
+                  />
+                )}
               </motion.div>
             </motion.div>
           ) : null}
@@ -342,6 +398,20 @@ const styles = {
     borderRadius: 6,
     boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
     transition: 'transform 0.35s ease, filter 0.35s ease',
+  },
+  playBadge: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 56,
+    height: 56,
+    borderRadius: '50%',
+    background: 'rgba(0,0,0,0.55)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
   },
   pageSection: {
     padding: '80px 0 88px',

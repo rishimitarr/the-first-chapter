@@ -42,8 +42,72 @@ export const eventRecaps = [
       },
     ],
   },
+  {
+    slug: 'apc-back-to-school-2026',
+    title: 'APC Back to School 2026',
+    logo: '/apc-logo.png',
+    hideSectionTag: true,
+    sliderDuration: 45,
+    date: 'August 2026',
+    location: 'Brampton, Ontario',
+    intro:
+      'Back to school outreach with All People\'s Church, connecting with families and distributing care kits to children heading back to the classroom.',
+    summary: [
+      'At the APC Back to School 2026 event, our team partnered with All People\'s Church to reach families preparing for the new school year.',
+      'We distributed care kits, shared information about our programs, and connected with parents and children throughout the day.',
+      'The event was a great opportunity to expand our reach in the Brampton community and build new relationships with local families.',
+    ],
+    hero: {
+      src: '/event-recap/apc-back-to-school/8Y0A9562.jpg',
+      alt: 'APC Back to School 2026 event',
+      width: 6000,
+      height: 4000,
+      variants: [{ src: '/event-recap/apc-back-to-school/8Y0A9562.jpg', width: 6000 }],
+    },
+    photos: [
+      {
+        src: '/event-recap/apc-back-to-school/8Y0A9551.jpg',
+        alt: 'Volunteers at APC Back to School 2026',
+        width: 5858,
+        height: 3905,
+        variants: [{ src: '/event-recap/apc-back-to-school/8Y0A9551.jpg', width: 5858 }],
+      },
+      {
+        src: '/event-recap/apc-back-to-school/8Y0A9562.jpg',
+        alt: 'APC Back to School 2026 event setup',
+        width: 6000,
+        height: 4000,
+        variants: [{ src: '/event-recap/apc-back-to-school/8Y0A9562.jpg', width: 6000 }],
+      },
+      {
+        src: '/event-recap/apc-back-to-school/8Y0A9564.jpg',
+        alt: 'Families at APC Back to School 2026',
+        width: 6000,
+        height: 4000,
+        variants: [{ src: '/event-recap/apc-back-to-school/8Y0A9564.jpg', width: 6000 }],
+      },
+      {
+        src: '/event-recap/apc-back-to-school/0H9A9158-web.mp4',
+        alt: 'APC Back to School 2026 highlight video',
+        type: 'video',
+        poster: '/event-recap/apc-back-to-school/0H9A9158-poster.jpg',
+      },
+      {
+        src: '/event-recap/apc-back-to-school/0H9A9159-web.mp4',
+        alt: 'APC Back to School 2026 event footage',
+        type: 'video',
+        poster: '/event-recap/apc-back-to-school/0H9A9159-poster.jpg',
+      },
+      {
+        src: '/event-recap/apc-back-to-school/8Y0A9552-web.mp4',
+        alt: 'APC Back to School 2026 community moment',
+        type: 'video',
+        poster: '/event-recap/apc-back-to-school/8Y0A9552-poster.jpg',
+      },
+    ],
+  },
 ]
 
-export function getLatestEventRecap() {
-  return eventRecaps[0]
+export function getLatestEventRecaps() {
+  return eventRecaps
 }

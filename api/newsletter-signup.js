@@ -46,30 +46,41 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: 'The First Chapter <onboarding@thefirstchapternpo.org>',
         to: [email],
-        subject: 'Welcome to The First Chapter!',
+        subject: 'Help Educate Children Today!',
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #1A3A6B; font-size: 24px;">Welcome, ${firstName}!</h1>
-            <p style="color: #555; line-height: 1.6;">
-              Thank you for joining The First Chapter community. We're thrilled to have you with us.
-            </p>
-            <p style="color: #555; line-height: 1.6;">
-              You'll receive updates about our mission to provide educational care kits to children 
-              in the Greater Toronto Area, upcoming events, and ways you can make a difference.
-            </p>
-            <div style="margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
-              <p style="color: #1A3A6B; font-weight: bold; margin: 0;">
-                Together, we're writing brighter futures for children in our community.
-              </p>
-            </div>
-            <p style="color: #555; line-height: 1.6;">
-              If you have any questions, feel free to reach out to us anytime.
-            </p>
-            <p style="color: #555; margin-top: 30px;">
-              Warm regards,<br/>
-              The First Chapter Team
-            </p>
-          </div>
+          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+          <html dir="ltr" lang="en">
+          <head>
+            <meta content="width=device-width" name="viewport"/>
+            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+            <title>Help educate children in the GTA and change lives.</title>
+          </head>
+          <body dir="ltr" lang="en" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;font-size:1em;min-height:100%;line-height:155%">
+            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:600px;width:100%;border-radius:0px;line-height:155%">
+              <tbody>
+                <tr>
+                  <td dir="ltr" lang="en" style="padding:0">
+                    <h1 style="margin:0;padding:0;font-size:2.25em;line-height:1.44em;padding-top:0.389em;font-weight:600;text-align:left">Welcome to the family!</h1>
+                    <p style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">Hello ${firstName || 'There'},</p>
+                    <p style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">Thank you for joining our community. We're so glad to have you with us.</p>
+                    <p style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">We need your help to educate children around the GTA. Every child deserves access to the supplies and opportunities that can shape their future, and together, we can make that possible. Whether it's through volunteering, sharing our mission, or contributing what you can, your support directly changes lives in our community.</p>
+                    <p style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">In the weeks ahead, you'll hear from us about the students we serve, the programs we run, and the ways you can get involved. We promise to keep things meaningful. No bullsh*t, just stories and updates that matter.</p>
+                    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
+                      <tbody>
+                        <tr>
+                          <td align="left">
+                            <a href="https://www.thefirstchapternpo.org/" style="display:inline-block;padding:7px 12px;background-color:#000000;color:#ffffff;border-radius:4px;font-weight:500;font-size:0.875em;text-decoration:none" target="_blank">Help us Today</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">With gratitude,<br/>The First Chapter Team</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
         `,
       }),
     })
