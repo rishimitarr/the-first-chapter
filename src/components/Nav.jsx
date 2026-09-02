@@ -65,7 +65,9 @@ export default function Nav() {
     <motion.nav
       style={{
         ...styles.nav,
-        background: atTop ? 'transparent' : '#fff',
+        background: atTop ? 'transparent' : 'rgba(255,255,255,0.75)',
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
         boxShadow: atTop ? 'none' : '0 2px 20px rgba(0,0,0,0.07)',
       }}
       className={atTop ? 'nav-overlay' : undefined}
@@ -313,7 +315,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: '12px 24px 20px',
-    background: '#fff',
+    background: 'rgba(255,255,255,0.75)',
+    backdropFilter: 'none',
+    WebkitBackdropFilter: 'none',
     borderTop: '1px solid rgba(0,0,0,0.06)',
     overflow: 'hidden',
   },

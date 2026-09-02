@@ -5,7 +5,8 @@ import ImpactStrip from './components/ImpactStrip'
 import OurImpact from './components/OurImpact'
 import EventRecap from './components/EventRecap'
 import ProgramCards from './components/ProgramCards'
-import ReadingList from './components/ReadingList'
+// import ReadingList from './components/ReadingList'
+import PartnersSection from './components/PartnersSection'
 import Join from './components/Join'
 import Footer from './components/Footer'
 import { getLatestEventRecaps } from './data/eventRecaps'
@@ -25,7 +26,8 @@ function App() {
           <EventRecap key={event.slug} event={event} variant="teaser" />
         ))}
         <ProgramCards />
-        <ReadingList />
+        {/* <ReadingList /> */}
+        <PartnersSection />
         <Join />
       </main>
       <Footer />

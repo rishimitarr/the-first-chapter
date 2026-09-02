@@ -80,7 +80,7 @@ export default function JoinTeam() {
           transition={{ duration: 0.55, delay: 0.1 }}
           style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', fontWeight: 700, color: '#2c3e2d', marginBottom: '1rem', lineHeight: 1.2 }}
         >
-          Stay in the loop
+          Stay Connected with Us!
         </motion.h2>
 
         <motion.p

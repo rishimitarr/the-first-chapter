@@ -75,14 +75,9 @@ export default function Join() {
         >
           <div style={styles.grid} className="join-grid">
             <div style={styles.left}>
-              <span style={styles.tag}>Join Us</span>
               <h2 style={styles.heading}>
-                Stay in the loop
+                Stay Connected with Us!
               </h2>
-              <p style={styles.body}>
-                Get updates on our mission, upcoming events, and ways you can help children 
-                across the Greater Toronto Area access the education they deserve.
-              </p>
             </div>
 
             <div>
