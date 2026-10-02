@@ -3,6 +3,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { InfiniteSlider } from './ui/infinite-slider'
 
 function VideoCard({ photo, index, onClick }) {
+  const poster = buildSizes(
+    { src: photo.poster, width: photo.posterWidth, height: photo.posterHeight },
+    '400px',
+  )
   return (
     <button
       type="button"
@@ -12,7 +16,9 @@ function VideoCard({ photo, index, onClick }) {
     >
       <div style={{ position: 'relative' }}>
         <img
-          src={photo.poster}
+          src={poster.src}
+          srcSet={poster.srcSet}
+          sizes={poster.sizes}
           alt={photo.alt}
           style={styles.sliderImage}
           loading="lazy"
@@ -24,6 +30,30 @@ function VideoCard({ photo, index, onClick }) {
           </svg>
         </div>
       </div>
+    </button>
+  )
+}
+
+function PhotoSlide({ photo, index, onClick }) {
+  const sources = buildSizes(photo, '400px')
+  return (
+    <button
+      type="button"
+      style={styles.sliderImageBtn}
+      onClick={() => onClick(index)}
+      aria-label={`View: ${photo.alt}`}
+    >
+      <img
+        src={sources.src}
+        srcSet={sources.srcSet}
+        sizes={sources.sizes}
+        width={sources.width}
+        height={sources.height}
+        alt={photo.alt}
+        style={styles.sliderImage}
+        loading="lazy"
+        decoding="async"
+      />
     </button>
   )
 }
@@ -57,19 +87,40 @@ const sectionVariant = {
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
 }
 
-function buildSizes(image) {
-  const src = image.src
-  const variants = Array.isArray(image.variants) ? image.variants : []
-  const srcSet = variants.length
-    ? variants.map((variant) => `${variant.src} ${variant.width}w`).join(', ')
-    : `${src} 1x, ${src} 2x`
+const STEP_WIDTHS = [800, 1600]
+
+function stepSrc(src, step) {
+  const dot = src.lastIndexOf('.')
+  if (dot <= 0) return src
+  return `${src.slice(0, dot)}-${step}${src.slice(dot)}`
+}
+
+function imageEntries(image) {
+  const steps = STEP_WIDTHS.filter((step) => image.width && step < image.width)
+  const entries = steps.map((step) => ({ src: stepSrc(image.src, step), width: step }))
+  if (image.width && image.width <= STEP_WIDTHS[STEP_WIDTHS.length - 1]) {
+    entries.push({ src: image.src, width: image.width })
+  }
+  return entries
+}
+
+function buildSizes(image, sizes) {
+  const entries = imageEntries(image)
+  if (!entries.length) {
+    return { src: image.src, srcSet: undefined, sizes, width: image.width, height: image.height }
+  }
   return {
-    src,
-    srcSet,
+    src: entries[0].src,
+    srcSet: entries.map((entry) => `${entry.src} ${entry.width}w`).join(', '),
+    sizes,
     width: image.width,
     height: image.height,
-    sizes: image.sizes,
   }
+}
+
+function lightboxSrc(image) {
+  const entries = imageEntries(image)
+  return entries.length ? entries[entries.length - 1].src : image.src
 }
 
 function MetaChip({ label, value }) {
@@ -95,7 +146,7 @@ export default function EventRecap({ event, variant = 'full' }) {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [activeIndex])
 
-  const featured = buildSizes(event.hero)
+  const featured = buildSizes(event.hero, 'min(720px, 100vw)')
 
   if (variant === 'teaser') {
     return (
@@ -136,21 +187,12 @@ export default function EventRecap({ event, variant = 'full' }) {
                   onClick={setActiveIndex}
                 />
               ) : (
-                <button
+                <PhotoSlide
                   key={photo.src}
-                  type="button"
-                  style={styles.sliderImageBtn}
-                  onClick={() => setActiveIndex(index)}
-                  aria-label={`View: ${photo.alt}`}
-                >
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    style={styles.sliderImage}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </button>
+                  photo={photo}
+                  index={index}
+                  onClick={setActiveIndex}
+                />
               )
             ))}
           </InfiniteSlider>
@@ -195,9 +237,12 @@ export default function EventRecap({ event, variant = 'full' }) {
                   />
                 ) : (
                   <img
-                    src={event.photos[activeIndex].src}
+                    src={lightboxSrc(event.photos[activeIndex])}
                     alt={event.photos[activeIndex].alt}
-                    style={styles.modalImage}
+                    style={{
+                      ...styles.modalImage,
+                      aspectRatio: `${event.photos[activeIndex].width} / ${event.photos[activeIndex].height}`,
+                    }}
                   />
                 )}
               </motion.div>
@@ -279,7 +324,7 @@ export default function EventRecap({ event, variant = 'full' }) {
 
           <div style={styles.carousel} className="event-recap-carousel">
             {event.photos.map((image, index) => {
-              const sources = buildSizes(image)
+              const sources = buildSizes(image, 'min(560px, 84vw)')
               return (
                 <button
                   key={image.src}
@@ -334,11 +379,25 @@ export default function EventRecap({ event, variant = 'full' }) {
               >
                 Close
               </button>
-              <img
-                src={event.photos[activeIndex].src}
-                alt={event.photos[activeIndex].alt}
-                style={styles.modalImage}
-              />
+              {event.photos[activeIndex].type === 'video' ? (
+                <video
+                  key={event.photos[activeIndex].src}
+                  src={event.photos[activeIndex].src}
+                  poster={event.photos[activeIndex].poster}
+                  style={styles.modalImage}
+                  controls
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={lightboxSrc(event.photos[activeIndex])}
+                  alt={event.photos[activeIndex].alt}
+                  style={{
+                    ...styles.modalImage,
+                    aspectRatio: `${event.photos[activeIndex].width} / ${event.photos[activeIndex].height}`,
+                  }}
+                />
+              )}
             </motion.div>
           </motion.div>
         ) : null}

@@ -65,7 +65,7 @@ export default function OurImpact() {
           <div style={styles.countersRow}>
             <div style={styles.counterItem}>
               <span style={styles.counterLabel}>Total Raised</span>
-              <AnimatedNumber target={947} prefix="$" inView={inView} />
+              <AnimatedNumber target={1450} prefix="$" inView={inView} />
             </div>
 
             <div style={styles.counterDivider} />

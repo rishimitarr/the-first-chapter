@@ -27,7 +27,8 @@ export function InfiniteSlider({
       ? `@keyframes ${animName} { from { transform: translateX(0); } to { transform: translateX(${translateAmount}px); } }`
       : `@keyframes ${animName} { from { transform: translateY(0); } to { transform: translateY(${translateAmount}px); } }`
 
-  const shouldAnimate = isInView && width > 0
+  const shouldAnimate = width > 0
+  const shouldRun = shouldAnimate && isInView && !isPaused
 
   return (
     <div
@@ -47,9 +48,8 @@ export function InfiniteSlider({
           animationTimingFunction: 'linear',
           animationIterationCount: 'infinite',
           animationDirection: reverse ? 'reverse' : 'normal',
-          animationPlayState: isPaused ? 'paused' : 'running',
-          opacity: shouldAnimate ? 1 : 0,
-          transition: 'opacity 0.6s ease',
+          animationPlayState: shouldRun ? 'running' : 'paused',
+          willChange: 'transform',
         }}
         onMouseEnter={() => durationOnHover && setIsPaused(true)}
         onMouseLeave={() => durationOnHover && setIsPaused(false)}

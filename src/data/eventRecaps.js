@@ -1,44 +1,58 @@
 export const eventRecaps = [
   {
-    slug: 'td-mosaic-festival',
-    title: 'TD Mosaic Festival',
-    date: 'August 2026',
-    location: 'Mississauga, Ontario',
+    slug: 'brampton-fall-fair-2026',
+    title: '173rd Annual Brampton Fall Fair',
+    date: 'September 2026',
+    location: 'Brampton, Ontario',
     intro:
-      'A busy summer event where our team met families, shared program information, and introduced The First Chapter to new community members.',
+      'Our team attended the 173rd Annual Brampton Fall Fair, connecting with families and sharing our programs with the community.',
     summary: [
-      'At TD Mosaic Festival in Mississauga, our volunteers spoke with families across the grounds, shared printed information about our programs, and introduced The First Chapter to attendees who were meeting us for the first time.',
-      'We spent the day answering questions, connecting with parents, and sharing details about our care kit and community outreach work.',
-      'The event gave us a clear look at the scale of the festival and the number of people who stopped to learn more about our work.',
+      'At the 173rd Annual Brampton Fall Fair, our volunteers engaged with families throughout the event, sharing information about our programs and introducing The First Chapter to new community members.',
+      'We spent the day talking with parents, answering questions about our care kits, and building connections with families in the Brampton area.',
+      'The event provided a wonderful opportunity to connect with the local community and showcase our work in supporting children and families.',
     ],
     hero: {
-      src: '/event-recap/td-mosaic-festival/audience.jpg',
-      alt: 'Audience gathered at TD Mosaic Festival',
-      width: 1086,
-      height: 1448,
-      variants: [{ src: '/event-recap/td-mosaic-festival/audience.jpg', width: 1086 }],
+      src: '/event-recap/brampton-fall-fair/IMG_0272.jpeg',
+      alt: '173rd Annual Brampton Fall Fair event',
+      width: 4032,
+      height: 3024,
+      variants: [{ src: '/event-recap/brampton-fall-fair/IMG_0272.jpeg', width: 4032 }],
     },
     photos: [
       {
-        src: '/event-recap/td-mosaic-festival/table.jpg',
-        alt: 'The First Chapter table at TD Mosaic Festival',
-        width: 1199,
-        height: 1600,
-        variants: [{ src: '/event-recap/td-mosaic-festival/table.jpg', width: 1199 }],
+        src: '/event-recap/brampton-fall-fair/IMG_0273.jpeg',
+        alt: 'Brampton Fall Fair community engagement',
+        width: 4032,
+        height: 3024,
+        variants: [{ src: '/event-recap/brampton-fall-fair/IMG_0273.jpeg', width: 4032 }],
       },
       {
-        src: '/event-recap/td-mosaic-festival/talking.jpg',
-        alt: 'Volunteers talking with families at The First Chapter table during TD Mosaic Festival',
-        width: 1200,
-        height: 1600,
-        variants: [{ src: '/event-recap/td-mosaic-festival/talking.jpg', width: 1200 }],
+        src: '/event-recap/brampton-fall-fair/IMG_0274.jpeg',
+        alt: 'Families at Brampton Fall Fair',
+        width: 4032,
+        height: 3024,
+        variants: [{ src: '/event-recap/brampton-fall-fair/IMG_0274.jpeg', width: 4032 }],
       },
       {
-        src: '/event-recap/td-mosaic-festival/wider-audience.jpg',
-        alt: 'Wider view of the crowd gathered at TD Mosaic Festival',
-        width: 962,
-        height: 720,
-        variants: [{ src: '/event-recap/td-mosaic-festival/wider-audience.jpg', width: 962 }],
+        src: '/event-recap/brampton-fall-fair/IMG_0275.jpeg',
+        alt: 'The First Chapter table at Brampton Fall Fair',
+        width: 4032,
+        height: 3024,
+        variants: [{ src: '/event-recap/brampton-fall-fair/IMG_0275.jpeg', width: 4032 }],
+      },
+      {
+        src: '/event-recap/brampton-fall-fair/IMG_0276.jpeg',
+        alt: 'Volunteers at Brampton Fall Fair',
+        width: 4032,
+        height: 3024,
+        variants: [{ src: '/event-recap/brampton-fall-fair/IMG_0276.jpeg', width: 4032 }],
+      },
+      {
+        src: '/event-recap/brampton-fall-fair/IMG_0279.jpeg',
+        alt: 'Brampton Fall Fair event atmosphere',
+        width: 4032,
+        height: 3024,
+        variants: [{ src: '/event-recap/brampton-fall-fair/IMG_0279.jpeg', width: 4032 }],
       },
     ],
   },
@@ -91,18 +105,67 @@ export const eventRecaps = [
         alt: 'APC Back to School 2026 highlight video',
         type: 'video',
         poster: '/event-recap/apc-back-to-school/0H9A9158-poster.jpg',
+        posterWidth: 1920,
+        posterHeight: 1080,
       },
       {
         src: '/event-recap/apc-back-to-school/0H9A9159-web.mp4',
         alt: 'APC Back to School 2026 event footage',
         type: 'video',
         poster: '/event-recap/apc-back-to-school/0H9A9159-poster.jpg',
+        posterWidth: 1920,
+        posterHeight: 1080,
       },
       {
         src: '/event-recap/apc-back-to-school/8Y0A9552-web.mp4',
         alt: 'APC Back to School 2026 community moment',
         type: 'video',
         poster: '/event-recap/apc-back-to-school/8Y0A9552-poster.jpg',
+        posterWidth: 3840,
+        posterHeight: 2160,
+      },
+    ],
+  },
+  {
+    slug: 'td-mosaic-festival',
+    title: 'TD Mosaic Festival',
+    date: 'August 2026',
+    location: 'Mississauga, Ontario',
+    intro:
+      'A busy summer event where our team met families, shared program information, and introduced The First Chapter to new community members.',
+    summary: [
+      'At TD Mosaic Festival in Mississauga, our volunteers spoke with families across the grounds, shared printed information about our programs, and introduced The First Chapter to attendees who were meeting us for the first time.',
+      'We spent the day answering questions, connecting with parents, and sharing details about our care kit and community outreach work.',
+      'The event gave us a clear look at the scale of the festival and the number of people who stopped to learn more about our work.',
+    ],
+    hero: {
+      src: '/event-recap/td-mosaic-festival/audience.jpg',
+      alt: 'Audience gathered at TD Mosaic Festival',
+      width: 1086,
+      height: 1448,
+      variants: [{ src: '/event-recap/td-mosaic-festival/audience.jpg', width: 1086 }],
+    },
+    photos: [
+      {
+        src: '/event-recap/td-mosaic-festival/table.jpg',
+        alt: 'The First Chapter table at TD Mosaic Festival',
+        width: 1199,
+        height: 1600,
+        variants: [{ src: '/event-recap/td-mosaic-festival/table.jpg', width: 1199 }],
+      },
+      {
+        src: '/event-recap/td-mosaic-festival/talking.jpg',
+        alt: 'Volunteers talking with families at The First Chapter table during TD Mosaic Festival',
+        width: 1200,
+        height: 1600,
+        variants: [{ src: '/event-recap/td-mosaic-festival/talking.jpg', width: 1200 }],
+      },
+      {
+        src: '/event-recap/td-mosaic-festival/wider-audience.jpg',
+        alt: 'Wider view of the crowd gathered at TD Mosaic Festival',
+        width: 962,
+        height: 720,
+        variants: [{ src: '/event-recap/td-mosaic-festival/wider-audience.jpg', width: 962 }],
       },
     ],
   },
@@ -110,4 +173,8 @@ export const eventRecaps = [
 
 export function getLatestEventRecaps() {
   return eventRecaps
+}
+
+export function getLatestEventRecap() {
+  return eventRecaps[0]
 }
