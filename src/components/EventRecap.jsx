@@ -59,6 +59,30 @@ function PhotoSlide({ photo, index, onClick }) {
 }
 
 function EventTitle({ title }) {
+  if (title.includes('Oakville')) {
+    return (
+      <>
+        <img
+          src="/partner-logos/oakville-civitan-logo.png"
+          alt="Civitan Club of Oakville"
+          style={{ height: '1.35em', width: 'auto', verticalAlign: 'middle', display: 'inline-block', margin: '0 14px 0 0', objectFit: 'contain' }}
+        />
+        {title}
+      </>
+    )
+  }
+  if (title.includes('Brampton Fall Fair')) {
+    return (
+      <>
+        <img
+          src="/partner-logos/peel-agricultural-society-logo.jpeg"
+          alt="Brampton Peel Agricultural Society"
+          style={{ height: '1.1em', width: '1.1em', verticalAlign: 'middle', display: 'inline-block', margin: '0 16px 0 0', borderRadius: 12, border: '1px solid rgba(26,58,107,0.14)', objectFit: 'contain' }}
+        />
+        {title}
+      </>
+    )
+  }
   if (title.includes('TD')) {
     const parts = title.split('TD')
     return (
@@ -170,33 +194,69 @@ export default function EventRecap({ event, variant = 'full' }) {
           </motion.div>
         </div>
 
-        <motion.div
-          style={styles.sliderFullWidth}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <InfiniteSlider durationOnHover={75} gap={24} duration={event.sliderDuration || 25}>
-            {event.photos.map((photo, index) => (
-              photo.type === 'video' ? (
-                <VideoCard
+        {event.staticGallery ? (
+          <motion.div
+            style={styles.staticGrid}
+            className="event-recap-static-grid"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {event.photos.map((photo, index) => {
+              const sources = buildSizes(photo, '50vw')
+              return (
+                <button
                   key={photo.src}
-                  photo={photo}
-                  index={index}
-                  onClick={setActiveIndex}
-                />
-              ) : (
-                <PhotoSlide
-                  key={photo.src}
-                  photo={photo}
-                  index={index}
-                  onClick={setActiveIndex}
-                />
+                  type="button"
+                  style={styles.staticPhotoBtn}
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`View: ${photo.alt}`}
+                >
+                  <img
+                    src={sources.src}
+                    srcSet={sources.srcSet}
+                    sizes={sources.sizes}
+                    width={sources.width}
+                    height={sources.height}
+                    alt={photo.alt}
+                    style={styles.staticPhoto}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
               )
-            ))}
-          </InfiniteSlider>
-        </motion.div>
+            })}
+          </motion.div>
+        ) : (
+          <motion.div
+            style={styles.sliderFullWidth}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <InfiniteSlider durationOnHover={75} gap={24} duration={event.sliderDuration || 25}>
+              {event.photos.map((photo, index) => (
+                photo.type === 'video' ? (
+                  <VideoCard
+                    key={photo.src}
+                    photo={photo}
+                    index={index}
+                    onClick={setActiveIndex}
+                  />
+                ) : (
+                  <PhotoSlide
+                    key={photo.src}
+                    photo={photo}
+                    index={index}
+                    onClick={setActiveIndex}
+                  />
+                )
+              ))}
+            </InfiniteSlider>
+          </motion.div>
+        )}
 
         <AnimatePresence>
           {activeIndex !== null ? (
@@ -439,6 +499,36 @@ const styles = {
   sliderFullWidth: {
     marginTop: 40,
     overflow: 'hidden',
+  },
+  staticGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: 24,
+    width: '100%',
+    maxWidth: 1160,
+    margin: '40px auto 0',
+    padding: '0 24px',
+    boxSizing: 'border-box',
+  },
+  staticPhotoBtn: {
+    border: 'none',
+    padding: 0,
+    background: 'transparent',
+    cursor: 'pointer',
+    borderRadius: 6,
+    overflow: 'hidden',
+    display: 'block',
+    width: '100%',
+    height: 'clamp(180px, 24vw, 340px)',
+  },
+  staticPhoto: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+    borderRadius: 6,
+    boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+    transition: 'transform 0.35s ease, filter 0.35s ease',
   },
   sliderImageBtn: {
     border: 'none',

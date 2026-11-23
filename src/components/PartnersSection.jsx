@@ -1,6 +1,9 @@
 const partners = [
   { src: '/partner-logos/apc-logo.png', alt: 'APC' },
   { src: '/partner-logos/td-mosaic.png', alt: 'TD Mosaic' },
+  { src: '/partner-logos/peel-agricultural-society-banner.png', alt: 'Brampton Peel Agricultural Society', radius: 8 },
+  { src: '/partner-logos/wing-wagon-banner.png', alt: 'Wing Wagon', radius: 8 },
+  { src: '/partner-logos/oakville-civitan-logo.png', alt: 'Civitan Club of Oakville' },
 ]
 
 export default function PartnersSection() {
@@ -18,7 +21,7 @@ export default function PartnersSection() {
               <img
                 src={p.src}
                 alt={p.alt}
-                style={styles.logo}
+                style={p.radius ? { ...styles.logo, borderRadius: p.radius } : styles.logo}
               />
             </div>
           ))}
@@ -53,14 +56,14 @@ const styles = {
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: '40px 56px',
-    maxWidth: 900,
+    gap: '40px 48px',
+    maxWidth: 1100,
     width: '100%',
   },
   logoWrap: {
-    flex: '1 1 calc(25% - 56px)',
-    minWidth: 160,
-    maxWidth: 240,
+    flex: '1 1 calc(20% - 48px)',
+    minWidth: 140,
+    maxWidth: 210,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

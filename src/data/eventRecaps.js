@@ -1,7 +1,46 @@
 export const eventRecaps = [
   {
+    slug: 'oakville-farmers-market',
+    title: 'Oakville Farmers Market',
+    logo: '/partner-logos/oakville-civitan-logo.png',
+    staticGallery: true,
+    date: 'November 2026',
+    location: 'Oakville, Ontario',
+    intro:
+      'Our team attended the Oakville Farmers Market by representing the Oakville Community Hub as part of the Civitan International group.',
+    summary: [
+      'At the Oakville Farmers Market, our team welcomed visitors at the Oakville Community Hub table, sharing information about our programs and meeting families from across the community.',
+      'Representing the Oakville Community Hub as part of the Civitan International group, our volunteers spent the day talking with parents, answering questions, and connecting with local families.',
+      'The market gave us a wonderful opportunity to reach the Oakville community and introduce our work to people who were meeting us for the first time.',
+    ],
+    hero: {
+      src: '/event-recap/oakville-farmers-market/pic-1.jpeg',
+      alt: 'Oakville Community Hub tent at the Oakville Farmers Market',
+      width: 6048,
+      height: 8064,
+      variants: [{ src: '/event-recap/oakville-farmers-market/pic-1.jpeg', width: 6048 }],
+    },
+    photos: [
+      {
+        src: '/event-recap/oakville-farmers-market/pic-1.jpeg',
+        alt: 'Oakville Community Hub tent and table at the Oakville Farmers Market',
+        width: 6048,
+        height: 8064,
+        variants: [{ src: '/event-recap/oakville-farmers-market/pic-1.jpeg', width: 6048 }],
+      },
+      {
+        src: '/event-recap/oakville-farmers-market/pic-2.jpeg',
+        alt: 'Oakville Community Hub banner at the Oakville Farmers Market',
+        width: 6048,
+        height: 8064,
+        variants: [{ src: '/event-recap/oakville-farmers-market/pic-2.jpeg', width: 6048 }],
+      },
+    ],
+  },
+  {
     slug: 'brampton-fall-fair-2026',
     title: '173rd Annual Brampton Fall Fair',
+    hideSectionTag: true,
     date: 'September 2026',
     location: 'Brampton, Ontario',
     intro:
@@ -129,6 +168,7 @@ export const eventRecaps = [
   {
     slug: 'td-mosaic-festival',
     title: 'TD Mosaic Festival',
+    hideSectionTag: true,
     date: 'August 2026',
     location: 'Mississauga, Ontario',
     intro:

@@ -301,6 +301,10 @@ ul { list-style: none; }
   .event-recap-gallery-grid {
     grid-template-columns: 1fr !important;
   }
+
+  .event-recap-static-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 .reading-story-card img {
